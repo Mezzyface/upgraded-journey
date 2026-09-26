@@ -2,13 +2,40 @@
 
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_nvjdf"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_niejd"]
+[ext_resource type="Resource" uid="uid://b2y04bmespval" path="res://data/moves/tackle.tres" id="3_0uo5p"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_8mvxe"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_tjcm0"]
+[ext_resource type="Resource" uid="uid://db0xdqty555q5" path="res://data/moves/bite.tres" id="4_vlx8n"]
+[ext_resource type="Resource" uid="uid://dmqtpi532lvj" path="res://data/moves/howl.tres" id="5_a22bs"]
 [ext_resource type="SpriteFrames" uid="uid://cdjpthhkuw1j2" path="res://creatures/frames/wolf.tres" id="5_cilyy"]
+[ext_resource type="Resource" uid="uid://dsxc7ip05jrq7" path="res://data/traits/keen_nose.tres" id="7_3fwr8"]
+[ext_resource type="Resource" uid="uid://ddwuqs1crwnwu" path="res://data/traits/swift.tres" id="8_h077n"]
+
+[sub_resource type="Resource" id="Resource_v07bi"]
+script = ExtResource("2_niejd")
+move = ExtResource("3_0uo5p")
+
+[sub_resource type="Resource" id="Resource_fy1y0"]
+script = ExtResource("2_niejd")
+move = ExtResource("4_vlx8n")
+grade = 2
+
+[sub_resource type="Resource" id="Resource_2725t"]
+script = ExtResource("2_niejd")
+move = ExtResource("5_a22bs")
+stat = "heart"
 
 [resource]
 script = ExtResource("4_tjcm0")
 id = &"wolf"
 display_name = "Wolf"
-line = &"wolf"
+line = &"canine"
+stage = 2
+element = &"beast"
+egg_group = &"beast"
+potential_power = 450
+potential_speed = 450
+potential_heart = 350
+natural_traits = Array[ExtResource("3_8mvxe")]([ExtResource("7_3fwr8"), ExtResource("8_h077n")])
+moves = Array[ExtResource("2_niejd")]([SubResource("Resource_v07bi"), SubResource("Resource_fy1y0"), SubResource("Resource_2725t")])
 sprite_frames = ExtResource("5_cilyy")

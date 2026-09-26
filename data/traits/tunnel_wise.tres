@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TraitDef" format=3 uid="uid://1525hlnjwwu2"]
+
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="1_ij42y"]
+
+[resource]
+script = ExtResource("1_ij42y")
+id = &"tunnel_wise"
+display_name = "Tunnel Wise"
+description = "Learned to navigate tight tunnels."

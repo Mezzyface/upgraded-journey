@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MoveDef" format=3 uid="uid://dmqtpi532lvj"]
+
+[ext_resource type="Script" uid="uid://dyj1ofvkniou1" path="res://creatures/defs/move_def.gd" id="1_ykkdu"]
+
+[resource]
+script = ExtResource("1_ykkdu")
+id = &"howl"
+display_name = "Howl"
+element = &"beast"
+kind = "utility"

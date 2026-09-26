@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TraitDef" format=3 uid="uid://c06tlpivgbxu0"]
+
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="1_2h7xq"]
+
+[resource]
+script = ExtResource("1_2h7xq")
+id = &"fireproof"
+display_name = "Fireproof"
+description = "Unbothered by flame and heat."

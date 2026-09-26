@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="MoveDef" format=3 uid="uid://etskujyum6hb"]
+
+[ext_resource type="Script" uid="uid://dyj1ofvkniou1" path="res://creatures/defs/move_def.gd" id="1_akpup"]
+
+[resource]
+script = ExtResource("1_akpup")
+id = &"dig"
+display_name = "Dig"
+element = &"earth"

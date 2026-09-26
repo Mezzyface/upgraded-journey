@@ -1,14 +1,47 @@
 [gd_resource type="Resource" script_class="Species" format=3 uid="uid://w44dvcfebsir"]
 
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_b4vlp"]
+[ext_resource type="Resource" uid="uid://6ielr0k18s17" path="res://data/species/spider_albino.tres" id="2_lixo4"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_w5n4t"]
+[ext_resource type="Resource" uid="uid://crsumu537oop1" path="res://data/traits/darksight.tres" id="3_60gnp"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_usnuu"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_0vtkb"]
+[ext_resource type="Resource" uid="uid://miidqs6crd8d" path="res://data/species/spider_large.tres" id="4_wuicf"]
 [ext_resource type="SpriteFrames" uid="uid://dkj5n6u6r8hjl" path="res://creatures/frames/spider.tres" id="5_psvq5"]
+[ext_resource type="Resource" uid="uid://db0xdqty555q5" path="res://data/moves/bite.tres" id="6_nwsey"]
+[ext_resource type="Resource" uid="uid://bt28s821dakdv" path="res://data/moves/web.tres" id="7_tfu82"]
+
+[sub_resource type="Resource" id="Resource_0d0x1"]
+script = ExtResource("1_b4vlp")
+into = ExtResource("2_lixo4")
+required_trait = ExtResource("3_60gnp")
+
+[sub_resource type="Resource" id="Resource_b2oxy"]
+script = ExtResource("1_b4vlp")
+into = ExtResource("4_wuicf")
+stat = "power"
+min_grade = 3
+
+[sub_resource type="Resource" id="Resource_g7dk6"]
+script = ExtResource("2_w5n4t")
+move = ExtResource("6_nwsey")
+
+[sub_resource type="Resource" id="Resource_dyjay"]
+script = ExtResource("2_w5n4t")
+move = ExtResource("7_tfu82")
+stat = "speed"
 
 [resource]
 script = ExtResource("4_0vtkb")
 id = &"spider"
 display_name = "Spider"
 line = &"spider"
+element = &"dark"
+egg_group = &"bug"
+potential_guard = 250
+potential_speed = 350
+potential_wits = 250
+potential_heart = 250
+moves = Array[ExtResource("2_w5n4t")]([SubResource("Resource_g7dk6"), SubResource("Resource_dyjay")])
+evolutions = Array[ExtResource("1_b4vlp")]([SubResource("Resource_0d0x1"), SubResource("Resource_b2oxy")])
 sprite_frames = ExtResource("5_psvq5")

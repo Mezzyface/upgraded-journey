@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TraitDef" format=3 uid="uid://53tevwjcywi7"]
+
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="1_1ajfg"]
+
+[resource]
+script = ExtResource("1_1ajfg")
+id = &"glowing"
+display_name = "Glowing"
+description = "Softly glows in the dark."

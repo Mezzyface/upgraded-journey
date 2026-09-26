@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Personality" format=3 uid="uid://cyt8q6tqy1l31"]
+
+[ext_resource type="Script" uid="uid://b2mmvkao4nku1" path="res://creatures/defs/personality.gd" id="1_n36u2"]
+
+[resource]
+script = ExtResource("1_n36u2")
+id = &"cheerful"
+display_name = "Cheerful"
+favored_stat = "heart"

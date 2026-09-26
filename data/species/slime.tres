@@ -2,13 +2,35 @@
 
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_rgneg"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_c5ivj"]
+[ext_resource type="Resource" uid="uid://tylkt83k5vbr" path="res://data/species/slime_antenna.tres" id="2_nhe2k"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_kd5wh"]
+[ext_resource type="Resource" uid="uid://l71dqn66ir37" path="res://data/moves/splash.tres" id="4_ejpo8"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_nhe2k"]
 [ext_resource type="SpriteFrames" uid="uid://dk13gkbm5wyga" path="res://creatures/frames/slime.tres" id="5_ejpo8"]
+[ext_resource type="Resource" uid="uid://dckg1yenmlbh2" path="res://data/traits/sticky.tres" id="6_kg0hr"]
+
+[sub_resource type="Resource" id="Resource_8jfvo"]
+script = ExtResource("1_rgneg")
+into = ExtResource("2_nhe2k")
+stat = "heart"
+min_grade = 2
+
+[sub_resource type="Resource" id="Resource_oovqg"]
+script = ExtResource("2_c5ivj")
+move = ExtResource("4_ejpo8")
 
 [resource]
 script = ExtResource("4_nhe2k")
 id = &"slime"
 display_name = "Slime"
 line = &"slime"
+element = &"water"
+egg_group = &"amorphous"
+potential_power = 250
+potential_speed = 250
+potential_wits = 200
+potential_heart = 350
+natural_traits = Array[ExtResource("3_kd5wh")]([ExtResource("6_kg0hr")])
+moves = Array[ExtResource("2_c5ivj")]([SubResource("Resource_oovqg")])
+evolutions = Array[ExtResource("1_rgneg")]([SubResource("Resource_8jfvo")])
 sprite_frames = ExtResource("5_ejpo8")

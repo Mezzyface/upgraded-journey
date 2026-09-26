@@ -2,13 +2,34 @@
 
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_l3yv3"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_ijeow"]
+[ext_resource type="Resource" uid="uid://l71dqn66ir37" path="res://data/moves/splash.tres" id="3_414jx"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_wih04"]
+[ext_resource type="Resource" uid="uid://tm4i1iyahlcp" path="res://data/moves/glow.tres" id="4_i8t6r"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_ujr67"]
 [ext_resource type="SpriteFrames" uid="uid://b45hyhxmjg8kr" path="res://creatures/frames/slime_antenna.tres" id="5_414jx"]
+[ext_resource type="Resource" uid="uid://dckg1yenmlbh2" path="res://data/traits/sticky.tres" id="6_3vs4x"]
+[ext_resource type="Resource" uid="uid://53tevwjcywi7" path="res://data/traits/glowing.tres" id="7_56osc"]
+
+[sub_resource type="Resource" id="Resource_n1efw"]
+script = ExtResource("2_ijeow")
+move = ExtResource("3_414jx")
+
+[sub_resource type="Resource" id="Resource_nhj0l"]
+script = ExtResource("2_ijeow")
+move = ExtResource("4_i8t6r")
+stat = "wits"
+grade = 2
 
 [resource]
 script = ExtResource("4_ujr67")
 id = &"slime_antenna"
 display_name = "Slime Antenna"
-line = &"slime_antenna"
+line = &"slime"
+stage = 2
+element = &"light"
+egg_group = &"amorphous"
+potential_guard = 350
+potential_heart = 450
+natural_traits = Array[ExtResource("3_wih04")]([ExtResource("6_3vs4x"), ExtResource("7_56osc")])
+moves = Array[ExtResource("2_ijeow")]([SubResource("Resource_n1efw"), SubResource("Resource_nhj0l")])
 sprite_frames = ExtResource("5_414jx")

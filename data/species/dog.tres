@@ -1,14 +1,43 @@
 [gd_resource type="Resource" script_class="Species" format=3 uid="uid://bym4h3rymwc83"]
 
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_ox4mf"]
+[ext_resource type="Resource" uid="uid://c6eqax27rb2lf" path="res://data/species/wolf.tres" id="2_wadqj"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_xyr5t"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_w545t"]
+[ext_resource type="Resource" uid="uid://b2y04bmespval" path="res://data/moves/tackle.tres" id="4_7ud1u"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_ao01x"]
+[ext_resource type="Resource" uid="uid://dmqtpi532lvj" path="res://data/moves/howl.tres" id="5_bysa0"]
 [ext_resource type="SpriteFrames" uid="uid://boii8c476ykqr" path="res://creatures/frames/dog.tres" id="5_wadqj"]
+[ext_resource type="Resource" uid="uid://dsxc7ip05jrq7" path="res://data/traits/keen_nose.tres" id="7_8s8yu"]
+
+[sub_resource type="Resource" id="Resource_cin8h"]
+script = ExtResource("1_ox4mf")
+into = ExtResource("2_wadqj")
+stat = "power"
+min_grade = 2
+min_age_days = 3
+
+[sub_resource type="Resource" id="Resource_twlnd"]
+script = ExtResource("2_xyr5t")
+move = ExtResource("4_7ud1u")
+
+[sub_resource type="Resource" id="Resource_c78yk"]
+script = ExtResource("2_xyr5t")
+move = ExtResource("5_bysa0")
+stat = "heart"
 
 [resource]
 script = ExtResource("4_ao01x")
 id = &"dog"
 display_name = "Dog"
-line = &"dog"
+line = &"canine"
+element = &"beast"
+egg_group = &"beast"
+potential_guard = 250
+potential_speed = 350
+potential_wits = 250
+potential_heart = 350
+natural_traits = Array[ExtResource("3_w545t")]([ExtResource("7_8s8yu")])
+moves = Array[ExtResource("2_xyr5t")]([SubResource("Resource_twlnd"), SubResource("Resource_c78yk")])
+evolutions = Array[ExtResource("1_ox4mf")]([SubResource("Resource_cin8h")])
 sprite_frames = ExtResource("5_wadqj")

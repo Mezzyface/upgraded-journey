@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="MoveDef" format=3 uid="uid://b8lf5njub6eow"]
+
+[ext_resource type="Script" uid="uid://dyj1ofvkniou1" path="res://creatures/defs/move_def.gd" id="1_ntfh0"]
+
+[resource]
+script = ExtResource("1_ntfh0")
+id = &"vine_lash"
+display_name = "Vine Lash"
+element = &"nature"

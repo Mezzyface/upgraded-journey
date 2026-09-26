@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Personality" format=3 uid="uid://cdeuos2tg04bk"]
+
+[ext_resource type="Script" uid="uid://b2mmvkao4nku1" path="res://creatures/defs/personality.gd" id="1_tgiwm"]
+
+[resource]
+script = ExtResource("1_tgiwm")
+id = &"gentle"
+display_name = "Gentle"
+favored_stat = "heart"
+disfavored_stat = "power"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TraitDef" format=3 uid="uid://dsxc7ip05jrq7"]
+
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="1_38xv3"]
+
+[resource]
+script = ExtResource("1_38xv3")
+id = &"keen_nose"
+display_name = "Keen Nose"
+description = "Tracks scents other creatures miss."

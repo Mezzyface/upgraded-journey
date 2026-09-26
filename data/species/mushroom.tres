@@ -1,14 +1,35 @@
 [gd_resource type="Resource" script_class="Species" format=3 uid="uid://b1dqnlq5262ih"]
 
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_w1ni1"]
+[ext_resource type="Resource" uid="uid://3vhmmbmdoqrf" path="res://data/species/party_mushroom.tres" id="2_5ucfr"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_ngib8"]
+[ext_resource type="Resource" uid="uid://cyt8q6tqy1l31" path="res://data/personalities/cheerful.tres" id="3_6oyyt"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_7guxt"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_32tiv"]
 [ext_resource type="SpriteFrames" uid="uid://dlbbdkhgmpm20" path="res://creatures/frames/mushroom.tres" id="5_5ucfr"]
+[ext_resource type="Resource" uid="uid://dnqhx74oqiq1r" path="res://data/moves/spore.tres" id="5_c73nc"]
+[ext_resource type="Resource" uid="uid://cinkvyewrbyjt" path="res://data/traits/spore_cloud.tres" id="7_sfga0"]
+
+[sub_resource type="Resource" id="Resource_wellk"]
+script = ExtResource("1_w1ni1")
+into = ExtResource("2_5ucfr")
+personality = ExtResource("3_6oyyt")
+
+[sub_resource type="Resource" id="Resource_muw68"]
+script = ExtResource("2_ngib8")
+move = ExtResource("5_c73nc")
+stat = "wits"
 
 [resource]
 script = ExtResource("4_32tiv")
 id = &"mushroom"
 display_name = "Mushroom"
 line = &"mushroom"
+element = &"nature"
+egg_group = &"plant"
+potential_power = 250
+potential_speed = 200
+natural_traits = Array[ExtResource("3_7guxt")]([ExtResource("7_sfga0")])
+moves = Array[ExtResource("2_ngib8")]([SubResource("Resource_muw68")])
+evolutions = Array[ExtResource("1_w1ni1")]([SubResource("Resource_wellk")])
 sprite_frames = ExtResource("5_5ucfr")

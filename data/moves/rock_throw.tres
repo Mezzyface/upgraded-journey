@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="MoveDef" format=3 uid="uid://dxhmcdglw8v4l"]
+
+[ext_resource type="Script" uid="uid://dyj1ofvkniou1" path="res://creatures/defs/move_def.gd" id="1_8rfmx"]
+
+[resource]
+script = ExtResource("1_8rfmx")
+id = &"rock_throw"
+display_name = "Rock Throw"
+element = &"earth"

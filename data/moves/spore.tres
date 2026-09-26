@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MoveDef" format=3 uid="uid://dnqhx74oqiq1r"]
+
+[ext_resource type="Script" uid="uid://dyj1ofvkniou1" path="res://creatures/defs/move_def.gd" id="1_ixd7d"]
+
+[resource]
+script = ExtResource("1_ixd7d")
+id = &"spore"
+display_name = "Spore"
+element = &"nature"
+kind = "utility"

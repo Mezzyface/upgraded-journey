@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Location" format=3 uid="uid://cl2ight8q1ay3"]
+
+[ext_resource type="Script" uid="uid://bba3sgivwgdlf" path="res://creatures/defs/location.gd" id="1_y3cuw"]
+[ext_resource type="Resource" uid="uid://1525hlnjwwu2" path="res://data/traits/tunnel_wise.tres" id="2_xh8dj"]
+
+[resource]
+script = ExtResource("1_y3cuw")
+id = &"mine"
+display_name = "Mine"
+trains_trait = ExtResource("2_xh8dj")

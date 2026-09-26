@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TraitDef" format=3 uid="uid://cinkvyewrbyjt"]
+
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="1_pdosq"]
+
+[resource]
+script = ExtResource("1_pdosq")
+id = &"spore_cloud"
+display_name = "Spore Cloud"
+description = "Releases a cloud of spores when threatened."

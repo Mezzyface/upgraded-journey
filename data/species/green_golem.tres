@@ -1,14 +1,57 @@
 [gd_resource type="Resource" script_class="Species" format=3 uid="uid://bsb6kbljayfjh"]
 
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_v170l"]
+[ext_resource type="Resource" uid="uid://b5nab1cdtwta" path="res://data/species/yellow_golem.tres" id="2_bi2n3"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_uattl"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_h7wtr"]
+[ext_resource type="Resource" uid="uid://1525hlnjwwu2" path="res://data/traits/tunnel_wise.tres" id="3_xf04p"]
+[ext_resource type="Resource" uid="uid://bx87alkms6v72" path="res://data/species/blue_golem.tres" id="4_l77s0"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_mtcps"]
+[ext_resource type="Resource" uid="uid://c4yee2iga10g5" path="res://data/species/red_golem.tres" id="5_l80r5"]
 [ext_resource type="SpriteFrames" uid="uid://d2wv00fgcj16n" path="res://creatures/frames/green_golem.tres" id="5_nlwoq"]
+[ext_resource type="Resource" uid="uid://brmet65og288a" path="res://data/moves/slam.tres" id="7_moktj"]
+[ext_resource type="Resource" uid="uid://etskujyum6hb" path="res://data/moves/dig.tres" id="8_oon0o"]
+[ext_resource type="Resource" uid="uid://d316dhxeoqla5" path="res://data/traits/thick_hide.tres" id="10_mbgxy"]
+
+[sub_resource type="Resource" id="Resource_vc2g6"]
+script = ExtResource("1_v170l")
+into = ExtResource("2_bi2n3")
+required_trait = ExtResource("3_xf04p")
+
+[sub_resource type="Resource" id="Resource_tfxfq"]
+script = ExtResource("1_v170l")
+into = ExtResource("4_l77s0")
+stat = "guard"
+min_grade = 3
+
+[sub_resource type="Resource" id="Resource_qje1p"]
+script = ExtResource("1_v170l")
+into = ExtResource("5_l80r5")
+stat = "power"
+min_grade = 3
+
+[sub_resource type="Resource" id="Resource_5tkdm"]
+script = ExtResource("2_uattl")
+move = ExtResource("7_moktj")
+
+[sub_resource type="Resource" id="Resource_bqy7e"]
+script = ExtResource("2_uattl")
+move = ExtResource("8_oon0o")
+stat = "guard"
+grade = 2
 
 [resource]
 script = ExtResource("4_mtcps")
 id = &"green_golem"
 display_name = "Green Golem"
-line = &"green_golem"
+line = &"golem"
+element = &"earth"
+egg_group = &"mineral"
+potential_power = 350
+potential_guard = 450
+potential_speed = 150
+potential_wits = 200
+natural_traits = Array[ExtResource("3_h7wtr")]([ExtResource("10_mbgxy")])
+moves = Array[ExtResource("2_uattl")]([SubResource("Resource_5tkdm"), SubResource("Resource_bqy7e")])
+evolutions = Array[ExtResource("1_v170l")]([SubResource("Resource_vc2g6"), SubResource("Resource_tfxfq"), SubResource("Resource_qje1p")])
 sprite_frames = ExtResource("5_nlwoq")

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Personality" format=3 uid="uid://b1a26imw40q6u"]
+
+[ext_resource type="Script" uid="uid://b2mmvkao4nku1" path="res://creatures/defs/personality.gd" id="1_g81m7"]
+
+[resource]
+script = ExtResource("1_g81m7")
+id = &"bold"
+display_name = "Bold"
+disfavored_stat = "guard"

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MoveDef" format=3 uid="uid://bt28s821dakdv"]
+
+[ext_resource type="Script" uid="uid://dyj1ofvkniou1" path="res://creatures/defs/move_def.gd" id="1_2sb0k"]
+
+[resource]
+script = ExtResource("1_2sb0k")
+id = &"web"
+display_name = "Web"
+element = &"dark"
+kind = "utility"

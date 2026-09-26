@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Location" format=3 uid="uid://wnsjfnja232x"]
+
+[ext_resource type="Script" uid="uid://bba3sgivwgdlf" path="res://creatures/defs/location.gd" id="1_p5gj7"]
+[ext_resource type="Resource" uid="uid://bh3jk2e4v7721" path="res://data/traits/sunny.tres" id="2_u0q0s"]
+
+[resource]
+script = ExtResource("1_p5gj7")
+id = &"meadow"
+display_name = "Meadow"
+trains_trait = ExtResource("2_u0q0s")

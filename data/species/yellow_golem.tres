@@ -3,12 +3,42 @@
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_l0xph"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_cdqd6"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_7okbv"]
+[ext_resource type="Resource" uid="uid://brmet65og288a" path="res://data/moves/slam.tres" id="3_lu6b2"]
+[ext_resource type="Resource" uid="uid://etskujyum6hb" path="res://data/moves/dig.tres" id="4_ivwu3"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_kba7k"]
 [ext_resource type="SpriteFrames" uid="uid://b76v0ajfc2vxi" path="res://creatures/frames/yellow_golem.tres" id="5_buu24"]
+[ext_resource type="Resource" uid="uid://dxhmcdglw8v4l" path="res://data/moves/rock_throw.tres" id="5_khwhc"]
+[ext_resource type="Resource" uid="uid://d316dhxeoqla5" path="res://data/traits/thick_hide.tres" id="7_muv8c"]
+[ext_resource type="Resource" uid="uid://53tevwjcywi7" path="res://data/traits/glowing.tres" id="8_8afov"]
+
+[sub_resource type="Resource" id="Resource_hcptv"]
+script = ExtResource("2_cdqd6")
+move = ExtResource("3_lu6b2")
+
+[sub_resource type="Resource" id="Resource_d2loa"]
+script = ExtResource("2_cdqd6")
+move = ExtResource("4_ivwu3")
+stat = "guard"
+grade = 2
+
+[sub_resource type="Resource" id="Resource_iqi00"]
+script = ExtResource("2_cdqd6")
+move = ExtResource("5_khwhc")
+grade = 2
 
 [resource]
 script = ExtResource("4_kba7k")
 id = &"yellow_golem"
 display_name = "Yellow Golem"
-line = &"yellow_golem"
+line = &"golem"
+stage = 2
+element = &"earth"
+egg_group = &"mineral"
+potential_power = 400
+potential_guard = 450
+potential_speed = 200
+potential_wits = 350
+potential_heart = 350
+natural_traits = Array[ExtResource("3_7okbv")]([ExtResource("7_muv8c"), ExtResource("8_8afov")])
+moves = Array[ExtResource("2_cdqd6")]([SubResource("Resource_hcptv"), SubResource("Resource_d2loa"), SubResource("Resource_iqi00")])
 sprite_frames = ExtResource("5_buu24")

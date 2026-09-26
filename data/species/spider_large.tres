@@ -3,12 +3,40 @@
 [ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_rt8hg"]
 [ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_5f8p8"]
 [ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_fpxfd"]
+[ext_resource type="Resource" uid="uid://db0xdqty555q5" path="res://data/moves/bite.tres" id="3_rw7sn"]
+[ext_resource type="Resource" uid="uid://bt28s821dakdv" path="res://data/moves/web.tres" id="4_2dhkp"]
 [ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_ytbty"]
+[ext_resource type="Resource" uid="uid://dqrnlembm4luj" path="res://data/moves/shadow_bite.tres" id="5_56bja"]
 [ext_resource type="SpriteFrames" uid="uid://bj6lnk0u7rgkw" path="res://creatures/frames/spider_large.tres" id="5_rw7sn"]
+[ext_resource type="Resource" uid="uid://d316dhxeoqla5" path="res://data/traits/thick_hide.tres" id="7_pnfb3"]
+
+[sub_resource type="Resource" id="Resource_m7752"]
+script = ExtResource("2_5f8p8")
+move = ExtResource("3_rw7sn")
+
+[sub_resource type="Resource" id="Resource_jbubf"]
+script = ExtResource("2_5f8p8")
+move = ExtResource("4_2dhkp")
+stat = "speed"
+
+[sub_resource type="Resource" id="Resource_i77bt"]
+script = ExtResource("2_5f8p8")
+move = ExtResource("5_56bja")
+grade = 2
 
 [resource]
 script = ExtResource("4_ytbty")
 id = &"spider_large"
 display_name = "Spider Large"
-line = &"spider_large"
+line = &"spider"
+stage = 2
+element = &"dark"
+egg_group = &"bug"
+potential_power = 500
+potential_guard = 400
+potential_speed = 350
+potential_wits = 250
+potential_heart = 350
+natural_traits = Array[ExtResource("3_fpxfd")]([ExtResource("7_pnfb3")])
+moves = Array[ExtResource("2_5f8p8")]([SubResource("Resource_m7752"), SubResource("Resource_jbubf"), SubResource("Resource_i77bt")])
 sprite_frames = ExtResource("5_rw7sn")

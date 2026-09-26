@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Location" format=3 uid="uid://xgx166ftqpwl"]
+
+[ext_resource type="Script" uid="uid://bba3sgivwgdlf" path="res://creatures/defs/location.gd" id="1_vsue7"]
+[ext_resource type="Resource" uid="uid://bmbqfbh0gg3aa" path="res://data/traits/forest_wise.tres" id="2_4pdj7"]
+
+[resource]
+script = ExtResource("1_vsue7")
+id = &"old_forest"
+display_name = "Old Forest"
+trains_trait = ExtResource("2_4pdj7")

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="TraitDef" format=3 uid="uid://bmbqfbh0gg3aa"]
+
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="1_3flct"]
+
+[resource]
+script = ExtResource("1_3flct")
+id = &"forest_wise"
+display_name = "Forest Wise"
+description = "Learned to move unseen through deep woods."
