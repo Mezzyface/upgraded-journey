@@ -191,7 +191,8 @@ Follows the repo rule: everything is editable in the Godot editor; generators ar
   idle and move. Stations open themed panels: Orders board, Creature card (with pedigree), Breeding (with
   compatibility), Training, Expedition, Market, Day summary. Reuse the theme variations (`NamePlate`,
   `InventorySlot`, `DecoratedButton`, `PackScrollBar` + `ui/pack_scroll_bar.gd`).
-- **Tests** — one `tests/run_tests.gd` (SceneTree script with asserts), run with
+- **Tests** — no framework: a runner `tests/run_tests.gd` (SceneTree script) runs every `test_*` method in
+  `tests/test_*.gd`, run with
   `--headless --script res://tests/run_tests.gd`. Covers spark rolls, inheritance and inspiration odds with fixed
   seeds, grade breakpoints, order matching, evolution branching, save/load round trip.
 
