@@ -56,5 +56,9 @@ them in the Inspector. **Project > Tools > Creatures: Import monster pack…** c
 `creatures/frames/` and a starter Species in `data/species/` for each variant. It never overwrites an existing
 file; delete a file first to regenerate it. Tests: `godot --headless --path . -s res://tests/run_tests.gd`.
 
+The tests and the Db need the licensed pack art, which is git-ignored: on a fresh clone, drop the monster packs
+into `asset-pipeline/80_Monster_Packs/` and run the Creatures import (and the UI pack sync, above) before running
+tests, otherwise `test_content` fails and SpriteFrames report missing textures.
+
 Rule for all Godot work (see `CLAUDE.md`): changes go through the editor, and anything generated is an explicit
 editor tool, never a script that silently overwrites editor-editable files.
