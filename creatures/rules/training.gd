@@ -15,7 +15,7 @@ static func train(c: CreatureData, stat: String, location: Location, db: Db, rng
 			mult += 0.25
 		if p.disfavored_stat == stat:
 			mult -= 0.25
-	mult *= 0.5 + c.mood / 100.0
+	mult *= 0.5 + clampi(c.mood, 0, 100) / 100.0
 	var before: int = c.stats[stat]
 	var cap: int = c.potential[stat]
 	c.stats[stat] = mini(before + roundi(BASE_GAIN * mult), cap)

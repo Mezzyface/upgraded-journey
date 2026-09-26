@@ -40,24 +40,41 @@ func to_dict() -> Dictionary:
 	}
 
 
-## Creatures whose species no longer exists in `db` are skipped with a warning, so removing content never
-## makes an old save unloadable.
+## Creatures whose species no longer exists in `db`, or whose record has a type a save shouldn't have
+## (hand-edited or corrupted), are skipped with a warning -- never fatal to the rest of the load. A
+## non-Array "creatures" is itself invalid: returns null rather than silently loading nothing.
 static func from_dict(d: Dictionary, db: Db) -> GameState:
+	var creatures_v: Variant = d.get("creatures", [])
+	if creatures_v is not Array:
+		push_warning("save: 'creatures' is not a list; save not loaded")
+		return null
 	var g := GameState.new()
-	g.day = int(d.get("day", 1))
-	g.ap = int(d.get("ap", START_AP))
-	g.money = int(d.get("money", 0))
-	g.reputation = int(d.get("reputation", 0))
-	g.next_id = int(d.get("next_id", 1))
-	for cd in d.get("creatures", []):
+	g.day = _int_field(d, "day", g.day)
+	g.ap = _int_field(d, "ap", g.ap)
+	g.money = _int_field(d, "money", g.money)
+	g.reputation = _int_field(d, "reputation", g.reputation)
+	g.next_id = _int_field(d, "next_id", g.next_id)
+	var highest_id := 0
+	for cd in creatures_v:
 		if cd is not Dictionary:
+			push_warning("save: a creature record is not an object; skipped")
 			continue
 		var c := CreatureData.from_dict(cd)
+		if c == null:
+			push_warning("save: a creature record has invalid fields; skipped")
+			continue
 		if not db.species.has(c.species):
 			push_warning("save: creature #%d has unknown species '%s'; skipped" % [c.id, c.species])
 			continue
 		g.creatures[c.id] = c
+		highest_id = maxi(highest_id, c.id)
+	g.next_id = maxi(g.next_id, highest_id + 1)  # never reuse an id, even if the saved next_id fell behind
 	return g
+
+
+static func _int_field(d: Dictionary, key: String, def: int) -> int:
+	var v: Variant = d.get(key, def)
+	return int(v) if (v is int or v is float) else def
 
 
 ## Writes to a temp file first, then renames, so a crash mid-write never destroys the previous save.
@@ -79,7 +96,11 @@ static func load_file(db: Db, path := SAVE_PATH) -> GameState:
 	if data is not Dictionary:
 		push_warning("save: %s is not valid JSON" % path)
 		return null
-	var version := int(data.get("version", 0))
+	var version_v: Variant = data.get("version", 0)
+	if version_v is not int and version_v is not float:
+		push_warning("save: %s has a non-numeric version" % path)
+		return null
+	var version := int(version_v)
 	if version < 1 or version > SAVE_VERSION:
 		push_warning("save: %s has unsupported version %d" % [path, version])
 		return null

@@ -14,6 +14,15 @@ func test_gain_uses_personality_and_mood() -> void:
 	eq(p["gain"], 27, "40 * 0.75 * (0.5 + 0.40)")
 
 
+func test_mood_multiplier_is_clamped_even_if_set_externally() -> void:
+	var db := Fixtures.db()
+	var st := GameState.new()
+	var c := Fixtures.adult(st, "spider", 200, 500)
+	c.mood = 150  # e.g. from a hand-edited save; must not inflate the gain multiplier past 1.5
+	var r := Training.train(c, "guard", null, db, Fixtures.rng())
+	eq(r["gain"], 60, "40 * 1.5 (mood clamped to 100), no favored/disfavored stat")
+
+
 func test_gain_never_exceeds_potential() -> void:
 	var db := Fixtures.db()
 	var st := GameState.new()
