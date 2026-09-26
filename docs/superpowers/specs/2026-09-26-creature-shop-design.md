@@ -115,7 +115,7 @@ the branch (first satisfied in list order).
    |-----------------|----|-----------------------------------------------------------------------------------------|
    | Train           | 1  | a creature does a drill: stat gain toward potential; the drill location may grant a learned trait |
    | Care            | 1  | feed / play: personality and mood                                                        |
-   | Breed           | 2  | two retired, compatible creatures make an egg (hatches ~2 days, adult ~3 more)           |
+   | Breed           | 2  | two retired, compatible creatures make an egg (hatches in 2 days, adult 4 days later)           |
    | Expedition      | 2  | up to 3 creatures go to a location; stats/traits vs its challenges; return in the evening with wild eggs/captures, materials, experience, possibly an injury |
    | Retire          | 0  | move a creature to the breeding stable; locks its sparks                                |
    | Market          | 0  | buy feed, items, eggs; sell surplus creatures cheaply                                   |
