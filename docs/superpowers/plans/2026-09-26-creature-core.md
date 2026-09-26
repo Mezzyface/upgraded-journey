@@ -2399,3 +2399,22 @@ GameState + day phases), `Events` bus, care actions and the care-learned traits,
 (`Expedition.resolve`), order board generation from `OrderTemplate`s, the shop scene with pens, all panels
 (orders, creature card with pedigree and compatibility marks, breeding, training, expedition, market, day
 summary), Maaack Menus Template, and the seeded 10-day playthrough from the spec's "Done when" list.
+
+## Carry-over into Plan 2 (from the Plan 1 final review, 2026-09-26)
+
+Must-do first tasks:
+- Fold orphan ids into `next_id` in `GameState.from_dict` (a hand-edited save with a lowered `next_id` lets a recovered
+  orphan overwrite a creature that reused its id); tighten the orphan test's A-or-B assertion.
+- Give Darksight a source (a location/care trait or Spider Albino eggs from market/expedition): today Spider Albino is
+  unreachable in a fresh game and the 2-generation trait-spark goal cannot be played.
+
+Rulings needed / behavior to add with the day loop:
+- Should retired creatures still evolve in the stable? (today they do; it changes species after sparks are locked)
+- Rules-level guards: retired creatures cannot train; only adults can retire.
+- Call `Training.learn_moves` after evolution; decide same-evening evolution (spec order implies it; today it is the next day).
+- Missing spec pieces: `held_item` evolution condition; a per-creature "raised here" flag for the Gene Scanner mystery rule.
+- Save the RNG state for the seeded 10-day playthrough.
+- Pens: idle fallback for variants without `move_*` (party_mushroom), `melee` vs `attack` naming, spider has no attack.
+- Importer: 12 of 80 packs use `Spritesheet/` (singular) — handle when importing more packs.
+- Owner check once in the editor: Tools > "Creatures: Import monster pack…" is present, species/moves open and edit in
+  the Inspector, and the ResourceTables tab shows data/ folders (MCP screenshots cannot capture docks).
