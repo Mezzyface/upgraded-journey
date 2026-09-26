@@ -1,3 +1,4 @@
+@tool
 class_name Personality
 extends Resource
 ## Training on the favored stat gains 25% more, on the disfavored stat 25% less.

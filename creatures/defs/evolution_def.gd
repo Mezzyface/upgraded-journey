@@ -1,3 +1,4 @@
+@tool
 class_name EvolutionDef
 extends Resource
 ## One evolution branch. Every set condition must hold; unset ones are ignored.

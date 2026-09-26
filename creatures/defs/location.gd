@@ -1,3 +1,4 @@
+@tool
 class_name Location
 extends Resource
 ## A place to train (and, in Plan 2, to send expeditions). Training here may teach `trains_trait`.

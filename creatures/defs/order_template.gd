@@ -1,3 +1,4 @@
+@tool
 class_name OrderTemplate
 extends Resource
 ## A customer request. All `required` groups must pass; `bonus` groups add `bonus_money` when they all pass too.

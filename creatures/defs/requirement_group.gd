@@ -1,3 +1,4 @@
+@tool
 class_name RequirementGroup
 extends Resource
 ## Passes when any one of its requirements passes. An order passes when all its groups pass.

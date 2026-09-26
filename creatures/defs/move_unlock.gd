@@ -1,3 +1,4 @@
+@tool
 class_name MoveUnlock
 extends Resource
 ## A species learns `move` once `stat` reaches `grade`.

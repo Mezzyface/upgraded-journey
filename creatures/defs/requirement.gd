@@ -1,3 +1,4 @@
+@tool
 class_name Requirement
 extends Resource
 ## One condition an order checks. `id` is the species id, line id, stat name, trait id, element, move kind
