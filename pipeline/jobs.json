@@ -1,0 +1,6 @@
+[
+  {"name": "hero_fox",      "type": "portrait", "prompt": "a fox-eared swordswoman in a red dress holding a katana"},
+  {"name": "town_square",   "type": "splash",   "prompt": "a quiet seaside village square at sunset with a fountain"},
+  {"name": "blue_slime",    "type": "sprite",   "prompt": "a blue slime with a tiny crown"},
+  {"name": "button_gem",    "type": "ui",       "prompt": "a square wooden button with a green gem in the center"}
+]
