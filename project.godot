@@ -27,7 +27,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg", "res://addons/godot_omni/plugin.cfg", "res://addons/iol_theme/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg", "res://addons/godot_omni/plugin.cfg", "res://addons/iol_theme/plugin.cfg", "res://addons/creature_tools/plugin.cfg")
 
 [gui]
 

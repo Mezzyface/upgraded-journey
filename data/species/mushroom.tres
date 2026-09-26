@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Species" format=3 uid="uid://b1dqnlq5262ih"]
+
+[ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_w1ni1"]
+[ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_ngib8"]
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_7guxt"]
+[ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_32tiv"]
+[ext_resource type="SpriteFrames" uid="uid://dlbbdkhgmpm20" path="res://creatures/frames/mushroom.tres" id="5_5ucfr"]
+
+[resource]
+script = ExtResource("4_32tiv")
+id = &"mushroom"
+display_name = "Mushroom"
+line = &"mushroom"
+sprite_frames = ExtResource("5_5ucfr")

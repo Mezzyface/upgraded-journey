@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Species" format=3 uid="uid://6ielr0k18s17"]
+
+[ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_yf0uj"]
+[ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_rkb1a"]
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_0crg5"]
+[ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_71dbt"]
+[ext_resource type="SpriteFrames" uid="uid://daf1qj1w8mywh" path="res://creatures/frames/spider_albino.tres" id="5_jx7kk"]
+
+[resource]
+script = ExtResource("4_71dbt")
+id = &"spider_albino"
+display_name = "Spider Albino"
+line = &"spider_albino"
+sprite_frames = ExtResource("5_jx7kk")

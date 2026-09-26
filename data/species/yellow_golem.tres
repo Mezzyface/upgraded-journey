@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Species" format=3 uid="uid://b5nab1cdtwta"]
+
+[ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_l0xph"]
+[ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_cdqd6"]
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_7okbv"]
+[ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_kba7k"]
+[ext_resource type="SpriteFrames" uid="uid://b76v0ajfc2vxi" path="res://creatures/frames/yellow_golem.tres" id="5_buu24"]
+
+[resource]
+script = ExtResource("4_kba7k")
+id = &"yellow_golem"
+display_name = "Yellow Golem"
+line = &"yellow_golem"
+sprite_frames = ExtResource("5_buu24")

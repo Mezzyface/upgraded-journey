@@ -48,5 +48,13 @@ Scrollbars: the pack draws a scrollbar as a thin bar with a fixed-size knob, whi
 mode "Show Never"), add a `VSlider` beside it with `theme_type_variation = PackScrollBar` and the
 `ui/pack_scroll_bar.gd` script, and point its `scroll_path` at the container. The gallery does this.
 
+## Creatures
+
+Content lives in `data/` as Resources (Species, TraitDef, MoveDef, Personality, Location, OrderTemplate); edit
+them in the Inspector. **Project > Tools > Creatures: Import monster pack…** copies a pack from
+`asset-pipeline/80_Monster_Packs/` into `creatures/pack/` (git-ignored, licensed) and creates a SpriteFrames in
+`creatures/frames/` and a starter Species in `data/species/` for each variant. It never overwrites an existing
+file; delete a file first to regenerate it. Tests: `godot --headless --path . -s res://tests/run_tests.gd`.
+
 Rule for all Godot work (see `CLAUDE.md`): changes go through the editor, and anything generated is an explicit
 editor tool, never a script that silently overwrites editor-editable files.

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Species" format=3 uid="uid://miidqs6crd8d"]
+
+[ext_resource type="Script" uid="uid://dll0h1f63q140" path="res://creatures/defs/evolution_def.gd" id="1_rt8hg"]
+[ext_resource type="Script" uid="uid://hpt7ghiuu0c3" path="res://creatures/defs/move_unlock.gd" id="2_5f8p8"]
+[ext_resource type="Script" uid="uid://bg83x8tnpvfyb" path="res://creatures/defs/trait_def.gd" id="3_fpxfd"]
+[ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="4_ytbty"]
+[ext_resource type="SpriteFrames" uid="uid://bj6lnk0u7rgkw" path="res://creatures/frames/spider_large.tres" id="5_rw7sn"]
+
+[resource]
+script = ExtResource("4_ytbty")
+id = &"spider_large"
+display_name = "Spider Large"
+line = &"spider_large"
+sprite_frames = ExtResource("5_rw7sn")
