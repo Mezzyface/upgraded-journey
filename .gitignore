@@ -1,3 +1,5 @@
-assets/**/*.raw.*
-assets/**/*.review.png
+asset-pipeline/assets/**/*.raw.*
+asset-pipeline/assets/**/*.review.png
+__pycache__/
 Aseprite*
+.godot/

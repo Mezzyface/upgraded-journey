@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "godot-ai": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--isolated",
+        "--no-config",
+        "--no-env-file",
+        "--no-sources",
+        "--no-build",
+        "--index-strategy",
+        "first-index",
+        "--keyring-provider",
+        "disabled",
+        "--index",
+        "https://pypi.org/simple",
+        "--default-index",
+        "https://pypi.org/simple",
+        "--find-links",
+        "https://pypi.org/simple/godot-ai/",
+        "--link-mode",
+        "copy",
+        "--from",
+        "https://github.com/bebabinlarsson-blip/Godot-MCP/releases/download/v5.0.39/godot_ai-5.0.39-py3-none-any.whl",
+        "godot-ai",
+        "--port",
+        "8765"
+      ],
+      "env": {
+        "GODOT_AI_DISABLE_TELEMETRY": "1"
+      }
+    }
+  }
+}
