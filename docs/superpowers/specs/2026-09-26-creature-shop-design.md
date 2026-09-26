@@ -76,9 +76,10 @@ Hunter Stories, Viva Piñata, Chao Garden, Digimon, Temtem and Uma Musume.
 - **Breeding.** Both parents must be retired and share an egg group. The child is one parent's species at random
   (small chance of the evolved form if both parents are evolved). Each parent has a breeding cooldown in days.
 - **Spark pool.** The child carries its parents' sparks and its four grandparents' sparks. Grandparent sparks
-  have lower weight.
-- **Inspiration** happens twice: at hatch and at adulthood. Each spark in the pool procs with a chance from its
-  stars × weight × compatibility. Effects:
+  proc at half the parents' chance (as in Uma Musume).
+- **Inspiration** happens three times: at hatch, at mid-growth (halfway from hatch to adulthood) and at
+  adulthood. Each spark in the pool procs with a chance from its stars × weight (parent 1, grandparent ½) ×
+  compatibility. Effects:
   - stat spark → stat and potential boost,
   - trait spark → the trait is granted outright,
   - move spark → the move is learned early,
@@ -120,8 +121,8 @@ the branch (first satisfied in list order).
    | Market          | 0  | buy feed, items, eggs; sell surplus creatures cheaply                                   |
    | Deliver         | 0  | hand a creature to a customer at the counter                                            |
 
-3. **Evening.** Eggs hatch (inspiration), babies reach adulthood (inspiration), evolution checks, expeditions
-   return, deadlines tick, autosave.
+3. **Evening.** Eggs hatch, babies pass mid-growth and reach adulthood (an inspiration at each), evolution
+   checks, expeditions return, deadlines tick, autosave.
 
 ### Orders
 Requirements are composable pieces with AND / OR groups:
@@ -152,6 +153,24 @@ to Tactics).
 ## 3. Architecture (Godot 4.7)
 
 Follows the repo rule: everything is editable in the Godot editor; generators are explicit editor tools.
+
+### Third-party (all MIT)
+- **[Maaack/Godot-Menus-Template](https://github.com/Maaack/Godot-Menus-Template)** — main menu, options, pause,
+  credits, loading screen; restyled with the Isle of Lore theme. Settings via its `ConfigFile`. Verified to ship
+  no `.tres` save state.
+- **[Edit Resources as Table](https://github.com/don-tnowe/godot-resources-as-sheets-plugin)** — edit folders of
+  our data `.tres` as a spreadsheet in the editor. Editor-only; data stays plain Resources.
+- Later, only when branching conversations exist: **[Dialogue Manager 4](https://github.com/nathanhoad/godot_dialogue_manager)**.
+  Until then customer lines are string templates on the `OrderTemplate`/customer data.
+- Engine instead of addons: `JSON` saves, `ConfigFile` settings, Control drag-and-drop, `AStarGrid2D` (tactics).
+
+### Patterns taken from references
+- **Definitions vs runtime state** (pimea-panimo, PokemonGodWhite): `.tres` definitions are never mutated at
+  runtime; runtime objects (`CreatureData`, orders) reference them by id.
+- **Registries** (pimea-panimo): a `Db` autoload scans `data/<kind>/` at startup and indexes every definition by
+  id, so adding a `.tres` in the editor is all it takes to add content.
+- **Rules as static classes with tests** (pokerecomp's day-care rules): scene-free, deterministic given an RNG.
+- **Event bus** (GDQuest): one `Events` autoload with typed signals between rules/state and UI.
 
 - **Data** — `class_name` Resources with `@export` fields, one `.tres` each under `data/`, edited in the
   Inspector: `Species`, `TraitDef`, `Move`, `Personality`, `OrderTemplate`, `Location`. Evolutions and learnable
@@ -187,7 +206,8 @@ Follows the repo rule: everything is editable in the Godot editor; generators ar
 - Upgrades: extra pen, Gene Scanner, +1 AP.
 
 ### Build order
-Data classes → rules + tests → pack importer → state + save → shop scene + pens → panels → day loop → balance.
+Install addons → data classes + registry → rules + tests → pack importer → state + save → shop scene + pens →
+panels → day loop → menus → balance.
 
 ### Done when
 - 10 in-game days play from a fresh save with no errors.
