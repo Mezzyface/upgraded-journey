@@ -10,7 +10,7 @@ const OUT_DIR := "res://creatures/pack"
 const FRAMES_DIR := "res://creatures/frames"
 const SPECIES_DIR := "res://data/species"
 const CELL := 128
-const FACINGS: PackedStringArray = ["down", "left", "right", "up"]
+const FACINGS: PackedStringArray = ["down", "left", "right", "up"]  ## sheet rows top to bottom; confirmed visually on spider (2026-09-26)
 const FPS := 8.0
 
 
