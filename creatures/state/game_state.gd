@@ -13,6 +13,8 @@ var money := 500
 var reputation := 0
 var next_id := 1
 var creatures: Dictionary[int, CreatureData] = {}  ## every creature ever owned; GONE ones stay for pedigrees
+var orphans: Array[Dictionary] = []  ## raw records that failed to load (unknown species, malformed); kept
+## as-is and written back out on save so a later content fix or re-import can bring them back
 
 
 func new_id() -> int:
@@ -36,7 +38,7 @@ func to_dict() -> Dictionary:
 		"money": money,
 		"reputation": reputation,
 		"next_id": next_id,
-		"creatures": creatures.values().map(func(c: CreatureData) -> Dictionary: return c.to_dict()),
+		"creatures": creatures.values().map(func(c: CreatureData) -> Dictionary: return c.to_dict()) + orphans.duplicate(true),
 	}
 
 
@@ -62,9 +64,11 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 		var c := CreatureData.from_dict(cd)
 		if c == null:
 			push_warning("save: a creature record has invalid fields; skipped")
+			g.orphans.append(cd)
 			continue
 		if not db.species.has(c.species):
 			push_warning("save: creature #%d has unknown species '%s'; skipped" % [c.id, c.species])
+			g.orphans.append(cd)
 			continue
 		g.creatures[c.id] = c
 		highest_id = maxi(highest_id, c.id)

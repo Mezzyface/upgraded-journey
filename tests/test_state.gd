@@ -78,6 +78,26 @@ func test_unknown_species_is_skipped_not_fatal() -> void:
 	check(back.creatures.has(2), "slime kept")
 
 
+func test_unloadable_creatures_are_kept_as_orphans_and_survive_a_resave() -> void:
+	var db := Fixtures.db()
+	var d := _sample().to_dict()
+	d["creatures"][0]["species"] = "removed_species"
+	var loaded := GameState.from_dict(d, db)
+	eq(loaded.orphans.size(), 1, "the unknown-species record is kept, not lost")
+	eq(loaded.creatures.size(), 1, "still only the valid creature loads")
+
+	# A content fix restores the species; the orphan comes back on the next load.
+	var resaved := loaded.to_dict()
+	var reloaded := GameState.from_dict(resaved, db)
+	check(reloaded.creatures.has(1) or reloaded.orphans.size() == 1, "orphan preserved through a resave")
+
+	var full_db: Db = Fixtures.db()
+	full_db.add(Fixtures.species("removed_species", "spider", 1, "dark", "bug", []))
+	var recovered := GameState.from_dict(resaved, full_db)
+	check(recovered.creatures.has(1), "creature is back once its species exists again")
+	eq(recovered.orphans.size(), 0, "no longer an orphan")
+
+
 func test_malformed_creature_fields_are_skipped_not_fatal() -> void:
 	var d := _sample().to_dict()
 	var base: Dictionary = d["creatures"][0].duplicate(true)
