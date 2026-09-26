@@ -31,6 +31,12 @@ func test_load_dir_reads_tres_files() -> void:
 	eq(db.species.size(), 0, "missing folders are fine")
 
 
+func test_add_null_does_not_error() -> void:
+	var db := Db.new()
+	db.add(null)  # e.g. a definition whose art failed to load on a fresh clone; logs "failed to load" by design
+	eq(db.species.size(), 0, "nothing added")
+
+
 func test_requirement_descriptions() -> void:
 	var g := RequirementGroup.new()
 	g.any_of.assign([Fixtures.req("move_element", "earth"), Fixtures.req("move_kind", "damaging")])

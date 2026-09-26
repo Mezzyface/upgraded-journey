@@ -19,11 +19,19 @@ static func load_dir(root := "res://data") -> Db:
 		var dir := root.path_join(sub)
 		for file in ResourceLoader.list_directory(dir):
 			if file.ends_with(".tres") or file.ends_with(".res"):
-				db.add(load(dir.path_join(file)))
+				var path := dir.path_join(file)
+				var def: Resource = load(path)
+				if def == null:
+					push_error("Db: failed to load %s" % path)
+					continue
+				db.add(def)
 	return db
 
 
 func add(def: Resource) -> void:
+	if def == null:
+		push_error("Db: failed to load a definition")
+		return
 	var table: Dictionary
 	if def is Species:
 		table = species
