@@ -40,8 +40,13 @@ the committed theme just works (Rebuild is not needed). Headless equivalent: `ad
 
 `ui/gallery.tscn` (the current main scene) shows every themed control. Type variations available via
 `theme_type_variation`: `DecoratedButton`, `HeaderLabel`, `BannerLabel`, `OnDarkLabel`, `FlatPanel`, `BarPanel`,
-`InsetPanel`, `InventorySlot`, `InventorySlotSelected`, `NamePlate`. Round buttons are not nine-patch art; use a
+`InsetPanel`, `InventorySlot`, `InventorySlotSelected`, `NamePlate`, `PackScrollBar`. Round buttons are not nine-patch art; use a
 `TextureButton` with `button_round_*` as in the gallery.
+
+Scrollbars: the pack draws a scrollbar as a thin bar with a fixed-size knob, which is a `VSlider` in Godot (a
+`VScrollBar` stretches its grabber). For a scrolling page, hide the ScrollContainer's own bar (vertical scroll
+mode "Show Never"), add a `VSlider` beside it with `theme_type_variation = PackScrollBar` and the
+`ui/pack_scroll_bar.gd` script, and point its `scroll_path` at the container. The gallery does this.
 
 Rule for all Godot work (see `CLAUDE.md`): changes go through the editor, and anything generated is an explicit
 editor tool, never a script that silently overwrites editor-editable files.

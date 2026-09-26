@@ -49,6 +49,8 @@ const TEX := {
 	"scrollbar_horizontal_bar_3": ["scrollbar_horizontal_bar.standard/scrollbar_horizontal_bar_3.png", [12, 0, 12, 0]],
 	"scrollbar_vertical_button_1": ["scrollbar_vertical_button.standard/scrollbar_vertical_button_1.png", [13, 14, 13, 14]],
 	"scrollbar_vertical_button_pressed_1": ["scrollbar_vertical_button_pressed.standard/scrollbar_vertical_button_pressed_1.png", [13, 14, 13, 14]],
+	"scrollbar_vertical_button_2": ["scrollbar_vertical_button.standard/scrollbar_vertical_button_2.png", null],
+	"scrollbar_vertical_button_pressed_2": ["scrollbar_vertical_button_pressed.standard/scrollbar_vertical_button_pressed_2.png", null],
 	"scrollbar_horizontal_button_1": ["scrollbar_horizontal_button.standard/scrollbar_horizontal_button_1.png", [14, 13, 14, 13]],
 	"scrollbar_horizontal_button_pressed_1": ["scrollbar_horizontal_button_pressed.standard/scrollbar_horizontal_button_pressed_1.png", [14, 13, 14, 13]],
 	"scrollbar_diamond_0": ["scrollbar_diamond.standard/scrollbar_diamond_0.png", null],
@@ -192,14 +194,14 @@ static func build() -> Error:
 	t.set_color("font_outline_color", "ProgressBar", BLUE_LINE)
 	t.set_constant("outline_size", "ProgressBar", 3)
 
-	# Scrollbars: gray track, blue pill grabber overhanging the 12px track by 8px each side.
+	# Scrollbars: gray track widened to the 28px pill grabber so the two sit flush.
 	# Tracks need content margins or the stylebox reports zero thickness.
-	for sb in [["VScrollBar", "vertical", [8, 0, 8, 0], [6, 0, 6, 0]], ["HScrollBar", "horizontal", [0, 8, 0, 8], [0, 6, 0, 6]]]:
-		t.set_stylebox("scroll", sb[0], _box("scrollbar_%s_bar_2" % sb[1], sb[3]))
-		t.set_stylebox("scroll_focus", sb[0], _box("scrollbar_%s_bar_2" % sb[1], sb[3]))
-		t.set_stylebox("grabber", sb[0], _box("scrollbar_%s_button_1" % sb[1], [0, 0, 0, 0], Color.WHITE, sb[2]))
-		t.set_stylebox("grabber_highlight", sb[0], _box("scrollbar_%s_button_1" % sb[1], [0, 0, 0, 0], BRIGHT, sb[2]))
-		t.set_stylebox("grabber_pressed", sb[0], _box("scrollbar_%s_button_pressed_1" % sb[1], [0, 0, 0, 0], Color.WHITE, sb[2]))
+	for sb in [["VScrollBar", "vertical", [14, 0, 14, 0]], ["HScrollBar", "horizontal", [0, 14, 0, 14]]]:
+		t.set_stylebox("scroll", sb[0], _box("scrollbar_%s_bar_2" % sb[1], sb[2]))
+		t.set_stylebox("scroll_focus", sb[0], _box("scrollbar_%s_bar_2" % sb[1], sb[2]))
+		t.set_stylebox("grabber", sb[0], _box("scrollbar_%s_button_1" % sb[1], [0, 0, 0, 0]))
+		t.set_stylebox("grabber_highlight", sb[0], _box("scrollbar_%s_button_1" % sb[1], [0, 0, 0, 0], BRIGHT))
+		t.set_stylebox("grabber_pressed", sb[0], _box("scrollbar_%s_button_pressed_1" % sb[1], [0, 0, 0, 0]))
 
 	# Sliders: white track, blue filled part, diamond knob
 	for sl in [["HSlider", "horizontal", [0, 6, 0, 6]], ["VSlider", "vertical", [6, 0, 6, 0]]]:
@@ -209,6 +211,16 @@ static func build() -> Error:
 		t.set_icon("grabber", sl[0], _tex("scrollbar_diamond_0"))
 		t.set_icon("grabber_highlight", sl[0], _tex("scrollbar_diamond_pressed_0"))
 		t.set_icon("grabber_disabled", sl[0], _tex("scrollbar_diamond_0"))
+
+	# PackScrollBar: the pack draws scrollbars as a thin bar with a fixed-size knob, which is a VSlider in Godot
+	# (VScrollBar stretches its grabber). ui/pack_scroll_bar.gd drives a ScrollContainer with it.
+	t.set_type_variation("PackScrollBar", "VSlider")
+	t.set_stylebox("slider", "PackScrollBar", _box("scrollbar_vertical_bar_2", [6, 0, 6, 0]))
+	t.set_stylebox("grabber_area", "PackScrollBar", _empty())
+	t.set_stylebox("grabber_area_highlight", "PackScrollBar", _empty())
+	t.set_icon("grabber", "PackScrollBar", _tex("scrollbar_vertical_button_2"))
+	t.set_icon("grabber_highlight", "PackScrollBar", _tex("scrollbar_vertical_button_pressed_2"))
+	t.set_icon("grabber_disabled", "PackScrollBar", _tex("scrollbar_vertical_button_2"))
 
 	# Popups (OptionButton / MenuButton dropdowns) and SpinBox reuse the dialog box
 	t.set_stylebox("panel", "PopupMenu", _box("dialog_box_0", [12, 12, 12, 12]))

@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Upgraded Journey"
+run/main_scene="res://ui/gallery.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
-run/main_scene="res://ui/gallery.tscn"
 
 [autoload]
 
@@ -25,13 +25,13 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 
-[gui]
-
-theme/custom="res://ui/theme/isle_of_lore.tres"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg", "res://addons/godot_omni/plugin.cfg", "res://addons/iol_theme/plugin.cfg")
+
+[gui]
+
+theme/custom="res://ui/theme/isle_of_lore.tres"
 
 [rendering]
 

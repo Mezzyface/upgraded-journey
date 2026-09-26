@@ -27,6 +27,8 @@ editor cannot open and change, and nothing may silently overwrite what was chang
   The pack art it references lives in `ui/theme/pack/` (git-ignored, licensed) and is filled by the sync tool
   from `asset-pipeline/ui-pack/`.
 - `ui/gallery.tscn` shows every themed control; keep it updated when adding theme types.
+- Page scrollbars: `VSlider` + `PackScrollBar` variation + `ui/pack_scroll_bar.gd` beside a ScrollContainer
+  whose own bar is hidden (see README). Do not restyle `VScrollBar` to fake it; its grabber always stretches.
 - `addons/godot_ai`, `addons/godot_omni`: Godot-MCP. Server port 8765 (Docker owns 8000). Start Claude Code
   before opening the editor so the plugin attaches to the server Claude Code owns.
 - Asset packs and installers are git-ignored; do not commit licensed art.

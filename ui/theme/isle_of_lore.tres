@@ -1,42 +1,44 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" format=3 uid="uid://bevl56hmkcn3r"]
 
-[ext_resource type="FontFile" path="res://ui/theme/pack/HoneyPigeon.ttf" id="1"]
-[ext_resource type="FontFile" path="res://ui/theme/pack/honeyblot_caps.ttf" id="2"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/button_square_0.png" id="3"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/button_square_pressed_0.png" id="4"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/button_square_decorated_0.png" id="5"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/button_square_decorated_pressed_0.png" id="6"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/checkbox_1.png" id="7"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/checkbox_0.png" id="8"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/checkbox_3.png" id="9"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/radio_button_1.png" id="10"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/radio_button_0.png" id="11"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/toggle_on.png" id="12"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/toggle_off.png" id="13"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/dialog_box_0.png" id="14"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/box_0.png" id="15"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/panel_0.png" id="16"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/dialog_box_top_right_bg_0.png" id="17"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/inventory_slot_0.png" id="18"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/inventory_slot_1.png" id="19"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/name_plate_0.png" id="20"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/tooltip_0.png" id="21"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/banner_0.png" id="22"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/text_input_0.png" id="23"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/progress_bar_0.png" id="24"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/progress_bar_1.png" id="25"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_vertical_bar_2.png" id="26"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_vertical_button_1.png" id="27"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_vertical_button_pressed_1.png" id="28"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_horizontal_bar_2.png" id="29"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_horizontal_button_1.png" id="30"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_horizontal_button_pressed_1.png" id="31"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_horizontal_bar_3.png" id="32"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_horizontal_bar_1.png" id="33"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_diamond_0.png" id="34"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_diamond_pressed_0.png" id="35"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_vertical_bar_3.png" id="36"]
-[ext_resource type="Texture2D" path="res://ui/theme/pack/scrollbar_vertical_bar_1.png" id="37"]
+[ext_resource type="FontFile" uid="uid://b2g4fral2lj45" path="res://ui/theme/pack/HoneyPigeon.ttf" id="1"]
+[ext_resource type="FontFile" uid="uid://bbc4oncl26sbr" path="res://ui/theme/pack/honeyblot_caps.ttf" id="2"]
+[ext_resource type="Texture2D" uid="uid://ddq5453881c4b" path="res://ui/theme/pack/button_square_0.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dw0d34kw76c8b" path="res://ui/theme/pack/button_square_pressed_0.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dogktwymja6xg" path="res://ui/theme/pack/button_square_decorated_0.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://ii4cqit1djnq" path="res://ui/theme/pack/button_square_decorated_pressed_0.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://bi37shreuxh66" path="res://ui/theme/pack/checkbox_1.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://4gdno11bmrtx" path="res://ui/theme/pack/checkbox_0.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://bxthsu64yp8ss" path="res://ui/theme/pack/checkbox_3.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cewjuny3godar" path="res://ui/theme/pack/radio_button_1.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://ewnk3kslui1w" path="res://ui/theme/pack/radio_button_0.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://dupalocall4dq" path="res://ui/theme/pack/toggle_on.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://b5uwob215j66c" path="res://ui/theme/pack/toggle_off.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://0hd4dlaevdq3" path="res://ui/theme/pack/dialog_box_0.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://drge82a1masjp" path="res://ui/theme/pack/box_0.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://djxe4cb88abbg" path="res://ui/theme/pack/panel_0.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://bmpru8dc157wd" path="res://ui/theme/pack/dialog_box_top_right_bg_0.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://b84panvx53h1m" path="res://ui/theme/pack/inventory_slot_0.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://bjvc63xj6ik4t" path="res://ui/theme/pack/inventory_slot_1.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://doircqacp35tk" path="res://ui/theme/pack/name_plate_0.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://d1n67tkn4shaj" path="res://ui/theme/pack/tooltip_0.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://dh4mk3clultm7" path="res://ui/theme/pack/banner_0.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://boch7g6y8b88i" path="res://ui/theme/pack/text_input_0.png" id="23"]
+[ext_resource type="Texture2D" uid="uid://cio4mgfart2so" path="res://ui/theme/pack/progress_bar_0.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://dlxcav8118v51" path="res://ui/theme/pack/progress_bar_1.png" id="25"]
+[ext_resource type="Texture2D" uid="uid://dx8b0vvd7awqo" path="res://ui/theme/pack/scrollbar_vertical_bar_2.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://oflxsw4hs45c" path="res://ui/theme/pack/scrollbar_vertical_button_1.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://dy24gyujqblk4" path="res://ui/theme/pack/scrollbar_vertical_button_pressed_1.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://bjsbpyuk6680e" path="res://ui/theme/pack/scrollbar_vertical_button_2.png" id="28_nniib"]
+[ext_resource type="Texture2D" uid="uid://b5fdv4abqutje" path="res://ui/theme/pack/scrollbar_horizontal_bar_2.png" id="29"]
+[ext_resource type="Texture2D" uid="uid://kggtr6yrq5ui" path="res://ui/theme/pack/scrollbar_vertical_button_pressed_2.png" id="29_p3g3b"]
+[ext_resource type="Texture2D" uid="uid://crpdd4xx8f7ui" path="res://ui/theme/pack/scrollbar_horizontal_button_1.png" id="30"]
+[ext_resource type="Texture2D" uid="uid://cqkotgf51o13k" path="res://ui/theme/pack/scrollbar_horizontal_button_pressed_1.png" id="31"]
+[ext_resource type="Texture2D" uid="uid://dcvd765pwfkuf" path="res://ui/theme/pack/scrollbar_horizontal_bar_3.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://d06rrrcq1fl0d" path="res://ui/theme/pack/scrollbar_horizontal_bar_1.png" id="33"]
+[ext_resource type="Texture2D" uid="uid://clkibdbs4qlhf" path="res://ui/theme/pack/scrollbar_diamond_0.png" id="34"]
+[ext_resource type="Texture2D" uid="uid://bkh6rtlsr4pt5" path="res://ui/theme/pack/scrollbar_diamond_pressed_0.png" id="35"]
+[ext_resource type="Texture2D" uid="uid://dieha8gub5a8" path="res://ui/theme/pack/scrollbar_vertical_bar_3.png" id="36"]
+[ext_resource type="Texture2D" uid="uid://ff3yilbuhscc" path="res://ui/theme/pack/scrollbar_vertical_bar_1.png" id="37"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r3xfk"]
 content_margin_left = 40.0
@@ -239,8 +241,6 @@ texture_margin_left = 14.0
 texture_margin_top = 13.0
 texture_margin_right = 14.0
 texture_margin_bottom = 13.0
-expand_margin_top = 8.0
-expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0ms74"]
 content_margin_left = 0.0
@@ -252,8 +252,6 @@ texture_margin_left = 14.0
 texture_margin_top = 13.0
 texture_margin_right = 14.0
 texture_margin_bottom = 13.0
-expand_margin_top = 8.0
-expand_margin_bottom = 8.0
 modulate_color = Color(1.08, 1.08, 1.08, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qca21"]
@@ -266,23 +264,21 @@ texture_margin_left = 14.0
 texture_margin_top = 13.0
 texture_margin_right = 14.0
 texture_margin_bottom = 13.0
-expand_margin_top = 8.0
-expand_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7nqwc"]
 content_margin_left = 0.0
-content_margin_top = 6.0
+content_margin_top = 14.0
 content_margin_right = 0.0
-content_margin_bottom = 6.0
+content_margin_bottom = 14.0
 texture = ExtResource("29")
 texture_margin_left = 12.0
 texture_margin_right = 12.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cixp8"]
 content_margin_left = 0.0
-content_margin_top = 6.0
+content_margin_top = 14.0
 content_margin_right = 0.0
-content_margin_bottom = 6.0
+content_margin_bottom = 14.0
 texture = ExtResource("29")
 texture_margin_left = 12.0
 texture_margin_right = 12.0
@@ -386,6 +382,17 @@ texture_margin_left = 18.0
 texture_margin_top = 18.0
 texture_margin_right = 18.0
 texture_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r3udu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1lm4e"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5ldj5"]
+content_margin_left = 6.0
+content_margin_right = 6.0
+texture = ExtResource("26")
+texture_margin_top = 12.0
+texture_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lyb4q"]
 content_margin_left = 20.0
@@ -502,8 +509,6 @@ texture_margin_left = 13.0
 texture_margin_top = 14.0
 texture_margin_right = 13.0
 texture_margin_bottom = 14.0
-expand_margin_left = 8.0
-expand_margin_right = 8.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jxrjb"]
 content_margin_left = 0.0
@@ -515,8 +520,6 @@ texture_margin_left = 13.0
 texture_margin_top = 14.0
 texture_margin_right = 13.0
 texture_margin_bottom = 14.0
-expand_margin_left = 8.0
-expand_margin_right = 8.0
 modulate_color = Color(1.08, 1.08, 1.08, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2er1p"]
@@ -529,22 +532,20 @@ texture_margin_left = 13.0
 texture_margin_top = 14.0
 texture_margin_right = 13.0
 texture_margin_bottom = 14.0
-expand_margin_left = 8.0
-expand_margin_right = 8.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tosb0"]
-content_margin_left = 6.0
+content_margin_left = 14.0
 content_margin_top = 0.0
-content_margin_right = 6.0
+content_margin_right = 14.0
 content_margin_bottom = 0.0
 texture = ExtResource("26")
 texture_margin_top = 12.0
 texture_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n7spe"]
-content_margin_left = 6.0
+content_margin_left = 14.0
 content_margin_top = 0.0
-content_margin_right = 6.0
+content_margin_right = 14.0
 content_margin_bottom = 0.0
 texture = ExtResource("26")
 texture_margin_top = 12.0
@@ -688,6 +689,13 @@ NamePlate/base_type = &"PanelContainer"
 NamePlate/styles/panel = SubResource("StyleBoxTexture_3swra")
 OnDarkLabel/base_type = &"Label"
 OnDarkLabel/colors/font_color = Color(1, 1, 1, 1)
+PackScrollBar/base_type = &"VSlider"
+PackScrollBar/icons/grabber = ExtResource("28_nniib")
+PackScrollBar/icons/grabber_disabled = ExtResource("28_nniib")
+PackScrollBar/icons/grabber_highlight = ExtResource("29_p3g3b")
+PackScrollBar/styles/grabber_area = SubResource("StyleBoxEmpty_r3udu")
+PackScrollBar/styles/grabber_area_highlight = SubResource("StyleBoxEmpty_1lm4e")
+PackScrollBar/styles/slider = SubResource("StyleBoxTexture_5ldj5")
 Panel/styles/panel = SubResource("StyleBoxTexture_lyb4q")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_kdqxu")
 PopupMenu/colors/font_color = Color(0.17, 0.17, 0.17, 1)
