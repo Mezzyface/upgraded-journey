@@ -3,3 +3,5 @@ asset-pipeline/assets/**/*.review.png
 __pycache__/
 Aseprite*
 .godot/
+asset-pipeline/80_Monster_Packs/
+asset-pipeline/ui-pack/
