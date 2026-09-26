@@ -1,0 +1,32 @@
+# Upgraded Journey
+
+Godot 4.7 project at the repo root; AI asset pipeline in `asset-pipeline/` (see its README).
+
+## Standing rule: everything Godot goes through the Godot editor
+
+The owner edits scenes, themes, scripts and settings in the Godot editor. Nothing may exist in a form the
+editor cannot open and change, and nothing may silently overwrite what was changed there.
+
+- Make Godot changes with the `godot-ai` MCP tools (scene, node, script, resource, project, editor_screenshot)
+  while the editor is open, so the editor is the source of truth and shows the change immediately.
+  Fall back to writing `.tscn` / `.tres` / `.gd` text only when the MCP is unavailable, and then confirm the
+  file opens cleanly in the editor (`--headless --import` with no errors is the minimum check).
+- No generated Godot files. If something must be produced from external data (art packs, spreadsheets), make it
+  an editor tool: an `EditorPlugin` with a `Tools` menu item or dock, or an `EditorScript`, written in GDScript
+  under `addons/`. It runs on demand, and any overwrite of an editor-editable resource is explicit and named
+  in the menu item ("... (overwrites edits)").
+- If an edit would be tedious to make by hand in the editor, build the editor tool that makes it easy rather
+  than scripting around the editor.
+- Verify visually: take an `editor_screenshot` (or run the scene with the gallery's `--screenshot` flag) after
+  UI or scene changes.
+
+## Layout
+
+- `ui/theme/isle_of_lore.tres` is the project theme (`gui/theme/custom`). Edit it in the Theme editor.
+  `Project > Tools > Isle of Lore` has "Sync UI pack files" and "Rebuild theme from pack (overwrites edits)".
+  The pack art it references lives in `ui/theme/pack/` (git-ignored, licensed) and is filled by the sync tool
+  from `asset-pipeline/ui-pack/`.
+- `ui/gallery.tscn` shows every themed control; keep it updated when adding theme types.
+- `addons/godot_ai`, `addons/godot_omni`: Godot-MCP. Server port 8765 (Docker owns 8000). Start Claude Code
+  before opening the editor so the plugin attaches to the server Claude Code owns.
+- Asset packs and installers are git-ignored; do not commit licensed art.

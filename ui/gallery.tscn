@@ -1,0 +1,335 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://ui/gallery.gd" id="script"]
+[ext_resource type="Texture2D" path="res://ui/theme/pack/button_round_small_0.png" id="round"]
+[ext_resource type="Texture2D" path="res://ui/theme/pack/button_round_small_pressed_0.png" id="round_p"]
+[ext_resource type="Texture2D" path="res://ui/theme/pack/heart_piece_full_5.png" id="heart_full"]
+[ext_resource type="Texture2D" path="res://ui/theme/pack/heart_piece_half_3.png" id="heart_half"]
+[ext_resource type="Texture2D" path="res://ui/theme/pack/heart_piece_empty_0.png" id="heart_empty"]
+[ext_resource type="Texture2D" path="res://ui/theme/pack/example_portrait.png" id="portrait"]
+
+[sub_resource type="ButtonGroup" id="radio_group"]
+
+[node name="Gallery" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("script")
+
+[node name="World" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.42, 0.68, 0.55, 1)
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="Rows" type="VBoxContainer" parent="Scroll/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"BannerLabel"
+text = "Isle of Lore Theme"
+horizontal_alignment = 1
+
+[node name="H1" type="Label" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Buttons"
+
+[node name="Buttons" type="HBoxContainer" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Play" type="Button" parent="Scroll/Margin/Rows/Buttons"]
+layout_mode = 2
+tooltip_text = "Tooltips use the dark tooltip box."
+text = "Play"
+
+[node name="Disabled" type="Button" parent="Scroll/Margin/Rows/Buttons"]
+layout_mode = 2
+disabled = true
+text = "Disabled"
+
+[node name="Toggle" type="Button" parent="Scroll/Margin/Rows/Buttons"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Pressed"
+
+[node name="Decorated" type="Button" parent="Scroll/Margin/Rows/Buttons"]
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Options"
+
+[node name="Round" type="TextureButton" parent="Scroll/Margin/Rows/Buttons"]
+layout_mode = 2
+texture_normal = ExtResource("round")
+texture_pressed = ExtResource("round_p")
+
+[node name="Option" type="OptionButton" parent="Scroll/Margin/Rows/Buttons"]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Easy"
+popup/item_0/id = 0
+popup/item_1/text = "Normal"
+popup/item_1/id = 1
+popup/item_2/text = "Hard"
+popup/item_2/id = 2
+
+[node name="H2" type="Label" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Checks and switches"
+
+[node name="Checks" type="HBoxContainer" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Music" type="CheckBox" parent="Scroll/Margin/Rows/Checks"]
+layout_mode = 2
+button_pressed = true
+text = "Music"
+
+[node name="Sfx" type="CheckBox" parent="Scroll/Margin/Rows/Checks"]
+layout_mode = 2
+text = "Sound effects"
+
+[node name="Locked" type="CheckBox" parent="Scroll/Margin/Rows/Checks"]
+layout_mode = 2
+disabled = true
+button_pressed = true
+text = "Locked"
+
+[node name="RadioA" type="CheckBox" parent="Scroll/Margin/Rows/Checks"]
+layout_mode = 2
+button_pressed = true
+button_group = SubResource("radio_group")
+text = "Keyboard"
+
+[node name="RadioB" type="CheckBox" parent="Scroll/Margin/Rows/Checks"]
+layout_mode = 2
+button_group = SubResource("radio_group")
+text = "Gamepad"
+
+[node name="Fullscreen" type="CheckButton" parent="Scroll/Margin/Rows/Checks"]
+layout_mode = 2
+button_pressed = true
+text = "Fullscreen"
+
+[node name="Vsync" type="CheckButton" parent="Scroll/Margin/Rows/Checks"]
+layout_mode = 2
+text = "V-Sync"
+
+[node name="H3" type="Label" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Inputs and progress"
+
+[node name="Inputs" type="HBoxContainer" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Name" type="LineEdit" parent="Scroll/Margin/Rows/Inputs"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+placeholder_text = "Player name"
+
+[node name="ReadOnly" type="LineEdit" parent="Scroll/Margin/Rows/Inputs"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Read only"
+editable = false
+
+[node name="Spin" type="SpinBox" parent="Scroll/Margin/Rows/Inputs"]
+layout_mode = 2
+value = 3.0
+
+[node name="Progress" type="ProgressBar" parent="Scroll/Margin/Rows/Inputs"]
+custom_minimum_size = Vector2(300, 44)
+layout_mode = 2
+size_flags_vertical = 4
+value = 65.0
+
+[node name="Slider" type="HSlider" parent="Scroll/Margin/Rows/Inputs"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 4
+value = 40.0
+
+[node name="H4" type="Label" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Panels"
+
+[node name="Panels" type="HBoxContainer" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Dialog" type="PanelContainer" parent="Scroll/Margin/Rows/Panels"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Rows/Panels/Dialog"]
+layout_mode = 2
+
+[node name="Head" type="Label" parent="Scroll/Margin/Rows/Panels/Dialog/Body"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Dialog box"
+
+[node name="Text" type="Label" parent="Scroll/Margin/Rows/Panels/Dialog/Body"]
+layout_mode = 2
+text = "Default Panel and PanelContainer."
+autowrap_mode = 3
+
+[node name="Inset" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body"]
+layout_mode = 2
+theme_type_variation = &"InsetPanel"
+
+[node name="Slots" type="HBoxContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset"]
+layout_mode = 2
+
+[node name="Slot1" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_type_variation = &"InventorySlot"
+
+[node name="Slot2" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_type_variation = &"InventorySlotSelected"
+
+[node name="Icon" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots/Slot2"]
+layout_mode = 2
+texture = ExtResource("heart_full")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Slot3" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_type_variation = &"InventorySlot"
+
+[node name="Right" type="VBoxContainer" parent="Scroll/Margin/Rows/Panels"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Bar" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Right"]
+layout_mode = 2
+theme_type_variation = &"BarPanel"
+
+[node name="Hud" type="HBoxContainer" parent="Scroll/Margin/Rows/Panels/Right/Bar"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Heart1" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Bar/Hud"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("heart_full")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart2" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Bar/Hud"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("heart_half")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart3" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Bar/Hud"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("heart_empty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Gold" type="Label" parent="Scroll/Margin/Rows/Panels/Right/Bar/Hud"]
+layout_mode = 2
+text = "   1,250 gold"
+
+[node name="Talk" type="HBoxContainer" parent="Scroll/Margin/Rows/Panels/Right"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Portrait" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Talk"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("portrait")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Speech" type="VBoxContainer" parent="Scroll/Margin/Rows/Panels/Right/Talk"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Plate" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Right/Talk/Speech"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"NamePlate"
+
+[node name="Who" type="Label" parent="Scroll/Margin/Rows/Panels/Right/Talk/Speech/Plate"]
+layout_mode = 2
+theme_type_variation = &"OnDarkLabel"
+text = "Villager"
+
+[node name="Box" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Right/Talk/Speech"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_type_variation = &"FlatPanel"
+
+[node name="Line" type="Label" parent="Scroll/Margin/Rows/Panels/Right/Talk/Speech/Box"]
+layout_mode = 2
+text = "Welcome, traveller. The conversation box uses FlatPanel and NamePlate."
+autowrap_mode = 3
+
+[node name="H5" type="Label" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Text and vertical slider"
+
+[node name="Bottom" type="HBoxContainer" parent="Scroll/Margin/Rows"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Edit" type="TextEdit" parent="Scroll/Margin/Rows/Bottom"]
+custom_minimum_size = Vector2(420, 120)
+layout_mode = 2
+text = "TextEdit uses the text input box.
+Scroll down: the ScrollContainer's bar is themed too."
+wrap_mode = 1
+
+[node name="VSlider" type="VSlider" parent="Scroll/Margin/Rows/Bottom"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+value = 70.0
+
+[node name="Spacer" type="Control" parent="Scroll/Margin/Rows"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
