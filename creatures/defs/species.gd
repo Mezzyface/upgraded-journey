@@ -1,3 +1,4 @@
+@tool
 class_name Species
 extends Resource
 ## A kind of creature. Potentials are the typical stat caps of a wild one; bred ones inherit their parents' instead.
