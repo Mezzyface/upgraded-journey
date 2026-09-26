@@ -81,14 +81,19 @@ static func _int_field(d: Dictionary, key: String, def: int) -> int:
 	return int(v) if (v is int or v is float) else def
 
 
-## Writes to a temp file first, then renames, so a crash mid-write never destroys the previous save.
+## Writes to a temp file first, then renames, so a crash mid-write never destroys the previous save. If the
+## write itself fails (e.g. disk full), the temp file is removed and the good save is never touched.
 func save(path := SAVE_PATH) -> Error:
 	var tmp := path + ".tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
 		return FileAccess.get_open_error()
 	f.store_string(JSON.stringify(to_dict(), "\t"))
+	var write_err := f.get_error()
 	f.close()
+	if write_err != OK:
+		DirAccess.remove_absolute(tmp)
+		return write_err
 	return DirAccess.rename_absolute(tmp, path)
 
 
