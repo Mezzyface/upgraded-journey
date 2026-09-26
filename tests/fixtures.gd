@@ -107,3 +107,15 @@ static func rng(seed_value := 1) -> RandomNumberGenerator:
 	var r := RandomNumberGenerator.new()
 	r.seed = seed_value
 	return r
+
+
+## An adult of `species_id` with every stat at `stat` and every potential at `cap`, added to `state`.
+static func adult(state: GameState, species_id: String, stat := 200, cap := 500) -> CreatureData:
+	var c := CreatureData.new()
+	c.id = state.new_id()
+	c.species = StringName(species_id)
+	for s in Stats.NAMES:
+		c.stats[s] = stat
+		c.potential[s] = cap
+	state.add(c)
+	return c
