@@ -13,3 +13,5 @@ art/sprout/**
 !art/sprout/**/
 !art/sprout/**/*.import
 asset-pipeline/assets/restyle/
+# old Isle of Lore pack copy, licensed; delete locally when no longer needed
+ui/theme/pack/

@@ -46,9 +46,11 @@ Notes:
 `ui/theme/sprout_lands.tres` is the project theme (`gui/theme/custom`); edit it in the Theme editor. The game renders
 on a 640×360 pixel grid (`canvas_items` stretch, window 1280×720). Pack art is licensed and git-ignored:
 
-1. Put the Sprout Lands zips in `asset-pipeline/sprout-lands/` and extract each one there.
+1. Put the Sprout Lands zips in `asset-pipeline/sprout-lands/` and extract each one with "Extract Here" — each zip
+   already contains its own top-level folder, so a plain "Extract All…" nests that folder twice.
 2. **Project > Tools > Sprout Lands: Sync pack files** copies the files the project uses into `art/sprout/`
-   (headless: `godot --headless --path . -s res://addons/sprout_tools/sync_cli.gd`, then `--import`).
+   (headless: `godot --headless --path . -s res://addons/sprout_tools/sync_cli.gd`, then `--import`). Reopen the
+   project after the first sync — the editor caches the theme with missing textures until then.
 
 The `.import` files under `art/sprout/` are committed so UIDs and the pixel-font import settings survive a clone. Add a
 line to `FILES` in `addons/sprout_tools/sprout_sync.gd` whenever a scene or resource starts using another pack file.
