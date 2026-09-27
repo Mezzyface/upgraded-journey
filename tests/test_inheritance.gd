@@ -139,6 +139,7 @@ func test_inspire_applies_every_kind_and_respects_caps() -> void:
 	var db := Fixtures.db()
 	var st := GameState.new()
 	var c := Fixtures.adult(st, "spider", 980, 990)
+	c.stage = "baby"
 	c.pool.assign([
 		{"kind": "stat", "id": "power", "stars": 3, "weight": 2.0},
 		{"kind": "trait", "id": "darksight", "stars": 3, "weight": 2.0},
@@ -151,7 +152,7 @@ func test_inspire_applies_every_kind_and_respects_caps() -> void:
 	eq(c.stats["power"], 999, "stat capped at potential")
 	eq(c.traits, [&"darksight"], "trait granted")
 	check(c.moves.has(&"dig"), "move granted")
-	eq(c.personality, &"cheerful", "personality set")
+	eq(c.leanings.get("cheerful", 0), Leanings.SPARK_LEANING, "personality spark becomes a leaning")
 	eq(c.inspirations, 1, "counted")
 	Inheritance.inspire(c, db, Fixtures.rng())
 	eq(c.traits.count(&"darksight"), 1, "trait not duplicated")

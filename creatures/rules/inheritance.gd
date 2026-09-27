@@ -115,7 +115,7 @@ static func inspire(c: CreatureData, db: Db, rng: RandomNumberGenerator) -> Arra
 				if not c.moves.has(StringName(id)):
 					c.moves.append(StringName(id))
 			"personality":
-				c.personality = StringName(id)
+				Leanings.add(c, StringName(id), Leanings.SPARK_LEANING)
 	c.inspirations += 1
 	Training.learn_moves(c, db)
 	return procs

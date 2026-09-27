@@ -3,6 +3,7 @@ extends RefCounted
 ## End-of-day growth for one creature: eggs hatch, babies grow up, adults may evolve, cooldowns tick.
 ## Retired creatures are pickled: they never age or evolve, only their breeding cooldown ticks.
 ## Inspiration fires at hatch, at mid-growth and at adulthood. Returns events for the day summary.
+## Personality settles from leanings when a creature grows up.
 
 const GROW_DAYS := 4  ## baby -> adult
 const MID_DAYS := 2  ## days_left at the mid-growth inspiration
@@ -27,8 +28,10 @@ static func advance_day(c: CreatureData, db: Db, rng: RandomNumberGenerator) -> 
 		"baby":
 			c.days_left -= 1
 			if c.days_left <= 0:
+				var procs := Inheritance.inspire(c, db, rng)  # still a baby, so personality sparks count as leanings
 				c.stage = "adult"
-				events.append(_event(c, db, "grew up", Inheritance.inspire(c, db, rng)))
+				Leanings.settle(c, db, rng)
+				events.append(_event(c, db, "grew up", procs))
 			elif c.days_left == MID_DAYS:
 				events.append(_event(c, db, "is growing", Inheritance.inspire(c, db, rng)))
 		"adult":
