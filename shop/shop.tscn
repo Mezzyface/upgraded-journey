@@ -115,14 +115,15 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 174.0
-offset_top = 151.0
-offset_right = -176.0
-offset_bottom = -116.0
+offset_left = 211.0
+offset_top = 169.0
+offset_right = -213.0
+offset_bottom = -135.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7_yrv44")
 preview_frames = ExtResource("7_mmyc1")
+sprite_scale = 1.8
 
 [node name="StableFrame" type="TextureRect" parent="." unique_id=1146096328]
 texture_filter = 1
@@ -149,6 +150,7 @@ grow_vertical = 2
 script = ExtResource("7_yrv44")
 preview_frames = ExtResource("9_orod7")
 preview_count = 2
+sprite_scale = 1.8
 
 [node name="Door" type="TextureButton" parent="." unique_id=1983773903]
 unique_name_in_owner = true

@@ -10,8 +10,38 @@ const SUMMARY := preload("res://shop/panels/day_summary.tscn")
 var _rng := RandomNumberGenerator.new()
 
 
+## After `--`: `--save=<path>` uses that save file (for screenshots), `--open=card|orders|summary` opens a panel,
+## `--screenshot=<path>` saves a capture and quits. The same pattern as ui/gallery.gd.
+func _read_save_arg() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--save="):
+			Game.save_path = arg.trim_prefix("--save=")
+
+
+func _handle_cmdline() -> void:
+	var shot := ""
+	for arg in OS.get_cmdline_user_args():
+		match arg:
+			"--open=card":
+				if not Game.owned().is_empty():
+					open_card(Game.owned()[0])
+			"--open=orders":
+				open_orders()
+			"--open=summary":
+				end_day()
+		if arg.begins_with("--screenshot="):
+			shot = arg.trim_prefix("--screenshot=")
+	if shot != "":
+		await RenderingServer.frame_post_draw
+		await get_tree().create_timer(1.0).timeout
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png(shot)
+		get_tree().quit()
+
+
 func _ready() -> void:
 	_rng.randomize()
+	_read_save_arg()
 	if Game.state == null:
 		Game.start()
 	Game.changed.connect(_refresh)
@@ -22,6 +52,7 @@ func _ready() -> void:
 	%Pens.creature_clicked.connect(open_card)
 	%Stable.creature_clicked.connect(open_card)
 	_refresh()
+	_handle_cmdline()
 
 
 func _refresh() -> void:

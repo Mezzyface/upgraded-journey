@@ -62,3 +62,9 @@ tests, otherwise `test_content` fails and SpriteFrames report missing textures.
 
 Rule for all Godot work (see `CLAUDE.md`): changes go through the editor, and anything generated is an explicit
 editor tool, never a script that silently overwrites editor-editable files.
+
+## Playing
+
+`shop/shop.tscn` is the main scene. The `Game` autoload (`game/game.gd`) is the only path from the UI to the rules.
+Pens and the stable are `SpawnArea` nodes and panels open in the `PanelHost` node: move or resize them in the editor
+(they draw placeholders there). Screenshots: `godot --path . -- --save=user://shot_save.json --open=card --screenshot=out.png`.
