@@ -62,6 +62,9 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 			push_warning("save: a creature record is not an object; skipped")
 			continue
 		var c := CreatureData.from_dict(cd)
+		var raw_id: Variant = cd.get("id")
+		if raw_id is int or raw_id is float:
+			highest_id = maxi(highest_id, int(raw_id))  # orphans keep their id reserved too
 		if c == null:
 			push_warning("save: a creature record has invalid fields; skipped")
 			g.orphans.append(cd)

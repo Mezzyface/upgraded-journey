@@ -89,7 +89,8 @@ func test_unloadable_creatures_are_kept_as_orphans_and_survive_a_resave() -> voi
 	# A content fix restores the species; the orphan comes back on the next load.
 	var resaved := loaded.to_dict()
 	var reloaded := GameState.from_dict(resaved, db)
-	check(reloaded.creatures.has(1) or reloaded.orphans.size() == 1, "orphan preserved through a resave")
+	eq(reloaded.orphans.size(), 1, "orphan preserved through a resave")
+	check(not reloaded.creatures.has(1), "and still not loaded without its species")
 
 	var full_db: Db = Fixtures.db()
 	full_db.add(Fixtures.species("removed_species", "spider", 1, "dark", "bug", []))
@@ -200,3 +201,14 @@ func test_next_id_never_reuses_an_id() -> void:
 	d["next_id"] = 1  # lower than the highest loaded creature id
 	var back := GameState.from_dict(d, Fixtures.db())
 	eq(back.next_id, 3, "next_id advances past the highest loaded id (2)")
+
+
+func test_orphan_ids_are_never_reused() -> void:
+	var st := GameState.new()
+	var c := Fixtures.adult(st, "spider")
+	c.id = 5
+	var rec := c.to_dict()
+	rec["species"] = "removed_species"
+	var g := GameState.from_dict({"version": 1, "next_id": 1, "creatures": [rec]}, Fixtures.db())
+	eq(g.orphans.size(), 1, "orphaned")
+	check(g.new_id() > 5, "new ids skip past the orphan's id")
