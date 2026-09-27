@@ -23,9 +23,10 @@ static func slots(state: GameState) -> int:
 ## the last RECENT_LIMIT offered. Never offers the same template twice.
 static func post_offers(state: GameState, db: Db, rng: RandomNumberGenerator) -> void:
 	var t := tier(state.reputation)
+	var active: Array = state.orders.map(func(o: Dictionary) -> String: return o["template"])
 	var names: PackedStringArray = []
 	for id: StringName in db.orders:
-		if db.orders[id].min_rep_tier <= t:
+		if db.orders[id].min_rep_tier <= t and not active.has(String(id)):
 			names.append(String(id))
 	names.sort()  # independent of load order
 	var eligible: Array = Array(names).map(func(n: String) -> StringName: return StringName(n))

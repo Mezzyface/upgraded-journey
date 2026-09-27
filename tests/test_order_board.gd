@@ -23,6 +23,16 @@ func test_offers_respect_tier_and_never_duplicate() -> void:
 		check(st.board[0] != st.board[1], "no duplicates")
 
 
+func test_offers_exclude_already_active_orders() -> void:
+	var db := Fixtures.db()
+	var st := GameState.new()
+	st.orders.assign([{"template": "t0_slime", "deadline_day": 5}])
+	for seed_value in 20:
+		st.board.clear()
+		OrderBoard.post_offers(st, db, Fixtures.rng(seed_value))
+		check(not st.board.has(&"t0_slime"), "already active, not offered again")
+
+
 func test_recent_templates_are_skipped_when_possible() -> void:
 	var db := Fixtures.db()
 	var st := GameState.new()
