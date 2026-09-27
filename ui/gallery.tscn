@@ -1,15 +1,35 @@
 [gd_scene format=3 uid="uid://kxu6370qcfec"]
 
+[ext_resource type="Texture2D" uid="uid://qgbqp5i6ebcd" path="res://art/sprout/ui/Sprite sheet for Basic Pack.png" id="2_3xbav"]
+[ext_resource type="Texture2D" uid="uid://d3dtepjvjtoc2" path="res://art/sprout/ui/backdrops_a1.png" id="3_s8shc"]
 [ext_resource type="Script" uid="uid://dvua4rmjstjat" path="res://ui/pack_scroll_bar.gd" id="8_kq1tw"]
-[ext_resource type="Texture2D" uid="uid://telg6ironmbf" path="res://ui/theme/pack/heart_piece_empty_0.png" id="heart_empty"]
-[ext_resource type="Texture2D" uid="uid://cg0v6sg6ennpx" path="res://ui/theme/pack/heart_piece_full_5.png" id="heart_full"]
-[ext_resource type="Texture2D" uid="uid://c40a0i7sgwlof" path="res://ui/theme/pack/heart_piece_half_3.png" id="heart_half"]
-[ext_resource type="Texture2D" uid="uid://cbjkpwvpm74is" path="res://ui/theme/pack/example_portrait.png" id="portrait"]
-[ext_resource type="Texture2D" uid="uid://cly0ia6bygjrk" path="res://ui/theme/pack/button_round_small_0.png" id="round"]
-[ext_resource type="Texture2D" uid="uid://dpijyqlbskf7o" path="res://ui/theme/pack/button_round_small_pressed_0.png" id="round_p"]
 [ext_resource type="Script" uid="uid://byxrgwb7e07e5" path="res://ui/gallery.gd" id="script"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_i5pyh"]
+atlas = ExtResource("2_3xbav")
+region = Rect2(311, 5, 18, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0mxi7"]
+atlas = ExtResource("2_3xbav")
+region = Rect2(343, 6, 18, 19)
+
 [sub_resource type="ButtonGroup" id="radio_group"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3xbav"]
+atlas = ExtResource("2_3xbav")
+region = Rect2(581, 68, 7, 7)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s8shc"]
+atlas = ExtResource("2_3xbav")
+region = Rect2(581, 68, 7, 7)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kq1tw"]
+atlas = ExtResource("2_3xbav")
+region = Rect2(597, 68, 7, 7)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_km1ed"]
+atlas = ExtResource("2_3xbav")
+region = Rect2(613, 68, 7, 7)
 
 [node name="Gallery" type="Control" unique_id=1226079768]
 layout_mode = 3
@@ -34,7 +54,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -28.0
+offset_right = -14.0
 grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
@@ -43,10 +63,10 @@ vertical_scroll_mode = 3
 [node name="Margin" type="MarginContainer" parent="Scroll" unique_id=491657953]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 40
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="Rows" type="VBoxContainer" parent="Scroll/Margin" unique_id=338810560]
 layout_mode = 2
@@ -91,8 +111,8 @@ text = "Options"
 
 [node name="Round" type="TextureButton" parent="Scroll/Margin/Rows/Buttons" unique_id=1226314821]
 layout_mode = 2
-texture_normal = ExtResource("round")
-texture_pressed = ExtResource("round_p")
+texture_normal = SubResource("AtlasTexture_i5pyh")
+texture_pressed = SubResource("AtlasTexture_0mxi7")
 
 [node name="Option" type="OptionButton" parent="Scroll/Margin/Rows/Buttons" unique_id=62518393]
 layout_mode = 2
@@ -110,9 +130,11 @@ layout_mode = 2
 theme_type_variation = &"HeaderLabel"
 text = "Checks and switches"
 
-[node name="Checks" type="HBoxContainer" parent="Scroll/Margin/Rows" unique_id=2141965615]
+[node name="Checks" type="GridContainer" parent="Scroll/Margin/Rows" unique_id=814018074]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 12
+columns = 4
 
 [node name="Music" type="CheckBox" parent="Scroll/Margin/Rows/Checks" unique_id=704092532]
 layout_mode = 2
@@ -156,15 +178,15 @@ text = "Inputs and progress"
 
 [node name="Inputs" type="HBoxContainer" parent="Scroll/Margin/Rows" unique_id=1499904967]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 8
 
 [node name="Name" type="LineEdit" parent="Scroll/Margin/Rows/Inputs" unique_id=1089334973]
-custom_minimum_size = Vector2(260, 0)
+custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 placeholder_text = "Player name"
 
 [node name="ReadOnly" type="LineEdit" parent="Scroll/Margin/Rows/Inputs" unique_id=830477389]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "Read only"
 editable = false
@@ -174,13 +196,13 @@ layout_mode = 2
 value = 3.0
 
 [node name="Progress" type="ProgressBar" parent="Scroll/Margin/Rows/Inputs" unique_id=1659101110]
-custom_minimum_size = Vector2(300, 44)
+custom_minimum_size = Vector2(130, 22)
 layout_mode = 2
 size_flags_vertical = 4
 value = 65.0
 
 [node name="Slider" type="HSlider" parent="Scroll/Margin/Rows/Inputs" unique_id=2079000382]
-custom_minimum_size = Vector2(240, 0)
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_vertical = 4
 value = 40.0
@@ -195,7 +217,7 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="Dialog" type="PanelContainer" parent="Scroll/Margin/Rows/Panels" unique_id=1250146008]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
 [node name="Body" type="VBoxContainer" parent="Scroll/Margin/Rows/Panels/Dialog" unique_id=633259122]
@@ -219,23 +241,23 @@ theme_type_variation = &"InsetPanel"
 layout_mode = 2
 
 [node name="Slot1" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots" unique_id=772610120]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 theme_type_variation = &"InventorySlot"
 
 [node name="Slot2" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots" unique_id=1531506026]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 theme_type_variation = &"InventorySlotSelected"
 
 [node name="Icon" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots/Slot2" unique_id=264743227]
 layout_mode = 2
-texture = ExtResource("heart_full")
+texture = SubResource("AtlasTexture_3xbav")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Slot3" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Dialog/Body/Inset/Slots" unique_id=1646418932]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 theme_type_variation = &"InventorySlot"
 
@@ -252,23 +274,23 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Heart1" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Bar/Hud" unique_id=1697910088]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-texture = ExtResource("heart_full")
+texture = SubResource("AtlasTexture_s8shc")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Heart2" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Bar/Hud" unique_id=952207714]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-texture = ExtResource("heart_half")
+texture = SubResource("AtlasTexture_kq1tw")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Heart3" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Bar/Hud" unique_id=1623285276]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-texture = ExtResource("heart_empty")
+texture = SubResource("AtlasTexture_km1ed")
 expand_mode = 1
 stretch_mode = 5
 
@@ -281,10 +303,10 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="Portrait" type="TextureRect" parent="Scroll/Margin/Rows/Panels/Right/Talk" unique_id=1778464420]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 size_flags_vertical = 0
-texture = ExtResource("portrait")
+texture = ExtResource("3_s8shc")
 expand_mode = 1
 stretch_mode = 5
 
@@ -303,7 +325,7 @@ theme_type_variation = &"OnDarkLabel"
 text = "Villager"
 
 [node name="Box" type="PanelContainer" parent="Scroll/Margin/Rows/Panels/Right/Talk/Speech" unique_id=1306286061]
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_type_variation = &"FlatPanel"
 
@@ -322,20 +344,19 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="Edit" type="TextEdit" parent="Scroll/Margin/Rows/Bottom" unique_id=1711383395]
-custom_minimum_size = Vector2(420, 120)
+custom_minimum_size = Vector2(210, 60)
 layout_mode = 2
 text = "TextEdit uses the text input box.
 The page scrollbar on the right is PackScrollBar: a VSlider with the pack's fixed-size knob, driven by pack_scroll_bar.gd."
 wrap_mode = 1
-scroll_vertical = 0.833333333333333
 
 [node name="VSlider" type="VSlider" parent="Scroll/Margin/Rows/Bottom" unique_id=1607424481]
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 value = 70.0
 
 [node name="Spacer" type="Control" parent="Scroll/Margin/Rows" unique_id=724189085]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
 [node name="ScrollBar" type="VSlider" parent="." unique_id=30111981]
@@ -343,8 +364,10 @@ layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -28.0
+offset_left = -14.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_type_variation = &"PackScrollBar"
+max_value = 644.0
+value = 644.0
 script = ExtResource("8_kq1tw")

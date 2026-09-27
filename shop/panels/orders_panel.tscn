@@ -3,15 +3,15 @@
 [ext_resource type="Script" uid="uid://jq2jb6o1dvdp" path="res://shop/panels/orders_panel.gd" id="1_lqhj2"]
 
 [node name="OrdersPanel" type="PanelContainer" unique_id=573499012]
-custom_minimum_size = Vector2(760, 560)
+custom_minimum_size = Vector2(380, 280)
 script = ExtResource("1_lqhj2")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=439490203]
 layout_mode = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="Rows" type="VBoxContainer" parent="Margin" unique_id=1945832504]
 layout_mode = 2
