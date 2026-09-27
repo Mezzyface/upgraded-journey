@@ -20,4 +20,4 @@ func _sync() -> void:
 	if missing.is_empty():
 		print("[sprout_tools] synced %d files into %s" % [Sync.FILES.size(), Sync.DST])
 	else:
-		push_error("[sprout_tools] missing in %s (extract the zips there first):\n%s" % [Sync.SRC, "\n".join(missing)])
+		push_error("[sprout_tools] not synced (missing under %s — extract the zips there first — or failed to copy):\n%s" % [Sync.SRC, "\n".join(missing)])

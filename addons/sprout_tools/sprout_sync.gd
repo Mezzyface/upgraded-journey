@@ -18,7 +18,7 @@ const FILES := {
 }
 
 
-## Returns the source paths that were missing; empty means everything was copied.
+## Returns the source paths that were missing or failed to copy; empty means everything was copied.
 static func sync(src := SRC, dst := DST) -> PackedStringArray:
 	var missing := PackedStringArray()
 	for rel in FILES:
@@ -28,5 +28,7 @@ static func sync(src := SRC, dst := DST) -> PackedStringArray:
 			missing.append(FILES[rel])
 			continue
 		DirAccess.make_dir_recursive_absolute(to.get_base_dir())
-		DirAccess.copy_absolute(from, to)
+		var err := DirAccess.copy_absolute(from, to)
+		if err != OK:
+			missing.append("%s (copy failed: %s)" % [FILES[rel], error_string(err)])
 	return missing
