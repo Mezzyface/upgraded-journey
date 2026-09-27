@@ -41,6 +41,9 @@ func refresh() -> void:
 	scale = Vector2.ONE * _area.sprite_scale * (_area.baby_scale if creature.stage == "baby" else 1.0)
 	%Sprite.visible = not egg and _frames != null
 	%Egg.visible = egg
+	var body := CreatureAnim.body_rect(_frames)
+	%Hit.position = body.position
+	%Hit.size = body.size
 	_play("idle")
 
 

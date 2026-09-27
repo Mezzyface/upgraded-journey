@@ -39,3 +39,19 @@ func test_portrait_hugs_a_small_opaque_blob() -> void:
 	var p := CreatureAnim.portrait(Importer.frames_from_textures({"idle": tex}))
 	check(p is AtlasTexture, "an atlas crop")
 	eq((p as AtlasTexture).region, Rect2(18, 87, 14, 14), "blob bbox (10x8) + 2px padding each side, centred on it")
+
+
+func test_body_rect_is_the_opaque_blob_relative_to_the_cell_centre() -> void:
+	var img := Image.create(512, 512, false, Image.FORMAT_RGBA8)
+	img.fill_rect(Rect2i(20, 90, 10, 8), Color.WHITE)  # a small body low in the first 128px cell
+	var tex := ImageTexture.create_from_image(img)
+	var r := CreatureAnim.body_rect(Importer.frames_from_textures({"idle": tex}))
+	eq(r, Rect2(20 - 64, 90 - 64, 10, 8), "the blob's own bbox, relative to the 128px cell's centre")
+
+
+func test_body_rect_falls_back_to_the_old_fixed_box() -> void:
+	eq(CreatureAnim.body_rect(null), Rect2(-10, -10, 20, 20), "no frames")
+	eq(CreatureAnim.body_rect(SpriteFrames.new()), Rect2(-10, -10, 20, 20), "no idle animation")
+	var blank := ImageTexture.create_from_image(Image.create(512, 512, false, Image.FORMAT_RGBA8))
+	eq(CreatureAnim.body_rect(Importer.frames_from_textures({"idle": blank})), Rect2(-10, -10, 20, 20),
+			"a fully transparent frame has no bounding box to hug")

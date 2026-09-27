@@ -9,6 +9,7 @@ const FALLBACKS := {
 	"idle": ["idle", "move"],
 }
 const PORTRAIT_CELL := 64  ## the centre of the 128 px cell, where the creature stands
+const DEFAULT_BODY := Rect2(-10, -10, 20, 20)  ## the old fixed hit box, used when there's nothing to measure
 
 
 static func pick(frames: SpriteFrames, wanted: String, facing: String) -> StringName:
@@ -39,6 +40,24 @@ static func portrait(frames: SpriteFrames) -> Texture2D:
 		crop.region = _bounded_region(src)
 		return crop
 	return tex
+
+
+## The idle frame's opaque used rect, in cell-local coordinates relative to the cell centre (where the creature's
+## Node2D origin sits) — used to size and place a creature's click target on its actual body instead of a fixed
+## box. Falls back to `DEFAULT_BODY` when there is no frame or image to measure, or the frame is fully transparent.
+static func body_rect(frames: SpriteFrames) -> Rect2:
+	var anim := pick(frames, "idle", "down")
+	if anim == &"":
+		return DEFAULT_BODY
+	var tex := frames.get_frame_texture(anim, 0)
+	var img := tex.get_image() if tex else null
+	if img == null:
+		return DEFAULT_BODY
+	var used := img.get_used_rect()
+	if used.size == Vector2i.ZERO:
+		return DEFAULT_BODY
+	var centre := Vector2(img.get_size()) / 2.0
+	return Rect2(Vector2(used.position) - centre, Vector2(used.size))
 
 
 ## The opaque bounding box of `src`'s frame, squared with 2px padding on every side and clamped inside the cell,
