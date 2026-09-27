@@ -1,0 +1,12 @@
+{
+ "attempts": [
+  {
+   "pass": false,
+   "issues": "Remove the anthropomorphic face (eyes, eyebrows, mouth) and legs from the door; it should be a standard arched wooden shop door rather than a living creature or character."
+  },
+  {
+   "pass": true,
+   "issues": ""
+  }
+ ]
+}

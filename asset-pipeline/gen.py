@@ -116,7 +116,8 @@ def postprocess(src, job):
                                                            b.point(lambda v: 255 if v > 150 else 0)),
                                        g.point(lambda v: 255 if v < 120 else 0))
             im.putalpha(ImageChops.subtract(a, halo))
-    size = SIZES.get(job.get("size", style.get("size")), job.get("size", style.get("size")))
+    size = job.get("size", style.get("size"))
+    size = SIZES.get(size, size) if isinstance(size, (str, int)) else size  # ponytail: [w, h] sizes aren't hashable
     if size:
         size = (size, size) if isinstance(size, int) else tuple(size)
         im = im.resize(size, style.get("resample", Image.NEAREST))  # ponytail: nearest; a pixel-grid detector is better

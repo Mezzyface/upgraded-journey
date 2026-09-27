@@ -1,0 +1,12 @@
+{
+ "attempts": [
+  {
+   "pass": false,
+   "issues": "Render the sprite from a true side view (profile angle) instead of a front 3/4 perspective. Match the reference style's clean cel-shaded pixel art and bold outlines rather than using textured, dithered shading."
+  },
+  {
+   "pass": true,
+   "issues": ""
+  }
+ ]
+}
