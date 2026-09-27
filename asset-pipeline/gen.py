@@ -12,6 +12,7 @@ colors (palette size for the Aseprite pass; 0 skips it).
 Each type has a style prefix + default reference images pulled from art-example / the packs.
 """
 import glob, json, os, re, shutil, subprocess, sys, tempfile, time
+from collections import deque
 from PIL import Image, ImageChops, ImageDraw
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -103,6 +104,33 @@ def generate(job, notes=""):
     return max(files, key=os.path.getmtime)
 
 
+def despill(im):
+    """Flood-fill from the already-transparent background into any adjoining key-coloured
+    (magenta/purple) pixels, clearing them too -- catches a keyed shadow/halo the corner
+    flood-fill and the global halo-strip above miss (e.g. drop shadows dark enough to fall
+    outside the halo-strip's threshold). Only pixels *connected* to transparent background
+    are cleared, so key-coloured art fully enclosed by opaque pixels is left alone."""
+    w, h = im.size
+    px = im.load()
+    seen = bytearray(w * h)
+    q = deque()
+    for y in range(h):
+        for x in range(w):
+            if px[x, y][3] == 0:
+                seen[y * w + x] = 1
+                q.append((x, y))
+    while q:
+        x, y = q.popleft()
+        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+            if 0 <= nx < w and 0 <= ny < h and not seen[ny * w + nx]:
+                r, g, b, a = px[nx, ny]
+                if a > 0 and r > 140 and b > 130 and g < 90:
+                    px[nx, ny] = (r, g, b, 0)
+                    seen[ny * w + nx] = 1
+                    q.append((nx, ny))
+    return im
+
+
 def postprocess(src, job):
     style = STYLES[job["type"]]
     im = Image.open(src).convert("RGBA")
@@ -116,6 +144,7 @@ def postprocess(src, job):
                                                            b.point(lambda v: 255 if v > 150 else 0)),
                                        g.point(lambda v: 255 if v < 120 else 0))
             im.putalpha(ImageChops.subtract(a, halo))
+            im = despill(im)
     size = job.get("size", style.get("size"))
     size = SIZES.get(size, size) if isinstance(size, (str, int)) else size  # ponytail: [w, h] sizes aren't hashable
     if size:
