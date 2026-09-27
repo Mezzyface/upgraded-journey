@@ -2403,23 +2403,21 @@ summary), Maaack Menus Template, and the seeded 10-day playthrough from the spec
 ## Carry-over into Plan 2 (from the Plan 1 final review, 2026-09-26)
 
 Must-do first tasks:
-- Fold orphan ids into `next_id` in `GameState.from_dict` (a hand-edited save with a lowered `next_id` lets a recovered
-  orphan overwrite a creature that reused its id); tighten the orphan test's A-or-B assertion.
 - Give Darksight a source (a location/care trait or Spider Albino eggs from market/expedition): today Spider Albino is
   unreachable in a fresh game and the 2-generation trait-spark goal cannot be played.
 
 Decided by the owner (2026-09-26):
-- Retired creatures are "pickled": frozen and usable only for breeding/inspiration. No evolution (today they still
-  evolve in `Lifecycle.advance_day`), no training, no care, no delivery (already blocked in `Orders.check`); only
-  adults can retire. Add rules-level guards with tests.
+- Retired creatures are "pickled": frozen and usable only for breeding/inspiration. Done in the cleanup batch (no
+  ageing, evolution or training; only owned adults retire; delivery already blocked). Plan 2's care actions must
+  refuse retired creatures too (`Training.can_train` is the pattern).
 - After evolving, the new form's move unlocks join the creature's learnable pool; they are learned through training as
   usual (current behavior; no automatic learn on evolve).
 - Evolution stays on the day after growing up for now, to see how it feels.
 - Add the `held_item` evolution condition and a per-creature "raised here" flag for the Gene Scanner mystery rule.
 - Missing animations: play a default so every creature animates — tracked in
   https://github.com/Mezzyface/upgraded-journey/issues/1
-- Importer pack layouts: 12 of 80 packs don't use `Spritesheets/` — 4 use `Spritesheet/`, 8 keep the variant folders
-  directly in the pack folder. The importer should accept all three layouts.
+- Importer pack layouts: done (Spritesheets/, Spritesheet/ or variants in the pack folder; 174 variants across 76
+  packs). Not importable as creatures: 12 (FX), 8 (Objects), 46 (Plants 2, GIFs only), 17 (Peasants, nested A/B/C).
 
 Open question: saving the random-number state (only needed if reloading must not re-roll outcomes, i.e. no
 save-scumming; a seeded test run can simply seed at the start).
