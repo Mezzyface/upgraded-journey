@@ -133,9 +133,9 @@ static func send_expedition(state: GameState, db: Db, location_id: StringName, t
 static func retire(state: GameState, db: Db, c: CreatureData, rng: RandomNumberGenerator) -> String:
 	if c == null:
 		return "no such creature"
-	if state.busy.has(c.id):
-		return "busy on an expedition today"
-	var reason := Sparks.can_retire(c)
+	var reason := _available(state, c)
+	if reason == "":
+		reason = Sparks.can_retire(c)
 	if reason != "":
 		return reason
 	Sparks.retire(c, db, rng)

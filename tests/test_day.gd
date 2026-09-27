@@ -159,6 +159,27 @@ func test_fresh_injuries_last_two_full_days() -> void:
 	eq(Day.train(st, db, weak, "power", null, Fixtures.rng()), "", "healed on the third day")
 
 
+func test_retire_refuses_while_injured() -> void:
+	var db := Fixtures.db()
+	var st := _state()
+	var c := Fixtures.adult(st, "spider")
+	c.injured_days = 2
+	var before := st.to_dict()
+	eq(Day.retire(st, db, c, Fixtures.rng()), "injured for 2 more days", "refused")
+	eq(st.to_dict(), before, "nothing changed")
+
+
+func test_breed_refuses_an_injured_parent() -> void:
+	var db := Fixtures.db()
+	var st := _state()
+	var a := Fixtures.adult(st, "spider")
+	var b := Fixtures.adult(st, "spider")
+	Sparks.retire(a, db, Fixtures.rng())
+	Sparks.retire(b, db, Fixtures.rng())
+	a.injured_days = 1
+	eq(Day.breed(st, db, a, b, Fixtures.rng()), "an injured creature needs rest", "refused")
+
+
 func test_extra_ap_upgrade() -> void:
 	var st := _state()
 	st.upgrades.append(&"extra_ap")
