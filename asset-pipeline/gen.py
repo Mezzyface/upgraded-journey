@@ -277,6 +277,9 @@ def refine(dest, job):
     """Aseprite pass: remap to the job's palette PNG (or quantize to `colors`), save a .aseprite for hand edits."""
     colors = job.get("colors", STYLES[job["type"]]["colors"])
     pal = palette_of(job)
+    if pal and not os.path.exists(pal):
+        raise RuntimeError(f"{dest}: palette not found at {pal} -- "
+                            f"extract the Sprout Lands zips into asset-pipeline/sprout-lands/")
     if not (colors or pal) or not os.path.exists(ASEPRITE):
         return
     before = opaque_count(dest)

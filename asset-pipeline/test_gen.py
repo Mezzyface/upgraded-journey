@@ -50,6 +50,21 @@ def test_remap_keeps_every_opaque_pixel():  # a black outline must not become tr
     assert gen.off_palette(out, gen.palette_of({"type": "prop"})) == 0
 
 
+def test_missing_palette_stops_clearly():  # a job pointed at a missing palette must stop cleanly, not crash deep in Aseprite/PIL
+    gen.PALETTES["_missing_test"] = "no/such/palette.png"
+    dest = save("nopalette.png", (1, 1), {(0, 0): (1, 2, 3, 255)})
+    try:
+        gen.refine(dest, {"type": "prop", "palette": "_missing_test", "colors": 0})
+        raise AssertionError("expected RuntimeError for a missing palette")
+    except FileNotFoundError:
+        raise AssertionError("refine() must stop clearly, not raise FileNotFoundError")
+    except RuntimeError as e:
+        assert "no/such/palette.png" in str(e)
+        assert "extract the Sprout Lands zips into asset-pipeline/sprout-lands/" in str(e)
+    finally:
+        del gen.PALETTES["_missing_test"]
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):
