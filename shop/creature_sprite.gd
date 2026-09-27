@@ -15,7 +15,7 @@ var _facing := "right"
 
 
 func _ready() -> void:
-	$Hit.pressed.connect(func() -> void: clicked.emit(creature))
+	%Hit.pressed.connect(func() -> void: clicked.emit(creature))
 
 
 func setup(c: CreatureData, frames: SpriteFrames, area: SpawnArea, rng: RandomNumberGenerator) -> void:
@@ -25,7 +25,7 @@ func setup(c: CreatureData, frames: SpriteFrames, area: SpawnArea, rng: RandomNu
 	_rng = rng
 	place(area.random_point(rng))
 	_wait = rng.randf_range(0.2, 2.0)
-	$Sprite.sprite_frames = frames
+	%Sprite.sprite_frames = frames
 	refresh()
 
 
@@ -39,8 +39,8 @@ func place(p: Vector2) -> void:
 func refresh() -> void:
 	var egg := creature.stage == "egg"
 	scale = Vector2.ONE * _area.sprite_scale * (_area.baby_scale if creature.stage == "baby" else 1.0)
-	$Sprite.visible = not egg and _frames != null
-	$Egg.visible = egg
+	%Sprite.visible = not egg and _frames != null
+	%Egg.visible = egg
 	_play("idle")
 
 
@@ -61,7 +61,7 @@ func _process(delta: float) -> void:
 
 
 func _play(wanted: String) -> void:
-	var s: AnimatedSprite2D = $Sprite
+	var s: AnimatedSprite2D = %Sprite
 	var anim := CreatureAnim.pick(_frames, wanted, _facing)
 	if anim != &"" and s.animation != anim:
 		s.play(anim)
