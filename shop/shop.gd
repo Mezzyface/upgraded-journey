@@ -3,6 +3,7 @@ extends Control
 ## (SpawnAreas) and panels into %PanelHost at runtime.
 
 const TOAST_SECONDS := 2.5
+const CARD := preload("res://shop/panels/creature_card.tscn")
 
 var _rng := RandomNumberGenerator.new()
 
@@ -31,8 +32,10 @@ func _refresh() -> void:
 	%Stable.sync(Game.retired(), Game.db, _rng)
 
 
-func open_card(_c: CreatureData) -> void:
-	toast("Creature card comes in the next step")  # Task 8
+func open_card(c: CreatureData) -> void:
+	var card := CARD.instantiate()
+	%PanelHost.open(card)
+	card.show_creature(c)
 
 
 func open_orders() -> void:

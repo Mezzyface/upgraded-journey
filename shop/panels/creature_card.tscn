@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://by3lcx24paa4p"]
+
+[ext_resource type="Script" uid="uid://dcakjcjavqa27" path="res://shop/panels/creature_card.gd" id="1_wkiug"]
+
+[node name="CreatureCard" type="PanelContainer" unique_id=13860526]
+custom_minimum_size = Vector2(620, 460)
+script = ExtResource("1_wkiug")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=708651217]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=93674868]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Margin/Rows" unique_id=870248298]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Portrait" type="TextureRect" parent="Margin/Rows/Header" unique_id=1733751116]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Titles" type="VBoxContainer" parent="Margin/Rows/Header" unique_id=1072398217]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="Margin/Rows/Header/Titles" unique_id=1794473586]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+
+[node name="Info" type="Label" parent="Margin/Rows/Header/Titles" unique_id=164799992]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Close" type="Button" parent="Margin/Rows/Header" unique_id=1306198707]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Stats" type="GridContainer" parent="Margin/Rows" unique_id=580956899]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 3
+
+[node name="Chips" type="HFlowContainer" parent="Margin/Rows" unique_id=1925509985]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Family" type="Label" parent="Margin/Rows" unique_id=1010836789]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Message" type="Label" parent="Margin/Rows" unique_id=1469424086]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="Margin/Rows" unique_id=1608086948]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Train" type="MenuButton" parent="Margin/Rows/Actions" unique_id=487440685]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Train"
+flat = false
+
+[node name="Feed" type="Button" parent="Margin/Rows/Actions" unique_id=1634337993]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Feed"
+
+[node name="Play" type="Button" parent="Margin/Rows/Actions" unique_id=699061693]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Play"
+
+[node name="Retire" type="Button" parent="Margin/Rows/Actions" unique_id=2124229324]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Retire"
+
+[node name="Sell" type="Button" parent="Margin/Rows/Actions" unique_id=1915029948]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Sell"
