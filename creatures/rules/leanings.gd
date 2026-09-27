@@ -20,6 +20,8 @@ static func settle(c: CreatureData, db: Db, rng: RandomNumberGenerator) -> void:
 	var best_n := 0
 	var tie := false
 	for key: String in c.leanings:
+		if not db.personalities.has(StringName(key)):
+			continue
 		var n: int = c.leanings[key]
 		if n > best_n:
 			best = key

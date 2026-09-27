@@ -44,6 +44,16 @@ func test_settle_ties_and_empty_keep_current_or_pick_random() -> void:
 	check(db.personalities.has(c.personality), "none -> a random known personality (%s)" % c.personality)
 
 
+func test_settle_ignores_unknown_personalities() -> void:
+	var db := Fixtures.db()
+	var st := GameState.new()
+	var c := _baby(st)
+	c.personality = &"timid"
+	c.leanings = {"evil_overlord": 9, "cheerful": 1}
+	Leanings.settle(c, db, Fixtures.rng())
+	eq(c.personality, &"cheerful", "the unknown leaning is skipped")
+
+
 func test_personality_spark_adds_a_leaning_and_settles_at_adulthood() -> void:
 	var db := Fixtures.db()
 	var st := GameState.new()
