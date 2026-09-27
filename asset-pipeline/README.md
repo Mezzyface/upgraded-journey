@@ -34,6 +34,8 @@ environment if it is not at `C:/Program Files/Aseprite/Aseprite.exe`.
  "refs": ["optional/up/to/3.png"], "aspect": "1:1", "size": "small", "colors": 16}
 ```
 
+`"neutral_shadow": true` (keyed types only): after despill, recolours any key-coloured pixels still left anywhere in the image (e.g. a shadow band fully enclosed by opaque art, which an edge-connected despill can't reach) into a plain dark shadow instead of leaving them key-coloured; opt in per job since it would wrongly recolour a legitimately purple creature/prop.
+
 ## Standard sizes
 
 | name     | px        | use                          |

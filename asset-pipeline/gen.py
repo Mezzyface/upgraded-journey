@@ -104,6 +104,12 @@ def generate(job, notes=""):
     return max(files, key=os.path.getmtime)
 
 
+def is_key_hue(r, g, b):
+    """True for magenta/purple key-colour tones by hue, not fixed brightness: catches dark
+    shadow-tinted purples (e.g. (127,41,128)) as well as the bright #FF00FF key itself."""
+    return r > 100 and b > 100 and g < min(r, b) - 60
+
+
 def despill(im):
     """Flood-fill from the already-transparent background into any adjoining key-coloured
     (magenta/purple) pixels, clearing them too -- catches a keyed shadow/halo the corner
@@ -124,10 +130,25 @@ def despill(im):
         for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
             if 0 <= nx < w and 0 <= ny < h and not seen[ny * w + nx]:
                 r, g, b, a = px[nx, ny]
-                if a > 0 and r > 140 and b > 130 and g < 90:
+                if a > 0 and is_key_hue(r, g, b):
                     px[nx, ny] = (r, g, b, 0)
                     seen[ny * w + nx] = 1
                     q.append((nx, ny))
+    return im
+
+
+def neutral_shadow(im):
+    """Opt-in (job "neutral_shadow": true): recolour any key-coloured pixels the edge-connected
+    despill couldn't reach (fully enclosed by opaque art, e.g. a shadow band under a fence) into
+    a plain dark shadow, same shape/alpha-ish. Runs over the whole image, so it's only wired in
+    per job -- never on a type/job where a purple creature or prop is legitimate art."""
+    w, h = im.size
+    px = im.load()
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            if a > 0 and is_key_hue(r, g, b):
+                px[x, y] = (35, 30, 28, 140)
     return im
 
 
@@ -145,6 +166,8 @@ def postprocess(src, job):
                                        g.point(lambda v: 255 if v < 120 else 0))
             im.putalpha(ImageChops.subtract(a, halo))
             im = despill(im)
+            if job.get("neutral_shadow"):
+                im = neutral_shadow(im)
     size = job.get("size", style.get("size"))
     size = SIZES.get(size, size) if isinstance(size, (str, int)) else size  # ponytail: [w, h] sizes aren't hashable
     if size:
