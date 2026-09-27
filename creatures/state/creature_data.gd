@@ -24,6 +24,8 @@ var breed_cooldown := 0
 var sparks: Array[Dictionary] = []  ## locked on retire: {kind, id, stars}
 var pool: Array[Dictionary] = []  ## inherited sparks waiting for inspiration: {kind, id, stars, weight}
 var inspirations := 0
+var injured_days := 0  ## > 0: can't train, go on expeditions or breed
+var leanings := {}  ## personality id (String) -> count; babies only, settled at adulthood (Leanings)
 
 
 static func wild(sp: Species, new_id: int, rng: RandomNumberGenerator) -> CreatureData:
@@ -34,6 +36,14 @@ static func wild(sp: Species, new_id: int, rng: RandomNumberGenerator) -> Creatu
 		var cap := clampi(roundi(sp.potential(s) * rng.randf_range(0.9, 1.1)), 0, Stats.MAX)
 		c.potential[s] = cap
 		c.stats[s] = roundi(cap * START_FRACTION)
+	return c
+
+
+## A wild egg (bought at the market or found on an expedition): hatches in Inheritance.HATCH_DAYS, no parents.
+static func wild_egg(sp: Species, new_id: int, rng: RandomNumberGenerator) -> CreatureData:
+	var c := wild(sp, new_id, rng)
+	c.stage = "egg"
+	c.days_left = Inheritance.HATCH_DAYS
 	return c
 
 
@@ -64,6 +74,8 @@ func to_dict() -> Dictionary:
 		"sparks": sparks.duplicate(true),
 		"pool": pool.duplicate(true),
 		"inspirations": inspirations,
+		"injured_days": injured_days,
+		"leanings": leanings.duplicate(),
 	}
 
 
@@ -120,6 +132,12 @@ static func from_dict(d: Dictionary) -> CreatureData:
 	c.sparks = _sparks_from(d.get("sparks", []), false)
 	c.pool = _sparks_from(d.get("pool", []), true)
 	c.inspirations = maxi(_num(d.get("inspirations", 0)), 0)
+	c.injured_days = maxi(_num(d.get("injured_days", 0)), 0)
+	var lean_v: Variant = d.get("leanings", {})
+	if lean_v is Dictionary:
+		for k in lean_v:
+			if k is String and _is_num(lean_v[k]):
+				c.leanings[k] = maxi(int(lean_v[k]), 0)
 	return c
 
 

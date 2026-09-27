@@ -212,3 +212,70 @@ func test_orphan_ids_are_never_reused() -> void:
 	var g := GameState.from_dict({"version": 1, "next_id": 1, "creatures": [rec]}, Fixtures.db())
 	eq(g.orphans.size(), 1, "orphaned")
 	check(g.new_id() > 5, "new ids skip past the orphan's id")
+
+
+func test_wild_egg() -> void:
+	var c := CreatureData.wild_egg(Fixtures.db().species[&"slime"], 3, Fixtures.rng())
+	eq(c.stage, "egg", "an egg")
+	eq(c.days_left, Inheritance.HATCH_DAYS, "hatch timer")
+	check(c.pool.is_empty() and c.parents.is_empty(), "wild: no parents, no sparks")
+
+
+func test_v2_fields_round_trip() -> void:
+	var db := Fixtures.db()
+	var st := _sample()
+	st.board.assign([&"t0_slime", &"t0_power"])
+	st.orders.append({"template": "t1_dark", "deadline_day": 9})
+	st.recent_templates.assign([&"t0_slime"])
+	st.inventory["feed"] = 3
+	st.upgrades.append(&"extra_pen")
+	st.expeditions.append({"location": "cave", "team": [2]})
+	st.busy.append(2)
+	st.cared.append(2)
+	var b: CreatureData = st.creatures[2]
+	b.injured_days = 2
+	b.leanings["cheerful"] = 3
+	var d := st.to_dict()
+	var back := GameState.from_dict(JSON.parse_string(JSON.stringify(d)), db)
+	eq(back.to_dict(), d, "round trip")
+
+
+func test_version_1_save_loads_with_empty_v2_fields() -> void:
+	var d := _sample().to_dict()
+	d["version"] = 1
+	for k in ["board", "orders", "recent_templates", "inventory", "upgrades", "expeditions", "busy", "cared"]:
+		d.erase(k)
+	for cd in d["creatures"]:
+		cd.erase("injured_days")
+		cd.erase("leanings")
+	var path := "user://test_v1.json"
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string(JSON.stringify(d))
+	f.close()
+	var g := GameState.load_file(Fixtures.db(), path)
+	check(g != null, "version 1 loads")
+	eq(g.creatures.size(), 2, "creatures")
+	check(g.board.is_empty() and g.orders.is_empty() and g.inventory.is_empty(), "new fields empty")
+	eq(g.creatures[2].injured_days, 0, "injured default")
+
+
+func test_v2_fields_with_unknown_ids_or_bad_types_are_dropped() -> void:
+	var d := _sample().to_dict()
+	d["board"] = ["t0_slime", "gone_template", 5]
+	d["orders"] = [{"template": "gone", "deadline_day": 3}, {"template": "t0_power", "deadline_day": "x"},
+		"junk", {"template": "t0_slime", "deadline_day": 4}]
+	d["inventory"] = {"feed": -4, "gold": "lots"}
+	d["upgrades"] = ["extra_pen", "nope"]
+	d["expeditions"] = [{"location": "atlantis", "team": [2]}, {"location": "cave", "team": [999, 2]}]
+	d["busy"] = [2, 777, "x"]
+	d["creatures"][1]["leanings"] = {"cheerful": 2, "bold": "many"}
+	d["creatures"][1]["injured_days"] = -3
+	var g := GameState.from_dict(d, Fixtures.db())
+	eq(g.board, [&"t0_slime"], "board keeps known templates")
+	eq(g.orders, [{"template": "t0_slime", "deadline_day": 4}], "orders keep valid entries")
+	eq(g.inventory, {"feed": 0}, "inventory clamped, bad values dropped")
+	eq(g.upgrades, [&"extra_pen"], "upgrades keep known ids")
+	eq(g.expeditions, [{"location": "cave", "team": [2]}], "unknown location and creatures dropped")
+	eq(g.busy, [2], "busy keeps known creatures")
+	eq(g.creatures[2].leanings, {"cheerful": 2}, "leanings keep numbers")
+	eq(g.creatures[2].injured_days, 0, "injured clamped")

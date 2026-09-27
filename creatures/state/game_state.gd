@@ -3,7 +3,7 @@ extends RefCounted
 ## Everything that changes during play. Saved as versioned JSON in user://, never as .tres: loading a resource
 ## can run embedded scripts, and players share save files.
 
-const SAVE_VERSION := 1
+const SAVE_VERSION := 2
 const SAVE_PATH := "user://save.json"
 const START_AP := 5
 
@@ -15,6 +15,14 @@ var next_id := 1
 var creatures: Dictionary[int, CreatureData] = {}  ## every creature ever owned; GONE ones stay for pedigrees
 var orphans: Array[Dictionary] = []  ## raw records that failed to load (unknown species, malformed); kept
 ## as-is and written back out on save so a later content fix or re-import can bring them back
+var board: Array[StringName] = []  ## template ids offered this morning
+var orders: Array[Dictionary] = []  ## accepted: {"template": String, "deadline_day": int}
+var recent_templates: Array[StringName] = []  ## last offered, newest last (OrderBoard.RECENT_LIMIT)
+var inventory := {}  ## item id (String) -> count; only "feed" for now
+var upgrades: Array[StringName] = []
+var expeditions: Array[Dictionary] = []  ## sent today, resolved in the evening: {"location": String, "team": Array}
+var busy: Array[int] = []  ## creature ids away on an expedition for the rest of the day
+var cared: Array[int] = []  ## creature ids cared for today
 
 
 func new_id() -> int:
@@ -39,6 +47,14 @@ func to_dict() -> Dictionary:
 		"reputation": reputation,
 		"next_id": next_id,
 		"creatures": creatures.values().map(func(c: CreatureData) -> Dictionary: return c.to_dict()) + orphans.duplicate(true),
+		"board": Array(board).map(func(id: StringName) -> String: return String(id)),
+		"orders": orders.duplicate(true),
+		"recent_templates": Array(recent_templates).map(func(id: StringName) -> String: return String(id)),
+		"inventory": inventory.duplicate(),
+		"upgrades": Array(upgrades).map(func(id: StringName) -> String: return String(id)),
+		"expeditions": expeditions.duplicate(true),
+		"busy": busy.duplicate(),
+		"cared": cared.duplicate(),
 	}
 
 
@@ -76,12 +92,55 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 		g.creatures[c.id] = c
 		highest_id = maxi(highest_id, c.id)
 	g.next_id = maxi(g.next_id, highest_id + 1)  # never reuse an id, even if the saved next_id fell behind
+	g.board = _known_ids(d.get("board", []), db.orders)
+	g.recent_templates = _known_ids(d.get("recent_templates", []), db.orders)
+	g.upgrades = _known_ids(d.get("upgrades", []), db.upgrades)
+	for o in _list(d.get("orders", [])):
+		if o is Dictionary and o.get("template") is String and db.orders.has(StringName(o["template"])) \
+				and CreatureData._is_num(o.get("deadline_day")):
+			g.orders.append({"template": o["template"], "deadline_day": int(o["deadline_day"])})
+	var inv: Variant = d.get("inventory", {})
+	if inv is Dictionary:
+		for k in inv:
+			if k is String and CreatureData._is_num(inv[k]):
+				g.inventory[k] = maxi(int(inv[k]), 0)
+	for e in _list(d.get("expeditions", [])):
+		if e is not Dictionary or e.get("location") is not String or not db.locations.has(StringName(e["location"])):
+			continue
+		var team: Array = []
+		for t in _list(e.get("team", [])):
+			if CreatureData._is_num(t) and g.creatures.has(int(t)):
+				team.append(int(t))
+		if not team.is_empty():
+			g.expeditions.append({"location": e["location"], "team": team})
+	g.busy = _known_creatures(d.get("busy", []), g)
+	g.cared = _known_creatures(d.get("cared", []), g)
 	return g
 
 
 static func _int_field(d: Dictionary, key: String, def: int) -> int:
 	var v: Variant = d.get(key, def)
 	return int(v) if (v is int or v is float) else def
+
+
+static func _list(v: Variant) -> Array:
+	return v if v is Array else []
+
+
+static func _known_ids(v: Variant, table: Dictionary) -> Array[StringName]:
+	var out: Array[StringName] = []
+	for id in _list(v):
+		if id is String and table.has(StringName(id)):
+			out.append(StringName(id))
+	return out
+
+
+static func _known_creatures(v: Variant, g: GameState) -> Array[int]:
+	var out: Array[int] = []
+	for id in _list(v):
+		if CreatureData._is_num(id) and g.creatures.has(int(id)):
+			out.append(int(id))
+	return out
 
 
 ## Writes to a temp file first, then renames, so a crash mid-write never destroys the previous save. If the
