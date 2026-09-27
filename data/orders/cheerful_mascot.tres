@@ -30,5 +30,4 @@ request_text = "A cheerful mascot with a trick or two."
 required = Array[ExtResource("1_q54g3")]([SubResource("Resource_l1lva"), SubResource("Resource_30yh2")])
 reward_money = 160
 reward_rep = 6
-deadline_days = 6
 min_rep_tier = 1

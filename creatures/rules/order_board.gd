@@ -46,7 +46,7 @@ static func accept(state: GameState, db: Db, template_id: StringName) -> String:
 	if state.orders.size() >= slots(state):
 		return "no free order slots"
 	state.board.erase(template_id)
-	state.orders.append({"template": String(template_id), "deadline_day": state.day + db.orders[template_id].deadline_days})
+	state.orders.append({"template": String(template_id), "deadline_day": state.day + OrderDifficulty.days(db.orders[template_id], db)})
 	return ""
 
 

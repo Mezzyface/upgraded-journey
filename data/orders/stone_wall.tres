@@ -31,5 +31,4 @@ request_text = "A golem to hold the gate."
 required = Array[ExtResource("1_jnmkg")]([SubResource("Resource_gpoqo"), SubResource("Resource_5sarx")])
 reward_money = 200
 reward_rep = 7
-deadline_days = 7
 min_rep_tier = 1

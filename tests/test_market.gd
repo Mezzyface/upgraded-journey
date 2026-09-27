@@ -47,13 +47,20 @@ func test_buy_egg_rules() -> void:
 func test_sell() -> void:
 	var st := GameState.new()
 	var c := Fixtures.adult(st, "spider", 200)  # five D grades
-	eq(Market.sell_price(c), 5 * 1 * 20, "20 per grade level")
+	eq(Market.sell_price(c), 10 + 5 * 1 * 20, "20 per grade level")
 	eq(Market.sell(st, c), "", "sold")
-	eq(st.money, 600, "paid")
+	eq(st.money, 610, "paid")
 	eq(c.status, CreatureData.Status.GONE, "gone")
 	var r := Fixtures.adult(st, "spider")
 	r.status = CreatureData.Status.RETIRED
 	eq(Market.sell(st, r), "retired creatures only breed", "pickled")
+
+
+func test_fresh_creatures_and_eggs_sell_for_the_base_price() -> void:
+	var st := GameState.new()
+	var egg := Fixtures.adult(st, "slime", 20)  # stats 20 = grade E
+	egg.stage = "egg"
+	eq(Market.sell_price(egg), Market.SELL_BASE, "eggs and untrained creatures sell for 10")
 
 
 func test_sell_refuses_a_busy_creature() -> void:

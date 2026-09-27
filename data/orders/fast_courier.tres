@@ -32,5 +32,4 @@ required = Array[ExtResource("1_bjy0f")]([SubResource("Resource_vnmju")])
 bonus = Array[ExtResource("1_bjy0f")]([SubResource("Resource_b2pjw")])
 reward_money = 180
 reward_rep = 6
-deadline_days = 6
 min_rep_tier = 1

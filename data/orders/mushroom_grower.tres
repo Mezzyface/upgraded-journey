@@ -24,4 +24,3 @@ request_text = "A mushroom friend for my garden."
 required = Array[ExtResource("1_hx722")]([SubResource("Resource_tijf6")])
 reward_money = 80
 reward_rep = 3
-deadline_days = 7

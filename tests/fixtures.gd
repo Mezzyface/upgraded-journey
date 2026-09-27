@@ -61,10 +61,10 @@ static func db() -> Db:
 	cave.money_min = 10
 	cave.money_max = 20
 	d.add(cave)
-	d.add(order("t0_slime", 0, [group([req("line", "slime")])], [], 80, 3, 4))
+	d.add(order("t0_slime", 0, [group([req("line", "slime")])], [], 80, 3, 0))
 	d.add(order("t0_power", 0, [group([req("stat", "power", Stats.Grade.D)])],
-		[group([req("stat", "power", Stats.Grade.C)])], 100, 4, 3))
-	d.add(order("t1_dark", 1, [group([req("trait", "darksight")])], [], 200, 8, 6))
+		[group([req("stat", "power", Stats.Grade.C)])], 100, 4, 0))
+	d.add(order("t1_dark", 1, [group([req("trait", "darksight")])], [], 200, 8, 0))
 	d.add(upgrade("extra_pen", 300, 0))
 	d.add(upgrade("extra_ap", 400, 1))
 	d.add(upgrade("gene_scanner", 500, 1))
@@ -157,7 +157,7 @@ static func loot(sp: Species, weight: int) -> LootEntry:
 	return e
 
 
-static func order(id: String, tier: int, required: Array, bonus: Array, money: int, rep: int, deadline: int) -> OrderTemplate:
+static func order(id: String, tier: int, required: Array, bonus: Array, money: int, rep: int, extra_days: int) -> OrderTemplate:
 	var o := OrderTemplate.new()
 	o.id = StringName(id)
 	o.customer = id.capitalize()
@@ -167,7 +167,7 @@ static func order(id: String, tier: int, required: Array, bonus: Array, money: i
 	o.reward_money = money
 	o.bonus_money = 50
 	o.reward_rep = rep
-	o.deadline_days = deadline
+	o.extra_days = extra_days
 	return o
 
 

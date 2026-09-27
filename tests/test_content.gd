@@ -62,7 +62,9 @@ func test_day_loop_content() -> void:
 				if r.kind in ["species", "line", "lineage"]:
 					needs_raising = true
 		if needs_raising:
-			check(o.deadline_days >= 7, "%s: an egg takes 6 days to raise; deadline_days >= 7" % o.id)
+			check(OrderDifficulty.days(o, db) >= 7, "%s: an egg takes 6 days to raise; computed deadline >= 7" % o.id)
+	for pair in [["sticky_helper", 4], ["first_pet", 9], ["help_me_mine", 7], ["spider_family", 19], ["albino_request", 13]]:
+		eq(OrderDifficulty.days(db.orders[StringName(pair[0])], db), pair[1], "%s computed deadline" % pair[0])
 	for loc: Location in db.locations.values():
 		check(not loc.challenges.is_empty() and not loc.loot.is_empty(), "%s has challenges and loot" % loc.id)
 		check(loc.money_min <= loc.money_max, "%s money range" % loc.id)

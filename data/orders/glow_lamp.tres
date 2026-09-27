@@ -21,5 +21,4 @@ request_text = "Something that glows, for the night market."
 required = Array[ExtResource("1_cdlg2")]([SubResource("Resource_87ula")])
 reward_money = 180
 reward_rep = 6
-deadline_days = 6
 min_rep_tier = 1

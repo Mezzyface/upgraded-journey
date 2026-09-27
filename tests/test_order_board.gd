@@ -49,7 +49,7 @@ func test_accept_deliver_and_rewards() -> void:
 	st.board.assign([&"t0_power", &"t0_slime"])
 	eq(OrderBoard.accept(st, db, &"t1_dark"), "not on the board", "must be offered")
 	eq(OrderBoard.accept(st, db, &"t0_power"), "", "accepted")
-	eq(st.orders[0], {"template": "t0_power", "deadline_day": 1 + 3}, "deadline = day + deadline_days")
+	eq(st.orders[0], {"template": "t0_power", "deadline_day": 1 + 4}, "deadline = day + computed days")
 	check(not st.board.has(&"t0_power"), "left the board")
 	var weak := Fixtures.adult(st, "spider", 50)  # power E
 	check(OrderBoard.deliver(st, db, 0, weak).begins_with("missing"), "not good enough")

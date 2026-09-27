@@ -51,5 +51,4 @@ required = Array[ExtResource("1_gwkn7")]([SubResource("Resource_cy3ps"), SubReso
 bonus = Array[ExtResource("1_gwkn7")]([SubResource("Resource_epoau")])
 reward_money = 220
 reward_rep = 8
-deadline_days = 7
 min_rep_tier = 1

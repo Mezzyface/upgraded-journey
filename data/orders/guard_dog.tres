@@ -30,4 +30,3 @@ request_text = "A dog to watch the sheep."
 required = Array[ExtResource("1_jihwn")]([SubResource("Resource_33r85")])
 bonus = Array[ExtResource("1_jihwn")]([SubResource("Resource_pwqkn")])
 reward_rep = 4
-deadline_days = 7

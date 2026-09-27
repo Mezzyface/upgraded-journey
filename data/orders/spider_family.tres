@@ -21,5 +21,4 @@ request_text = "Two generations of spiders, pure line."
 required = Array[ExtResource("1_oujlf")]([SubResource("Resource_xq8tn")])
 reward_money = 250
 reward_rep = 9
-deadline_days = 8
 min_rep_tier = 1

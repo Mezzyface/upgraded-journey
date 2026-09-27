@@ -3,7 +3,8 @@ extends RefCounted
 ## Buying feed, eggs and upgrades; selling creatures; pen space.
 
 const FEED_PRICE := 10
-const SELL_PER_GRADE := 20  ## sell price = this x the sum of the five stat grades (E=0 ... S=5)
+const SELL_BASE := 10  ## every creature sells for at least this
+const SELL_PER_GRADE := 20  ## sell price = SELL_BASE + this x the sum of the five stat grades
 const PEN_BASE := 6
 const PEN_PER_UPGRADE := 3
 
@@ -55,7 +56,7 @@ static func sell_price(c: CreatureData) -> int:
 	var grades := 0
 	for s in Stats.NAMES:
 		grades += Stats.grade(c.stats[s])
-	return grades * SELL_PER_GRADE
+	return SELL_BASE + grades * SELL_PER_GRADE
 
 
 static func sell(state: GameState, c: CreatureData) -> String:

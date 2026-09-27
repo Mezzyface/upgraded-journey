@@ -20,4 +20,3 @@ customer = "Widow Hale"
 request_text = "For my granddaughter — gentle, please."
 required = Array[ExtResource("1_vuk7a")]([SubResource("Resource_uttvs")])
 reward_money = 110
-deadline_days = 6

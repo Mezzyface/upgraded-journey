@@ -21,4 +21,3 @@ request_text = "Any slime, please! I've always wanted one."
 required = Array[ExtResource("1_3b772")]([SubResource("Resource_lkwm5")])
 reward_money = 80
 reward_rep = 3
-deadline_days = 7

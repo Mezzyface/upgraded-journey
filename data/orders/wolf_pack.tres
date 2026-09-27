@@ -29,5 +29,4 @@ request_text = "A bold wolf for the patrols."
 required = Array[ExtResource("1_e81oo")]([SubResource("Resource_25tuj"), SubResource("Resource_6hl7s")])
 reward_money = 300
 reward_rep = 10
-deadline_days = 8
 min_rep_tier = 2
