@@ -45,6 +45,29 @@ static func db() -> Db:
 	slime.evolutions.assign([evo(antenna, "none", 0, null, cheerful)])
 	for s in [spider, albino, large, slime, antenna]:
 		d.add(s)
+	for pid in ["gentle", "bold", "stubborn"]:
+		var p := Personality.new()
+		p.id = StringName(pid)
+		d.add(p)
+	slime.market_price = 60
+	slime.market_tier = 0
+	spider.market_price = 90
+	spider.market_tier = 1
+	var cave := Location.new()
+	cave.id = &"cave"
+	cave.display_name = "Cave"
+	cave.challenges.assign([group([req("trait", "darksight")]), group([req("stat", "guard", Stats.Grade.C)])])
+	cave.loot.assign([loot(albino, 1), loot(spider, 9)])
+	cave.money_min = 10
+	cave.money_max = 20
+	d.add(cave)
+	d.add(order("t0_slime", 0, [group([req("line", "slime")])], [], 80, 3, 4))
+	d.add(order("t0_power", 0, [group([req("stat", "power", Stats.Grade.D)])],
+		[group([req("stat", "power", Stats.Grade.C)])], 100, 4, 3))
+	d.add(order("t1_dark", 1, [group([req("trait", "darksight")])], [], 200, 8, 6))
+	d.add(upgrade("extra_pen", 300, 0))
+	d.add(upgrade("extra_ap", 400, 1))
+	d.add(upgrade("gene_scanner", 500, 1))
 	return d
 
 
@@ -119,3 +142,39 @@ static func adult(state: GameState, species_id: String, stat := 200, cap := 500)
 		c.potential[s] = cap
 	state.add(c)
 	return c
+
+
+static func group(reqs: Array) -> RequirementGroup:
+	var g := RequirementGroup.new()
+	g.any_of.assign(reqs)
+	return g
+
+
+static func loot(sp: Species, weight: int) -> LootEntry:
+	var e := LootEntry.new()
+	e.species = sp
+	e.weight = weight
+	return e
+
+
+static func order(id: String, tier: int, required: Array, bonus: Array, money: int, rep: int, deadline: int) -> OrderTemplate:
+	var o := OrderTemplate.new()
+	o.id = StringName(id)
+	o.customer = id.capitalize()
+	o.min_rep_tier = tier
+	o.required.assign(required)
+	o.bonus.assign(bonus)
+	o.reward_money = money
+	o.bonus_money = 50
+	o.reward_rep = rep
+	o.deadline_days = deadline
+	return o
+
+
+static func upgrade(id: String, cost: int, tier: int) -> UpgradeDef:
+	var u := UpgradeDef.new()
+	u.id = StringName(id)
+	u.display_name = id.capitalize()
+	u.cost = cost
+	u.min_tier = tier
+	return u

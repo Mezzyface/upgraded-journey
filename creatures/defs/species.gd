@@ -22,6 +22,11 @@ extends Resource
 ## Checked in order at the end of each day; the first satisfied branch wins.
 @export var evolutions: Array[EvolutionDef] = []
 @export var sprite_frames: SpriteFrames
+@export_group("Market")
+## Price of an egg at the market; market_tier is the reputation tier that unlocks it (-1 = never sold).
+@export var market_price: int = 0
+@export_range(-1, 4) var market_tier: int = -1
+@export_group("")
 
 
 func potential(stat: String) -> int:

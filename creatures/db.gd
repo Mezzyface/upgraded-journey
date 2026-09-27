@@ -3,7 +3,7 @@ extends RefCounted
 ## Every content definition, indexed by id. load_dir() reads data/<kind>/*.tres, so a new .tres made in the
 ## editor is all it takes to add content. Definitions are read-only at runtime.
 
-const FOLDERS: PackedStringArray = ["species", "traits", "moves", "personalities", "locations", "orders"]
+const FOLDERS: PackedStringArray = ["species", "traits", "moves", "personalities", "locations", "orders", "upgrades"]
 
 var species: Dictionary[StringName, Species] = {}
 var traits: Dictionary[StringName, TraitDef] = {}
@@ -11,6 +11,7 @@ var moves: Dictionary[StringName, MoveDef] = {}
 var personalities: Dictionary[StringName, Personality] = {}
 var locations: Dictionary[StringName, Location] = {}
 var orders: Dictionary[StringName, OrderTemplate] = {}
+var upgrades: Dictionary[StringName, UpgradeDef] = {}
 
 
 static func load_dir(root := "res://data") -> Db:
@@ -45,6 +46,8 @@ func add(def: Resource) -> void:
 		table = locations
 	elif def is OrderTemplate:
 		table = orders
+	elif def is UpgradeDef:
+		table = upgrades
 	else:
 		push_error("Db: %s is not a content definition" % def.resource_path)
 		return

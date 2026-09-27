@@ -44,3 +44,22 @@ func test_requirement_descriptions() -> void:
 	eq(Fixtures.req("stat", "power", Stats.Grade.B).describe(), "Power ≥ B", "stat")
 	eq(Fixtures.req("trait", "darksight").describe(), "Darksight", "trait")
 	eq(Fixtures.req("lineage", "spider", 0, 3).describe(), "3 generations of Spider", "lineage")
+
+
+func test_new_definitions_and_fields() -> void:
+	var db := Fixtures.db()
+	eq(db.upgrades.size(), 3, "upgrades indexed")
+	eq(db.upgrades[&"extra_ap"].min_tier, 1, "upgrade fields")
+	eq(db.orders.size(), 3, "order templates indexed")
+	var cave: Location = db.locations[&"cave"]
+	eq(cave.challenges.size(), 2, "challenges")
+	eq(cave.loot[0].species.id, &"spider_albino", "loot species")
+	eq(db.species[&"slime"].market_tier, 0, "market tier")
+	eq(db.species[&"spider_large"].market_tier, -1, "not sold by default")
+
+
+func test_load_dir_reads_upgrades() -> void:
+	var dir := "user://test_data/upgrades"
+	DirAccess.make_dir_recursive_absolute(dir)
+	ResourceSaver.save(Fixtures.upgrade("extra_pen", 300, 0), dir.path_join("extra_pen.tres"))
+	check(Db.load_dir("user://test_data").upgrades.has(&"extra_pen"), "loaded from data/upgrades")
