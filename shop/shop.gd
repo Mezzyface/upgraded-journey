@@ -4,6 +4,8 @@ extends Control
 
 const TOAST_SECONDS := 2.5
 const CARD := preload("res://shop/panels/creature_card.tscn")
+const ORDERS := preload("res://shop/panels/orders_panel.tscn")
+const SUMMARY := preload("res://shop/panels/day_summary.tscn")
 
 var _rng := RandomNumberGenerator.new()
 
@@ -39,11 +41,15 @@ func open_card(c: CreatureData) -> void:
 
 
 func open_orders() -> void:
-	toast("Orders come in the next step")  # Task 9
+	%PanelHost.open(ORDERS.instantiate())
 
 
 func end_day() -> void:
-	Game.end_day()  # Task 9 shows the summary
+	var day := Game.state.day
+	var events := Game.end_day()
+	var summary := SUMMARY.instantiate()
+	%PanelHost.open(summary)
+	summary.show_events(day, events)
 
 
 func toast(msg: String) -> void:

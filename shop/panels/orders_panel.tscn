@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://7uqjplo584q4"]
+
+[ext_resource type="Script" uid="uid://jq2jb6o1dvdp" path="res://shop/panels/orders_panel.gd" id="1_lqhj2"]
+
+[node name="OrdersPanel" type="PanelContainer" unique_id=573499012]
+custom_minimum_size = Vector2(760, 560)
+script = ExtResource("1_lqhj2")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=439490203]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=1945832504]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="HBoxContainer" parent="Margin/Rows" unique_id=1776190225]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/Rows/Title" unique_id=791087151]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Orders"
+
+[node name="Slots" type="Label" parent="Margin/Rows/Title" unique_id=1303109546]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="Margin/Rows/Title" unique_id=527535514]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Close" type="Button" parent="Margin/Rows/Title" unique_id=1270994586]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Rows" unique_id=1572160840]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="Margin/Rows/Scroll" unique_id=1277369850]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Message" type="Label" parent="Margin/Rows" unique_id=2017449095]
+unique_name_in_owner = true
+layout_mode = 2
