@@ -70,3 +70,10 @@ palette PNG instead of quantizing to `colors`. After the pass `gen.py` prints a 
 palette or the remap made pixels transparent. `python asset-pipeline/gen.py --remap <png>[#x,y,w,h] [--out <png>]`
 puts any existing image (or one cell of a sheet) on the palette without a model call. Refs accept the same
 `#x,y,w,h` suffix to use one frame of a sprite sheet. Checks: `python asset-pipeline/test_gen.py`.
+
+## Restyle experiment result
+
+Palette-remap (not full model restyle) is the recommended default -- it kept each creature's identity; full
+restyle lost the golem's features; creatures read well at about 32 px against 16 px tiles (a rough midpoint of the
+15-30 px measured); sub-project 2 uses this for `sprite_scale`. Run: `python asset-pipeline/restyle_compare.py`
+(outputs git-ignored).

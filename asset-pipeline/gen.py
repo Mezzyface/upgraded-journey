@@ -290,6 +290,12 @@ def refine(dest, job):
     if pal and not os.path.exists(pal):
         raise RuntimeError(f"{dest}: palette not found at {pal} -- "
                             f"extract the Sprout Lands zips into asset-pipeline/sprout-lands/")
+    if pal and not os.path.exists(ASEPRITE):
+        print(f"WARN  {dest}: Aseprite not found at {ASEPRITE}, palette lock skipped")
+        off = off_palette(dest, pal)
+        if off:
+            print(f"WARN  {dest}: {off} pixels off the palette")
+        return
     if not (colors or pal) or not os.path.exists(ASEPRITE):
         return
     before = opaque_count(dest)
@@ -310,6 +316,20 @@ def remap(ref, out):
     refine(out, {"type": "prop", "palette": "sprout"})
 
 
+def check_inputs(job):
+    """Fail clearly before any model call when a job's palette or reference files are missing -- otherwise the
+    un-remapped `dest` from generate() gets saved anyway and the next run just prints `skip`."""
+    pal = palette_of(job)
+    if pal and not os.path.exists(pal):
+        raise RuntimeError(f"{job['name']}: palette not found at {pal} -- "
+                            f"extract the Sprout Lands zips into asset-pipeline/sprout-lands/")
+    for ref in job.get("refs", STYLES[job["type"]]["refs"]):
+        path = os.path.join(ROOT, ref.partition("#")[0])
+        if not os.path.exists(path):
+            raise RuntimeError(f"{job['name']}: ref not found at {path} -- "
+                                f"extract the Sprout Lands zips into asset-pipeline/sprout-lands/")
+
+
 def run(job, force=False, reprocess=False):
     dest = os.path.join(OUT, job["type"], job["name"] + ".png")
     raw = glob.glob(dest[:-4] + ".raw.*")
@@ -324,6 +344,7 @@ def run(job, force=False, reprocess=False):
     if os.path.exists(dest) and not force:
         print(f"skip  {dest}")
         return
+    check_inputs(job)
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     notes, log = "", []
     for attempt in range(1 + REWORKS):

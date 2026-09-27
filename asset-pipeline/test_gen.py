@@ -65,6 +65,37 @@ def test_missing_palette_stops_clearly():  # a job pointed at a missing palette 
         del gen.PALETTES["_missing_test"]
 
 
+def test_missing_ref_stops_before_any_model_call():  # the pre-check must fire before generate() is ever called
+    orig_generate = gen.generate
+    gen.generate = lambda *a, **kw: (_ for _ in ()).throw(AssertionError("generate() must not be called"))
+    try:
+        job = {"name": "no_such_ref_job", "type": "prop", "refs": ["no/such/ref.png"]}
+        try:
+            gen.run(job)
+            raise AssertionError("expected RuntimeError for a missing ref")
+        except RuntimeError as e:
+            assert "no_such_ref_job" in str(e)
+            assert "extract the Sprout Lands zips into asset-pipeline/sprout-lands/" in str(e)
+    finally:
+        gen.generate = orig_generate
+
+
+def test_missing_palette_stops_before_any_model_call():  # same pre-check, for a job pointed at a missing palette
+    gen.PALETTES["_missing_test2"] = "no/such/palette2.png"
+    orig_generate = gen.generate
+    gen.generate = lambda *a, **kw: (_ for _ in ()).throw(AssertionError("generate() must not be called"))
+    try:
+        job = {"name": "no_such_palette_job", "type": "prop", "palette": "_missing_test2"}
+        try:
+            gen.run(job)
+            raise AssertionError("expected RuntimeError for a missing palette")
+        except RuntimeError as e:
+            assert "no/such/palette2.png" in str(e)
+    finally:
+        gen.generate = orig_generate
+        del gen.PALETTES["_missing_test2"]
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):
