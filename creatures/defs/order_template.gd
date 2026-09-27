@@ -12,4 +12,4 @@ extends Resource
 @export var bonus_money: int = 50
 @export var reward_rep: int = 5
 @export var deadline_days: int = 5
-@export_range(0, 5) var min_rep_tier: int = 0
+@export_range(0, 4) var min_rep_tier: int = 0

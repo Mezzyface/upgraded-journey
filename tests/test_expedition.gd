@@ -38,7 +38,7 @@ func test_loot_is_eggs_or_money_and_albino_is_rare() -> void:
 					albinos += 1
 		if st.money > 500:
 			money_finds += 1
-	check(eggs > 100 and eggs < 220, "about 40%% of 400 rolls are eggs (got %d)" % eggs)
+	check(eggs > 130 and eggs < 190, "about 40%% of 400 rolls are eggs (got %d)" % eggs)
 	check(albinos > 0 and albinos * 4 < eggs, "Spider Albino is rare (%d of %d eggs)" % [albinos, eggs])
 	check(money_finds > 0, "money rolls happen")
 
