@@ -24,7 +24,7 @@ resources_spreadsheet_view/freeze_first_column=true
 [application]
 
 config/name="Upgraded Journey"
-run/main_scene="res://ui/gallery.tscn"
+run/main_scene="res://shop/shop.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 

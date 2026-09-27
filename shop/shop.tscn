@@ -1,0 +1,187 @@
+[gd_scene format=3 uid="uid://df7hvi0xw551u"]
+
+[ext_resource type="Script" uid="uid://w2b7518gooom" path="res://shop/shop.gd" id="1_xad5q"]
+[ext_resource type="Texture2D" uid="uid://7js1hj7xo565" path="res://shop/art/shop_floor.png" id="2_ljlg5"]
+[ext_resource type="Texture2D" uid="uid://vgkbmfmheeod" path="res://shop/art/shop_counter.png" id="3_bv5vx"]
+[ext_resource type="Texture2D" uid="uid://dkosh17elkaj0" path="res://shop/art/market_stall.png" id="4_mmyc1"]
+[ext_resource type="Texture2D" uid="uid://b534vdu47nojw" path="res://shop/art/shop_door.png" id="5_orod7"]
+[ext_resource type="Texture2D" uid="uid://c51n6fwevwr3j" path="res://shop/art/pen_grass.png" id="6_cd0xb"]
+[ext_resource type="SpriteFrames" uid="uid://dk13gkbm5wyga" path="res://creatures/frames/slime.tres" id="7_mmyc1"]
+[ext_resource type="Script" uid="uid://bg12tx378yav2" path="res://shop/spawn_area.gd" id="7_yrv44"]
+[ext_resource type="Texture2D" uid="uid://drbg2kfuwbx8u" path="res://shop/art/stable_hay.png" id="8_pafut"]
+[ext_resource type="SpriteFrames" uid="uid://dkj5n6u6r8hjl" path="res://creatures/frames/spider.tres" id="9_orod7"]
+[ext_resource type="Script" uid="uid://ey0ju0iqjbkn" path="res://shop/panel_host.gd" id="11_cd0xb"]
+
+[node name="Shop" type="Control" unique_id=1935750032]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xad5q")
+
+[node name="Floor" type="TextureRect" parent="." unique_id=294044166]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_ljlg5")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HUD" type="PanelContainer" parent="." unique_id=571209694]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 64.0
+grow_horizontal = 2
+theme_type_variation = &"BarPanel"
+
+[node name="HudRow" type="HBoxContainer" parent="HUD" unique_id=1430248193]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="DayLabel" type="Label" parent="HUD/HudRow" unique_id=1556326706]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+
+[node name="ApLabel" type="Label" parent="HUD/HudRow" unique_id=479457805]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MoneyLabel" type="Label" parent="HUD/HudRow" unique_id=464357858]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RepLabel" type="Label" parent="HUD/HudRow" unique_id=330842084]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="HUD/HudRow" unique_id=580242534]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EndDayButton" type="Button" parent="HUD/HudRow" unique_id=399663739]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "End day"
+
+[node name="Counter" type="TextureButton" parent="." unique_id=1056247634]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 0
+offset_left = 40.0
+offset_top = 90.0
+offset_right = 296.0
+offset_bottom = 250.0
+tooltip_text = "Orders"
+texture_normal = ExtResource("3_bv5vx")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="MarketStall" type="TextureButton" parent="." unique_id=669970820]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 0
+offset_left = 984.0
+offset_top = 90.0
+offset_right = 1240.0
+offset_bottom = 250.0
+tooltip_text = "Market"
+texture_normal = ExtResource("4_mmyc1")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="PenFrame" type="TextureRect" parent="." unique_id=44616958]
+texture_filter = 1
+layout_mode = 0
+offset_left = 40.0
+offset_top = 290.0
+offset_right = 640.0
+offset_bottom = 680.0
+texture = ExtResource("6_cd0xb")
+expand_mode = 1
+
+[node name="Pens" type="Control" parent="PenFrame" unique_id=665469268]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 174.0
+offset_top = 151.0
+offset_right = -176.0
+offset_bottom = -116.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_yrv44")
+preview_frames = ExtResource("7_mmyc1")
+
+[node name="StableFrame" type="TextureRect" parent="." unique_id=1146096328]
+texture_filter = 1
+layout_mode = 0
+offset_left = 660.0
+offset_top = 290.0
+offset_right = 1040.0
+offset_bottom = 680.0
+texture = ExtResource("8_pafut")
+expand_mode = 1
+
+[node name="Stable" type="Control" parent="StableFrame" unique_id=1081452728]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 72.0
+offset_top = 163.0
+offset_right = -142.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_yrv44")
+preview_frames = ExtResource("9_orod7")
+preview_count = 2
+
+[node name="Door" type="TextureButton" parent="." unique_id=1983773903]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 0
+offset_left = 1080.0
+offset_top = 330.0
+offset_right = 1240.0
+offset_bottom = 650.0
+tooltip_text = "Expeditions"
+texture_normal = ExtResource("5_orod7")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Toast" type="Label" parent="." unique_id=138493415]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -48.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_type_variation = &"OnDarkLabel"
+horizontal_alignment = 1
+
+[node name="PanelHost" type="Control" parent="." unique_id=194054736]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 190.0
+offset_top = 80.0
+offset_right = 1090.0
+offset_bottom = 700.0
+script = ExtResource("11_cd0xb")
