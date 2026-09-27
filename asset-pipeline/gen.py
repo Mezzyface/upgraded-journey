@@ -13,7 +13,7 @@ Job fields: name, type (portrait|splash|sprite|ui|prop|restyle), prompt, refs (o
 palette (name from PALETTES; locks the Aseprite pass to that palette PNG instead of quantizing to `colors`).
 Each type has a style prefix + default reference images pulled from art-example / the packs / sprout-lands.
 """
-import glob, json, os, re, shutil, subprocess, sys, tempfile, time
+import glob, hashlib, json, os, re, shutil, subprocess, sys, tempfile, time
 from collections import deque
 from PIL import Image, ImageChops, ImageDraw
 
@@ -69,6 +69,13 @@ STYLES = {
                "#FF00FF background. Object: ",
         refs=[SL_PREM + "Objects/Trees, stumps and bushes.png", SL_PREM + "Objects/work station.png",
               SL_PREM + "Tilesets/Building parts/Chest.png"]),
+    "restyle": dict(  # job refs: [creature frame to redraw, style ref, style ref]
+        aspect="1:1", size="small", colors=0, palette="sprout",
+        prefix="Redraw the creature from the FIRST reference image as a tiny 16-bit farm game sprite in the exact "
+               "style of the OTHER reference images (Sprout Lands): same creature, same pose and silhouette, colours "
+               "moved to that soft pastel palette, 1px dark outline, simple flat shading, no anti-aliasing, one "
+               "creature centered and facing right, no text, on a solid flat magenta #FF00FF background. Creature: ",
+        refs=[SL_PREM + "Animals/Chicken/chicken default.png", SL_PREM + "Characters/Premium Charakter Spritesheet.png"]),
 }
 
 
@@ -80,7 +87,10 @@ def as_png(ref):
     if not crop and not path.lower().endswith(".gif"):
         return path
     tag = ("_" + crop.replace(",", "_")) if crop else ""
-    cached = os.path.join(tempfile.gettempdir(), "agy_refs", os.path.basename(path) + tag + ".png")
+    # ponytail: basename alone collides when refs share a filename (e.g. creatures/pack/*/idle.png) --
+    # prefix a hash of the full path so distinct sources never share a cache entry.
+    h = hashlib.sha1(path.encode()).hexdigest()[:8]
+    cached = os.path.join(tempfile.gettempdir(), "agy_refs", h + "_" + os.path.basename(path) + tag + ".png")
     if not os.path.exists(cached):
         os.makedirs(os.path.dirname(cached), exist_ok=True)
         im = Image.open(path)

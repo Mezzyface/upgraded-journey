@@ -12,3 +12,4 @@ asset-pipeline/sprout-lands/
 art/sprout/**
 !art/sprout/**/
 !art/sprout/**/*.import
+asset-pipeline/assets/restyle/
