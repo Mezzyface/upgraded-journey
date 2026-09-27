@@ -3,6 +3,7 @@ extends RefCounted
 ## Base for tests/test_*.gd. `check` records a failure instead of stopping, so one run reports everything.
 
 var failures: PackedStringArray = []
+var tree: SceneTree  ## set by the runner; scene tests add nodes to tree.root and `await tree.process_frame`
 
 
 func check(cond: bool, msg: String) -> void:

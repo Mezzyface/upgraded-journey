@@ -1,7 +1,8 @@
 extends SceneTree
 ## Headless test runner (no framework). From the repo root:
 ##   godot --headless --path . -s res://tests/run_tests.gd
-## Runs every test_* method of every tests/test_*.gd. Exit code 1 if anything fails.
+## Runs every test_* method of every tests/test_*.gd. A test may be a coroutine
+## (`await tree.process_frame`) — scene tests use this. Exit code 1 if anything fails.
 
 
 ## Catches script errors (e.g. a null call) that a test triggers. Without this, a test that aborts on a
@@ -14,7 +15,12 @@ class ErrorCatcher extends Logger:
 			script_errors.append("%s (%s:%d)" % [rationale if rationale != "" else code, file, line])
 
 
-func _init() -> void:
+func _initialize() -> void:
+	_run()
+
+
+## Runs on the main loop (not in _init) so autoloads exist and tests can await frames.
+func _run() -> void:
 	var catcher := ErrorCatcher.new()
 	OS.add_logger(catcher)
 	var ran := 0
@@ -28,13 +34,14 @@ func _init() -> void:
 			failed += 1
 			continue
 		var suite: TestSuite = script.new()
+		suite.tree = self
 		for m in suite.get_method_list():
 			var name: String = m.name
 			if not name.begins_with("test_"):
 				continue
 			suite.failures.clear()
 			catcher.script_errors.clear()
-			suite.call(name)
+			await suite.call(name)
 			ran += 1
 			for e in catcher.script_errors:
 				suite.failures.append("script error: %s" % e)
