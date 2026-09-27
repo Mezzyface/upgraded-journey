@@ -126,6 +126,8 @@ static func send_expedition(state: GameState, db: Db, location_id: StringName, t
 	state.expeditions.append({"location": String(location_id), "team": ids})
 	for id in ids:
 		state.busy.append(id)
+		if not state.cared.has(id):
+			state.cared.append(id)
 	state.ap -= COST_EXPEDITION
 	return ""
 

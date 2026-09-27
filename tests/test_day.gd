@@ -98,6 +98,17 @@ func test_away_injured_retired_and_eggs_are_refused() -> void:
 	eq(Day.send_expedition(st, db, &"atlantis", [b]), "unknown location", "unknown location")
 
 
+func test_expedition_counts_as_care() -> void:
+	var db := Fixtures.db()
+	var st := _state()
+	var baby := Fixtures.adult(st, "spider")
+	baby.stage = "baby"
+	Day.send_expedition(st, db, &"cave", [baby])
+	Day.end_day(st, db, Fixtures.rng())
+	eq(baby.leanings.get("bold", 0), 1, "leans Bold from the expedition")
+	eq(baby.leanings.get("timid", 0), 0, "not also marked Timid for being uncared-for")
+
+
 func test_breed_needs_pen_space_and_ap() -> void:
 	var db := Fixtures.db()
 	var st := _state()
