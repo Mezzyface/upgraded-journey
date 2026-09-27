@@ -50,10 +50,12 @@ static func accept(state: GameState, db: Db, template_id: StringName) -> String:
 
 
 static func deliver(state: GameState, db: Db, index: int, c: CreatureData) -> String:
-	if index < 0 or index >= state.orders.size():
-		return "no such order"
 	if c == null:
 		return "no such creature"
+	if state.busy.has(c.id):
+		return "busy on an expedition today"
+	if index < 0 or index >= state.orders.size():
+		return "no such order"
 	var tmpl: OrderTemplate = db.orders[StringName(state.orders[index]["template"])]
 	var r := Orders.check(c, tmpl, db, state)
 	if not r["ok"]:

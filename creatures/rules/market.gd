@@ -65,6 +65,8 @@ static func sell(state: GameState, c: CreatureData) -> String:
 		return "retired creatures only breed"
 	if c.status == CreatureData.Status.GONE:
 		return "no longer in the shop"
+	if state.busy.has(c.id):
+		return "busy on an expedition today"
 	state.money += sell_price(c)
 	c.status = CreatureData.Status.GONE
 	return ""

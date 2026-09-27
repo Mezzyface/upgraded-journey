@@ -143,14 +143,10 @@ static func retire(state: GameState, db: Db, c: CreatureData, rng: RandomNumberG
 
 
 static func sell(state: GameState, c: CreatureData) -> String:
-	if c != null and state.busy.has(c.id):
-		return "busy on an expedition today"
 	return Market.sell(state, c)
 
 
 static func deliver(state: GameState, db: Db, index: int, c: CreatureData) -> String:
-	if c != null and state.busy.has(c.id):
-		return "busy on an expedition today"
 	return OrderBoard.deliver(state, db, index, c)
 
 

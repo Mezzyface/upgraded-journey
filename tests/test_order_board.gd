@@ -53,6 +53,16 @@ func test_accept_deliver_and_rewards() -> void:
 	eq(OrderBoard.deliver(st, db, 0, weak), "no such order", "bad index")
 
 
+func test_deliver_refuses_a_busy_creature() -> void:
+	var db := Fixtures.db()
+	var st := GameState.new()
+	st.orders.assign([{"template": "t0_slime", "deadline_day": 5}])
+	var c := Fixtures.adult(st, "slime")
+	st.busy.append(c.id)
+	eq(OrderBoard.deliver(st, db, 0, c), "busy on an expedition today", "refused")
+	eq(st.orders.size(), 1, "order unchanged")
+
+
 func test_order_slots_limit_accepting() -> void:
 	var db := Fixtures.db()
 	var st := GameState.new()

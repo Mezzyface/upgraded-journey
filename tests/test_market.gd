@@ -56,6 +56,14 @@ func test_sell() -> void:
 	eq(Market.sell(st, r), "retired creatures only breed", "pickled")
 
 
+func test_sell_refuses_a_busy_creature() -> void:
+	var st := GameState.new()
+	var c := Fixtures.adult(st, "spider")
+	st.busy.append(c.id)
+	eq(Market.sell(st, c), "busy on an expedition today", "refused")
+	eq(c.status, CreatureData.Status.OWNED, "unchanged")
+
+
 func test_upgrades() -> void:
 	var db := Fixtures.db()
 	var st := GameState.new()
