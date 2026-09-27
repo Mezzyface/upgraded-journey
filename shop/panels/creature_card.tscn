@@ -46,6 +46,7 @@ autowrap_mode = 3
 [node name="Close" type="Button" parent="Margin/Rows/Header" unique_id=1306198707]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DecoratedButton"
 text = "Close"
 
 [node name="Stats" type="GridContainer" parent="Margin/Rows" unique_id=580956899]
@@ -72,25 +73,30 @@ theme_override_constants/separation = 8
 [node name="Train" type="MenuButton" parent="Margin/Rows/Actions" unique_id=487440685]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DecoratedButton"
 text = "Train"
 flat = false
 
 [node name="Feed" type="Button" parent="Margin/Rows/Actions" unique_id=1634337993]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DecoratedButton"
 text = "Feed"
 
 [node name="Play" type="Button" parent="Margin/Rows/Actions" unique_id=699061693]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DecoratedButton"
 text = "Play"
 
 [node name="Retire" type="Button" parent="Margin/Rows/Actions" unique_id=2124229324]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DecoratedButton"
 text = "Retire"
 
 [node name="Sell" type="Button" parent="Margin/Rows/Actions" unique_id=1915029948]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DecoratedButton"
 text = "Sell"
