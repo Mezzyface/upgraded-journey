@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://c6tqotn1ufehr"]
+
+[ext_resource type="Script" path="res://shop/creature_sprite.gd" id="1_vpxwt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_30t7f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ekj1c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g5mv3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lrmsj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kaxfk"]
+
+[node name="CreatureSprite" type="Node2D" unique_id=331166886]
+script = ExtResource("1_vpxwt")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=2058387422]
+texture_filter = 1
+
+[node name="Egg" type="Sprite2D" parent="." unique_id=1971446674]
+visible = false
+texture_filter = 1
+
+[node name="Hit" type="Button" parent="." unique_id=331808549]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_30t7f")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_ekj1c")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_g5mv3")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lrmsj")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_kaxfk")
+flat = true
