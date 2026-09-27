@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_4xyd6"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_tpy64"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_16amq"]
+
+[sub_resource type="Resource" id="Resource_ylxiy"]
+script = ExtResource("2_tpy64")
+kind = "trait"
+id = &"fireproof"
+
+[sub_resource type="Resource" id="Resource_pgieo"]
+script = ExtResource("1_4xyd6")
+any_of = Array[ExtResource("2_tpy64")]([SubResource("Resource_ylxiy")])
+
+[sub_resource type="Resource" id="Resource_gu2v1"]
+script = ExtResource("2_tpy64")
+kind = "stat"
+id = &"guard"
+min_grade = 3
+
+[sub_resource type="Resource" id="Resource_tyy8x"]
+script = ExtResource("1_4xyd6")
+any_of = Array[ExtResource("2_tpy64")]([SubResource("Resource_gu2v1")])
+
+[resource]
+script = ExtResource("3_16amq")
+id = &"fire_guard"
+customer = "Smith Garrow"
+request_text = "Fireproof and tough, for my forge."
+required = Array[ExtResource("1_4xyd6")]([SubResource("Resource_pgieo"), SubResource("Resource_tyy8x")])
+reward_money = 320
+reward_rep = 10
+deadline_days = 9
+min_rep_tier = 2

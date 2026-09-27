@@ -35,3 +35,53 @@ func test_some_species_branch() -> void:
 	var db := Db.load_dir()
 	check(db.species[&"spider"].evolutions.size() >= 2, "spider branches")
 	check(db.species[&"green_golem"].evolutions.size() >= 2, "green golem branches")
+
+
+func test_day_loop_content() -> void:
+	var db := Db.load_dir()
+	eq(db.upgrades.size(), 3, "upgrades")
+	check(db.orders.size() >= 15, "order templates (got %d)" % db.orders.size())
+	var kinds := {}
+	for o: OrderTemplate in db.orders.values():
+		check(not o.required.is_empty(), "%s has requirements" % o.id)
+		for g in o.required + o.bonus:
+			check(g != null and not g.any_of.is_empty(), "%s: no empty groups" % o.id)
+			for r in (g.any_of if g else []):
+				kinds[r.kind] = true
+				check(_requirement_resolves(r, db), "%s: %s '%s' exists" % [o.id, r.kind, r.id])
+	for k in ["species", "line", "stat", "trait", "move_element", "move_kind", "personality", "lineage"]:
+		check(kinds.has(k), "some order asks for %s" % k)
+	check(db.orders.values().filter(func(o: OrderTemplate) -> bool: return o.min_rep_tier == 0).size() >= 4,
+		"at least 4 tier-0 orders")
+	for loc: Location in db.locations.values():
+		check(not loc.challenges.is_empty() and not loc.loot.is_empty(), "%s has challenges and loot" % loc.id)
+		check(loc.money_min <= loc.money_max, "%s money range" % loc.id)
+		for e in loc.loot:
+			check(e != null and e.species != null and db.species.has(e.species.id), "%s loot species exists" % loc.id)
+	check(db.locations[&"mine"].loot.any(func(e: LootEntry) -> bool: return e.species.id == &"spider_albino"),
+		"the Mine can find Spider Albino")
+	var setup: NewGameSetup = load("res://data/new_game.tres")
+	check(setup != null and setup.species.size() == 3, "new game setup")
+	var sold := db.species.values().filter(func(s: Species) -> bool: return s.market_tier >= 0)
+	eq(sold.size(), 5, "five species sold as eggs")
+	for s: Species in sold:
+		check(s.stage == 1 and s.market_price > 0, "%s is a base form with a price" % s.id)
+
+
+func _requirement_resolves(r: Requirement, db: Db) -> bool:
+	match r.kind:
+		"species":
+			return db.species.has(r.id)
+		"trait":
+			return db.traits.has(r.id)
+		"personality":
+			return db.personalities.has(r.id)
+		"line", "lineage":
+			return db.species.values().any(func(s: Species) -> bool: return s.line == r.id)
+		"stat":
+			return Stats.NAMES.has(String(r.id))
+		"move_kind":
+			return r.id in [&"damaging", &"utility"]
+		"move_element":
+			return db.moves.values().any(func(m: MoveDef) -> bool: return m.element == r.id)
+	return false

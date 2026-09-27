@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_jihwn"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_3fsw7"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_bqoui"]
+
+[sub_resource type="Resource" id="Resource_eej4g"]
+script = ExtResource("2_3fsw7")
+kind = "personality"
+id = &"bold"
+
+[sub_resource type="Resource" id="Resource_pwqkn"]
+script = ExtResource("1_jihwn")
+any_of = Array[ExtResource("2_3fsw7")]([SubResource("Resource_eej4g")])
+
+[sub_resource type="Resource" id="Resource_yx0xd"]
+script = ExtResource("2_3fsw7")
+kind = "line"
+id = &"canine"
+
+[sub_resource type="Resource" id="Resource_33r85"]
+script = ExtResource("1_jihwn")
+any_of = Array[ExtResource("2_3fsw7")]([SubResource("Resource_yx0xd")])
+
+[resource]
+script = ExtResource("3_bqoui")
+id = &"guard_dog"
+customer = "Farmer Tess"
+request_text = "A dog to watch the sheep."
+required = Array[ExtResource("1_jihwn")]([SubResource("Resource_33r85")])
+bonus = Array[ExtResource("1_jihwn")]([SubResource("Resource_pwqkn")])
+reward_rep = 4

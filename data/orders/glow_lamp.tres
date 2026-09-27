@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_cdlg2"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_8e75q"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_bwbco"]
+
+[sub_resource type="Resource" id="Resource_fuwxs"]
+script = ExtResource("2_8e75q")
+kind = "trait"
+id = &"glowing"
+
+[sub_resource type="Resource" id="Resource_87ula"]
+script = ExtResource("1_cdlg2")
+any_of = Array[ExtResource("2_8e75q")]([SubResource("Resource_fuwxs")])
+
+[resource]
+script = ExtResource("3_bwbco")
+id = &"glow_lamp"
+customer = "Lamplighter Nell"
+request_text = "Something that glows, for the night market."
+required = Array[ExtResource("1_cdlg2")]([SubResource("Resource_87ula")])
+reward_money = 180
+reward_rep = 6
+deadline_days = 6
+min_rep_tier = 1

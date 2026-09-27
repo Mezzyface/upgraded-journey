@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_gwkn7"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_xoajv"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_iam5c"]
+
+[sub_resource type="Resource" id="Resource_d0c2i"]
+script = ExtResource("2_xoajv")
+kind = "stat"
+id = &"guard"
+min_grade = 2
+
+[sub_resource type="Resource" id="Resource_epoau"]
+script = ExtResource("1_gwkn7")
+any_of = Array[ExtResource("2_xoajv")]([SubResource("Resource_d0c2i")])
+
+[sub_resource type="Resource" id="Resource_pj8t1"]
+script = ExtResource("2_xoajv")
+kind = "trait"
+id = &"darksight"
+
+[sub_resource type="Resource" id="Resource_t5qgc"]
+script = ExtResource("2_xoajv")
+kind = "trait"
+id = &"glowing"
+
+[sub_resource type="Resource" id="Resource_cy3ps"]
+script = ExtResource("1_gwkn7")
+any_of = Array[ExtResource("2_xoajv")]([SubResource("Resource_pj8t1"), SubResource("Resource_t5qgc")])
+
+[sub_resource type="Resource" id="Resource_fkf8k"]
+script = ExtResource("2_xoajv")
+kind = "move_element"
+id = &"earth"
+
+[sub_resource type="Resource" id="Resource_vncjn"]
+script = ExtResource("2_xoajv")
+kind = "move_kind"
+id = &"damaging"
+
+[sub_resource type="Resource" id="Resource_regqo"]
+script = ExtResource("1_gwkn7")
+any_of = Array[ExtResource("2_xoajv")]([SubResource("Resource_fkf8k"), SubResource("Resource_vncjn")])
+
+[resource]
+script = ExtResource("3_iam5c")
+id = &"help_me_mine"
+customer = "Miner Dunn"
+request_text = "Help me mine: it has to see in the dark and dig or fight."
+required = Array[ExtResource("1_gwkn7")]([SubResource("Resource_cy3ps"), SubResource("Resource_regqo")])
+bonus = Array[ExtResource("1_gwkn7")]([SubResource("Resource_epoau")])
+reward_money = 220
+reward_rep = 8
+deadline_days = 7
+min_rep_tier = 1

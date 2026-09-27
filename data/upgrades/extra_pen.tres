@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UpgradeDef" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/upgrade_def.gd" id="1_uq2sb"]
+
+[resource]
+script = ExtResource("1_uq2sb")
+id = &"extra_pen"
+display_name = "Extra Pen"
+description = "Room for 3 more creatures."
+cost = 300

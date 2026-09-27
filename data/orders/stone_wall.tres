@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_jnmkg"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_3ddnm"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_rh1nt"]
+
+[sub_resource type="Resource" id="Resource_c53rt"]
+script = ExtResource("2_3ddnm")
+kind = "line"
+id = &"golem"
+
+[sub_resource type="Resource" id="Resource_gpoqo"]
+script = ExtResource("1_jnmkg")
+any_of = Array[ExtResource("2_3ddnm")]([SubResource("Resource_c53rt")])
+
+[sub_resource type="Resource" id="Resource_ye85n"]
+script = ExtResource("2_3ddnm")
+kind = "stat"
+id = &"guard"
+min_grade = 2
+
+[sub_resource type="Resource" id="Resource_5sarx"]
+script = ExtResource("1_jnmkg")
+any_of = Array[ExtResource("2_3ddnm")]([SubResource("Resource_ye85n")])
+
+[resource]
+script = ExtResource("3_rh1nt")
+id = &"stone_wall"
+customer = "Captain Ivers"
+request_text = "A golem to hold the gate."
+required = Array[ExtResource("1_jnmkg")]([SubResource("Resource_gpoqo"), SubResource("Resource_5sarx")])
+reward_money = 200
+reward_rep = 7
+deadline_days = 7
+min_rep_tier = 1

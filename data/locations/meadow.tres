@@ -1,10 +1,58 @@
 [gd_resource type="Resource" script_class="Location" format=3 uid="uid://wnsjfnja232x"]
 
 [ext_resource type="Script" uid="uid://bba3sgivwgdlf" path="res://creatures/defs/location.gd" id="1_p5gj7"]
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_pxdrh"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_4t0hw"]
 [ext_resource type="Resource" uid="uid://bh3jk2e4v7721" path="res://data/traits/sunny.tres" id="2_u0q0s"]
+[ext_resource type="Script" path="res://creatures/defs/loot_entry.gd" id="3_cjghe"]
+[ext_resource type="Resource" path="res://data/species/slime.tres" id="4_3vc6f"]
+[ext_resource type="Resource" path="res://data/species/mushroom.tres" id="5_q3o34"]
+[ext_resource type="Resource" path="res://data/species/dog.tres" id="6_u30lr"]
+
+[sub_resource type="Resource" id="Resource_o2grw"]
+script = ExtResource("2_4t0hw")
+kind = "stat"
+id = &"speed"
+min_grade = 1
+
+[sub_resource type="Resource" id="Resource_5qr51"]
+script = ExtResource("1_pxdrh")
+any_of = Array[ExtResource("2_4t0hw")]([SubResource("Resource_o2grw")])
+
+[sub_resource type="Resource" id="Resource_bjyiy"]
+script = ExtResource("2_4t0hw")
+kind = "move_element"
+id = &"nature"
+
+[sub_resource type="Resource" id="Resource_xcers"]
+script = ExtResource("2_4t0hw")
+kind = "move_element"
+id = &"beast"
+
+[sub_resource type="Resource" id="Resource_0n5qu"]
+script = ExtResource("1_pxdrh")
+any_of = Array[ExtResource("2_4t0hw")]([SubResource("Resource_bjyiy"), SubResource("Resource_xcers")])
+
+[sub_resource type="Resource" id="Resource_bbxhv"]
+script = ExtResource("3_cjghe")
+species = ExtResource("4_3vc6f")
+weight = 4
+
+[sub_resource type="Resource" id="Resource_0k0vo"]
+script = ExtResource("3_cjghe")
+species = ExtResource("5_q3o34")
+weight = 3
+
+[sub_resource type="Resource" id="Resource_7i240"]
+script = ExtResource("3_cjghe")
+species = ExtResource("6_u30lr")
+weight = 3
 
 [resource]
 script = ExtResource("1_p5gj7")
 id = &"meadow"
 display_name = "Meadow"
 trains_trait = ExtResource("2_u0q0s")
+challenges = Array[ExtResource("1_pxdrh")]([SubResource("Resource_5qr51"), SubResource("Resource_0n5qu")])
+loot = Array[ExtResource("3_cjghe")]([SubResource("Resource_bbxhv"), SubResource("Resource_0k0vo"), SubResource("Resource_7i240")])
+money_max = 30

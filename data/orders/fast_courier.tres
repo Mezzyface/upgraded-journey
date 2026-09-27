@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_bjy0f"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_30ygf"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_d1ppb"]
+
+[sub_resource type="Resource" id="Resource_hbarh"]
+script = ExtResource("2_30ygf")
+kind = "trait"
+id = &"swift"
+
+[sub_resource type="Resource" id="Resource_b2pjw"]
+script = ExtResource("1_bjy0f")
+any_of = Array[ExtResource("2_30ygf")]([SubResource("Resource_hbarh")])
+
+[sub_resource type="Resource" id="Resource_7q2qm"]
+script = ExtResource("2_30ygf")
+kind = "stat"
+id = &"speed"
+min_grade = 2
+
+[sub_resource type="Resource" id="Resource_vnmju"]
+script = ExtResource("1_bjy0f")
+any_of = Array[ExtResource("2_30ygf")]([SubResource("Resource_7q2qm")])
+
+[resource]
+script = ExtResource("3_d1ppb")
+id = &"fast_courier"
+customer = "Courier Lina"
+request_text = "Fast legs for my deliveries."
+required = Array[ExtResource("1_bjy0f")]([SubResource("Resource_vnmju")])
+bonus = Array[ExtResource("1_bjy0f")]([SubResource("Resource_b2pjw")])
+reward_money = 180
+reward_rep = 6
+deadline_days = 6
+min_rep_tier = 1

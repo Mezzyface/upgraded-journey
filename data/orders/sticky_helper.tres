@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_x00yg"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_rrlbx"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_tt7b2"]
+
+[sub_resource type="Resource" id="Resource_pquld"]
+script = ExtResource("2_rrlbx")
+kind = "trait"
+id = &"sticky"
+
+[sub_resource type="Resource" id="Resource_wss1t"]
+script = ExtResource("1_x00yg")
+any_of = Array[ExtResource("2_rrlbx")]([SubResource("Resource_pquld")])
+
+[resource]
+script = ExtResource("3_tt7b2")
+id = &"sticky_helper"
+customer = "Baker Mae"
+request_text = "Something sticky to catch the flies in my bakery."
+required = Array[ExtResource("1_x00yg")]([SubResource("Resource_wss1t")])
+reward_money = 90
+reward_rep = 3

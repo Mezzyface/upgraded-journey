@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_hx722"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_x6bnn"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_axfwi"]
+
+[sub_resource type="Resource" id="Resource_78tgt"]
+script = ExtResource("2_x6bnn")
+id = &"mushroom"
+
+[sub_resource type="Resource" id="Resource_fhgkm"]
+script = ExtResource("2_x6bnn")
+id = &"party_mushroom"
+
+[sub_resource type="Resource" id="Resource_tijf6"]
+script = ExtResource("1_hx722")
+any_of = Array[ExtResource("2_x6bnn")]([SubResource("Resource_78tgt"), SubResource("Resource_fhgkm")])
+
+[resource]
+script = ExtResource("3_axfwi")
+id = &"mushroom_grower"
+customer = "Herbalist Oona"
+request_text = "A mushroom friend for my garden."
+required = Array[ExtResource("1_hx722")]([SubResource("Resource_tijf6")])
+reward_money = 80
+reward_rep = 3

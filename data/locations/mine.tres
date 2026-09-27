@@ -1,10 +1,58 @@
 [gd_resource type="Resource" script_class="Location" format=3 uid="uid://cl2ight8q1ay3"]
 
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_o6218"]
 [ext_resource type="Script" uid="uid://bba3sgivwgdlf" path="res://creatures/defs/location.gd" id="1_y3cuw"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_t46tv"]
 [ext_resource type="Resource" uid="uid://1525hlnjwwu2" path="res://data/traits/tunnel_wise.tres" id="2_xh8dj"]
+[ext_resource type="Script" path="res://creatures/defs/loot_entry.gd" id="3_g0j1h"]
+[ext_resource type="Resource" path="res://data/species/green_golem.tres" id="4_dxfn0"]
+[ext_resource type="Resource" path="res://data/species/spider.tres" id="5_20ysu"]
+[ext_resource type="Resource" path="res://data/species/spider_albino.tres" id="6_jywth"]
+
+[sub_resource type="Resource" id="Resource_u51y3"]
+script = ExtResource("2_t46tv")
+kind = "trait"
+id = &"darksight"
+
+[sub_resource type="Resource" id="Resource_uyial"]
+script = ExtResource("2_t46tv")
+kind = "trait"
+id = &"glowing"
+
+[sub_resource type="Resource" id="Resource_4r3be"]
+script = ExtResource("1_o6218")
+any_of = Array[ExtResource("2_t46tv")]([SubResource("Resource_u51y3"), SubResource("Resource_uyial")])
+
+[sub_resource type="Resource" id="Resource_j4p28"]
+script = ExtResource("2_t46tv")
+kind = "stat"
+id = &"guard"
+min_grade = 2
+
+[sub_resource type="Resource" id="Resource_y71ku"]
+script = ExtResource("1_o6218")
+any_of = Array[ExtResource("2_t46tv")]([SubResource("Resource_j4p28")])
+
+[sub_resource type="Resource" id="Resource_x3k63"]
+script = ExtResource("3_g0j1h")
+species = ExtResource("4_dxfn0")
+weight = 5
+
+[sub_resource type="Resource" id="Resource_3mcy4"]
+script = ExtResource("3_g0j1h")
+species = ExtResource("5_20ysu")
+weight = 4
+
+[sub_resource type="Resource" id="Resource_t6hq5"]
+script = ExtResource("3_g0j1h")
+species = ExtResource("6_jywth")
 
 [resource]
 script = ExtResource("1_y3cuw")
 id = &"mine"
 display_name = "Mine"
 trains_trait = ExtResource("2_xh8dj")
+challenges = Array[ExtResource("1_o6218")]([SubResource("Resource_4r3be"), SubResource("Resource_y71ku")])
+loot = Array[ExtResource("3_g0j1h")]([SubResource("Resource_x3k63"), SubResource("Resource_3mcy4"), SubResource("Resource_t6hq5")])
+money_min = 20
+money_max = 50

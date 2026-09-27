@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_q54g3"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_jqs5h"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_gt8h4"]
+
+[sub_resource type="Resource" id="Resource_hjcjc"]
+script = ExtResource("2_jqs5h")
+kind = "personality"
+id = &"cheerful"
+
+[sub_resource type="Resource" id="Resource_l1lva"]
+script = ExtResource("1_q54g3")
+any_of = Array[ExtResource("2_jqs5h")]([SubResource("Resource_hjcjc")])
+
+[sub_resource type="Resource" id="Resource_rcf84"]
+script = ExtResource("2_jqs5h")
+kind = "move_kind"
+id = &"utility"
+
+[sub_resource type="Resource" id="Resource_30yh2"]
+script = ExtResource("1_q54g3")
+any_of = Array[ExtResource("2_jqs5h")]([SubResource("Resource_rcf84")])
+
+[resource]
+script = ExtResource("3_gt8h4")
+id = &"cheerful_mascot"
+customer = "Innkeeper Rolf"
+request_text = "A cheerful mascot with a trick or two."
+required = Array[ExtResource("1_q54g3")]([SubResource("Resource_l1lva"), SubResource("Resource_30yh2")])
+reward_money = 160
+reward_rep = 6
+deadline_days = 6
+min_rep_tier = 1

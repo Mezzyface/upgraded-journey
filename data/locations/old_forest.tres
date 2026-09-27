@@ -1,10 +1,54 @@
 [gd_resource type="Resource" script_class="Location" format=3 uid="uid://xgx166ftqpwl"]
 
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_l34f2"]
 [ext_resource type="Script" uid="uid://bba3sgivwgdlf" path="res://creatures/defs/location.gd" id="1_vsue7"]
 [ext_resource type="Resource" uid="uid://bmbqfbh0gg3aa" path="res://data/traits/forest_wise.tres" id="2_4pdj7"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_ubyuf"]
+[ext_resource type="Script" path="res://creatures/defs/loot_entry.gd" id="3_6abib"]
+[ext_resource type="Resource" path="res://data/species/spider.tres" id="4_q211o"]
+[ext_resource type="Resource" path="res://data/species/mushroom.tres" id="5_8uatj"]
+[ext_resource type="Resource" path="res://data/species/dog.tres" id="6_piuql"]
+
+[sub_resource type="Resource" id="Resource_8o454"]
+script = ExtResource("2_ubyuf")
+kind = "stat"
+id = &"wits"
+min_grade = 1
+
+[sub_resource type="Resource" id="Resource_8671q"]
+script = ExtResource("1_l34f2")
+any_of = Array[ExtResource("2_ubyuf")]([SubResource("Resource_8o454")])
+
+[sub_resource type="Resource" id="Resource_rgbfa"]
+script = ExtResource("2_ubyuf")
+kind = "stat"
+id = &"power"
+min_grade = 2
+
+[sub_resource type="Resource" id="Resource_8cgfs"]
+script = ExtResource("1_l34f2")
+any_of = Array[ExtResource("2_ubyuf")]([SubResource("Resource_rgbfa")])
+
+[sub_resource type="Resource" id="Resource_sdlx8"]
+script = ExtResource("3_6abib")
+species = ExtResource("4_q211o")
+weight = 4
+
+[sub_resource type="Resource" id="Resource_ss4la"]
+script = ExtResource("3_6abib")
+species = ExtResource("5_8uatj")
+weight = 3
+
+[sub_resource type="Resource" id="Resource_1ufup"]
+script = ExtResource("3_6abib")
+species = ExtResource("6_piuql")
+weight = 3
 
 [resource]
 script = ExtResource("1_vsue7")
 id = &"old_forest"
 display_name = "Old Forest"
 trains_trait = ExtResource("2_4pdj7")
+challenges = Array[ExtResource("1_l34f2")]([SubResource("Resource_8671q"), SubResource("Resource_8cgfs")])
+loot = Array[ExtResource("3_6abib")]([SubResource("Resource_sdlx8"), SubResource("Resource_ss4la"), SubResource("Resource_1ufup")])
+money_min = 15

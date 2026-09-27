@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="UpgradeDef" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/upgrade_def.gd" id="1_vnl62"]
+
+[resource]
+script = ExtResource("1_vnl62")
+id = &"gene_scanner"
+display_name = "Gene Scanner"
+description = "Reveals the sparks of grandparents you didn't raise."
+cost = 500
+min_tier = 1

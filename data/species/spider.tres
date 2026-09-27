@@ -45,3 +45,5 @@ potential_heart = 250
 moves = Array[ExtResource("2_w5n4t")]([SubResource("Resource_g7dk6"), SubResource("Resource_dyjay")])
 evolutions = Array[ExtResource("1_b4vlp")]([SubResource("Resource_0d0x1"), SubResource("Resource_b2oxy")])
 sprite_frames = ExtResource("5_psvq5")
+market_price = 90
+market_tier = 1

@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_27ph5"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_tf8pb"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_p5x0t"]
+
+[sub_resource type="Resource" id="Resource_pfvu7"]
+script = ExtResource("2_tf8pb")
+kind = "stat"
+id = &"power"
+min_grade = 2
+
+[sub_resource type="Resource" id="Resource_c5hid"]
+script = ExtResource("1_27ph5")
+any_of = Array[ExtResource("2_tf8pb")]([SubResource("Resource_pfvu7")])
+
+[sub_resource type="Resource" id="Resource_qpu1t"]
+script = ExtResource("2_tf8pb")
+kind = "stat"
+id = &"power"
+min_grade = 1
+
+[sub_resource type="Resource" id="Resource_ht0hs"]
+script = ExtResource("1_27ph5")
+any_of = Array[ExtResource("2_tf8pb")]([SubResource("Resource_qpu1t")])
+
+[resource]
+script = ExtResource("3_p5x0t")
+id = &"strong_hauler"
+customer = "Dockhand Brom"
+request_text = "I need something that can haul crates."
+required = Array[ExtResource("1_27ph5")]([SubResource("Resource_ht0hs")])
+bonus = Array[ExtResource("1_27ph5")]([SubResource("Resource_c5hid")])
+reward_rep = 4

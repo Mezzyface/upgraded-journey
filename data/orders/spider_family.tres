@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_oujlf"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_einu7"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_n5jfu"]
+
+[sub_resource type="Resource" id="Resource_olklt"]
+script = ExtResource("2_einu7")
+kind = "lineage"
+id = &"spider"
+
+[sub_resource type="Resource" id="Resource_xq8tn"]
+script = ExtResource("1_oujlf")
+any_of = Array[ExtResource("2_einu7")]([SubResource("Resource_olklt")])
+
+[resource]
+script = ExtResource("3_n5jfu")
+id = &"spider_family"
+customer = "Collector Vesk"
+request_text = "Two generations of spiders, pure line."
+required = Array[ExtResource("1_oujlf")]([SubResource("Resource_xq8tn")])
+reward_money = 250
+reward_rep = 9
+deadline_days = 8
+min_rep_tier = 1

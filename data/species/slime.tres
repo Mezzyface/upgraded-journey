@@ -34,3 +34,5 @@ natural_traits = Array[ExtResource("3_kd5wh")]([ExtResource("6_kg0hr")])
 moves = Array[ExtResource("2_c5ivj")]([SubResource("Resource_oovqg")])
 evolutions = Array[ExtResource("1_rgneg")]([SubResource("Resource_8jfvo")])
 sprite_frames = ExtResource("5_ejpo8")
+market_price = 60
+market_tier = 0

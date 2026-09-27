@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+
+[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_vuk7a"]
+[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_kwycy"]
+[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_ff3xm"]
+
+[sub_resource type="Resource" id="Resource_h0k3m"]
+script = ExtResource("2_kwycy")
+kind = "personality"
+id = &"gentle"
+
+[sub_resource type="Resource" id="Resource_uttvs"]
+script = ExtResource("1_vuk7a")
+any_of = Array[ExtResource("2_kwycy")]([SubResource("Resource_h0k3m")])
+
+[resource]
+script = ExtResource("3_ff3xm")
+id = &"gentle_pet"
+customer = "Widow Hale"
+request_text = "For my granddaughter — gentle, please."
+required = Array[ExtResource("1_vuk7a")]([SubResource("Resource_uttvs")])
+reward_money = 110
+deadline_days = 6
