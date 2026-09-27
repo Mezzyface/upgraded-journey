@@ -1,6 +1,6 @@
 @tool
 extends VSlider
-## Slider-style scrollbar from the Isle of Lore pack: a thin bar with a fixed-size knob.
+## Slider-style scrollbar (PackScrollBar variation): a thin bar with a fixed-size knob.
 ## Godot's VScrollBar stretches its grabber, so this VSlider drives the ScrollContainer instead.
 ## Put it beside the ScrollContainer, set that container's vertical scroll mode to "Show Never",
 ## and give this node the `PackScrollBar` theme type variation.

@@ -47,9 +47,11 @@ func test_variations_keep_their_names_and_bases() -> void:
 
 
 func test_nothing_references_isle_of_lore() -> void:
+	var forbidden := ["ui/theme/pack/", "isle_of_lore", "iol_theme"]
 	for path in _project_text_files("res://"):
 		var text := FileAccess.get_file_as_string(path)
-		check(not text.contains("ui/theme/pack/") and not text.contains("isle_of_lore"), "still referenced in %s" % path)
+		for token in forbidden:
+			check(not text.contains(token), "still references %s in %s" % [token, path])
 
 
 func _project_text_files(dir: String) -> PackedStringArray:
