@@ -92,6 +92,55 @@ func test_resizing_reflows_sprites_spawned_before_layout() -> void:
 	a.queue_free()
 
 
+const Importer := preload("res://addons/creature_tools/pack_importer.gd")
+const CREATURE_SPRITE := preload("res://shop/creature_sprite.tscn")
+
+
+func _fake_frames() -> SpriteFrames:
+	var tex := ImageTexture.create_from_image(Image.create(512, 512, false, Image.FORMAT_RGBA8))
+	return Importer.frames_from_textures({"idle": tex, "move": tex})
+
+
+func test_refresh_does_not_interrupt_a_walking_creature() -> void:
+	var a := _area()
+	await tree.process_frame
+	var s: CreatureSprite = CREATURE_SPRITE.instantiate()
+	a.add_child(s)
+	s.setup(_creatures(1)[0], _fake_frames(), a, Fixtures.rng())
+	s._target = s.position + Vector2(50, 0)  # mid-walk: not standing on its target
+	s._facing = "right"
+	s._play("move")
+	var sprite: AnimatedSprite2D = s.get_node("%Sprite")
+	eq(sprite.animation, &"move_right", "walking")
+	s.refresh()
+	eq(sprite.animation, &"move_right", "refresh left the walk animation alone")
+	a.queue_free()
+
+
+func test_no_frames_shows_the_egg_placeholder_instead_of_nothing() -> void:
+	var a := _area()
+	await tree.process_frame
+	var s: CreatureSprite = CREATURE_SPRITE.instantiate()
+	a.add_child(s)
+	s.setup(_creatures(1)[0], null, a, Fixtures.rng())
+	check(s.get_node("%Egg").visible, "no frames: the egg placeholder stands in")
+	check(not s.get_node("%Sprite").visible, "no frames: nothing for the sprite to show")
+	a.queue_free()
+
+
+func test_lower_creatures_draw_in_front() -> void:
+	var a := _area()
+	await tree.process_frame
+	a.sync(_creatures(3), Fixtures.db(), Fixtures.rng())
+	var s := a.sprites()
+	s[0].position.y = 50.0
+	s[1].position.y = 10.0
+	s[2].position.y = 30.0
+	a._process(0.0)
+	eq(a.sprites(), [s[1], s[2], s[0]], "reordered lowest-y first so the highest-y (lowest in the pen) draws last, on top")
+	a.queue_free()
+
+
 func test_panel_host_shows_one_panel_at_a_time() -> void:
 	var host := PanelHost.new()
 	host.size = Vector2(800, 500)

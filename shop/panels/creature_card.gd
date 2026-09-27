@@ -2,6 +2,8 @@ extends PanelContainer
 ## The creature card: stats against their caps, traits and moves, family, and this creature's actions. Every action
 ## goes through Game; a refused one shows its reason. Closes itself if the creature leaves the shop.
 
+const EGG_TEXTURE := preload("res://shop/art/egg.png")
+
 var creature: CreatureData
 var _pending_sell := false  ## Sell/Retire are two-step: the first press only arms the button
 var _pending_retire := false
@@ -70,7 +72,8 @@ func _refresh() -> void:
 	_pending_sell = false
 	_pending_retire = false
 	var sp := Game.species_of(creature)
-	%Portrait.texture = CreatureAnim.portrait(sp.sprite_frames) if sp else null
+	%Portrait.texture = EGG_TEXTURE if creature.stage == "egg" else \
+			(CreatureAnim.portrait(sp.sprite_frames) if sp else null)
 	%Name.text = "%s #%d" % [sp.display_name if sp else String(creature.species), creature.id]
 	var notes: PackedStringArray = [creature.stage.capitalize()]
 	if sp:

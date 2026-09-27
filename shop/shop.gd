@@ -12,10 +12,19 @@ var _rng := RandomNumberGenerator.new()
 
 ## After `--`: `--save=<path>` uses that save file (for screenshots), `--open=card|orders|summary` opens a panel,
 ## `--screenshot=<path>` saves a capture and quits. The same pattern as ui/gallery.gd.
+## `--screenshot=` without an explicit `--save=` never touches the real save: it defaults to a throwaway path.
 func _read_save_arg() -> void:
-	for arg in OS.get_cmdline_user_args():
+	var args := OS.get_cmdline_user_args()
+	var has_save := false
+	var has_screenshot := false
+	for arg in args:
 		if arg.begins_with("--save="):
 			Game.save_path = arg.trim_prefix("--save=")
+			has_save = true
+		elif arg.begins_with("--screenshot="):
+			has_screenshot = true
+	if has_screenshot and not has_save:
+		Game.save_path = "user://shot_save.json"
 
 
 func _handle_cmdline() -> void:

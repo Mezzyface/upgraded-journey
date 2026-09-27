@@ -47,6 +47,18 @@ func test_placeholder_stations_toast() -> void:
 	_done(shop)
 
 
+func test_creature_clicked_and_counter_open_their_panels() -> void:
+	var shop := _shop()
+	await tree.process_frame
+	shop.get_node("%Pens").creature_clicked.emit(Game.owned()[0])
+	await tree.process_frame
+	eq(shop.get_node("%PanelHost").current().name, "CreatureCard", "creature_clicked opens the card")
+	shop.get_node("%Counter").pressed.emit()
+	await tree.process_frame
+	eq(shop.get_node("%PanelHost").current().name, "OrdersPanel", "Counter opens the orders panel")
+	_done(shop)
+
+
 ## Regression for the almost-unclickable counter: a later sibling drawn on top of a station must not eat its
 ## clicks unless it explicitly ignores the mouse (creature Hit buttons, which are descendants, still work).
 func test_no_later_sibling_blocks_a_station() -> void:

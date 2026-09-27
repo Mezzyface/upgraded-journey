@@ -35,16 +35,20 @@ func place(p: Vector2) -> void:
 	_target = p
 
 
-## Re-reads the creature's stage (egg, baby, adult) and scale.
+## Re-reads the creature's stage (egg, baby, adult) and scale. Leaves a creature that's mid-walk alone — only
+## a standing creature (position == _target) is put back to idle — and falls back to the Egg placeholder
+## (scaled like a creature, not the small egg-in-nest look) for a species with no usable frames.
 func refresh() -> void:
 	var egg := creature.stage == "egg"
 	scale = Vector2.ONE * _area.sprite_scale * (_area.baby_scale if creature.stage == "baby" else 1.0)
-	%Sprite.visible = not egg and _frames != null
-	%Egg.visible = egg
+	var has_frames := _frames != null and CreatureAnim.pick(_frames, "idle", _facing) != &""
+	%Sprite.visible = not egg and has_frames
+	%Egg.visible = egg or not has_frames
 	var body := CreatureAnim.body_rect(_frames)
 	%Hit.position = body.position
 	%Hit.size = body.size
-	_play("idle")
+	if position == _target:
+		_play("idle")
 
 
 func _process(delta: float) -> void:

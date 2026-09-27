@@ -34,6 +34,19 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
+## Control has no `y_sort_enabled` (that's a Node2D/CanvasItem-only property that doesn't reach a Control
+## parent), so a lower creature is kept drawn in front of a higher one here instead: reorder the CreatureSprite
+## children by y every frame (cheap at `max_shown`-many creatures) so the later sibling — drawn last, on top —
+## is always the one standing lower in the pen.
+func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+	var kids := sprites()
+	kids.sort_custom(func(a: CreatureSprite, b: CreatureSprite) -> bool: return a.position.y < b.position.y)
+	for i in kids.size():
+		move_child(kids[i], i)
+
+
 ## Containers size this area after the first layout pass, so sprites synced earlier (all at 0, 0) or left outside
 ## by a resize are re-placed inside.
 func _notification(what: int) -> void:
