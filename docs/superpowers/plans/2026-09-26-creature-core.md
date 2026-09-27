@@ -2409,9 +2409,9 @@ Must-do first tasks:
   unreachable in a fresh game and the 2-generation trait-spark goal cannot be played.
 
 Decided by the owner (2026-09-26):
-- Retired creatures do NOT evolve in the stable: skip the evolution check for RETIRED creatures in
-  `Lifecycle.advance_day` (today they still evolve), with a test.
-- Retired creatures cannot train, and only adults can retire: add rules-level guards with tests.
+- Retired creatures are "pickled": frozen and usable only for breeding/inspiration. No evolution (today they still
+  evolve in `Lifecycle.advance_day`), no training, no care, no delivery (already blocked in `Orders.check`); only
+  adults can retire. Add rules-level guards with tests.
 - After evolving, the new form's move unlocks join the creature's learnable pool; they are learned through training as
   usual (current behavior; no automatic learn on evolve).
 - Evolution stays on the day after growing up for now, to see how it feels.
