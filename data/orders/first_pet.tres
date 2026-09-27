@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="OrderTemplate" format=3]
+[gd_resource type="Resource" script_class="OrderTemplate" format=3 uid="uid://blbdp4lgx31d5"]
 
-[ext_resource type="Script" path="res://creatures/defs/requirement_group.gd" id="1_3b772"]
-[ext_resource type="Script" path="res://creatures/defs/requirement.gd" id="2_t6qnt"]
-[ext_resource type="Script" path="res://creatures/defs/order_template.gd" id="3_74gql"]
+[ext_resource type="Script" uid="uid://bihxwn7ipqsjl" path="res://creatures/defs/requirement_group.gd" id="1_3b772"]
+[ext_resource type="Script" uid="uid://dnlgxwmkyfmhk" path="res://creatures/defs/requirement.gd" id="2_t6qnt"]
+[ext_resource type="Script" uid="uid://b8dbv7ohiq4s7" path="res://creatures/defs/order_template.gd" id="3_74gql"]
 
 [sub_resource type="Resource" id="Resource_r05ni"]
 script = ExtResource("2_t6qnt")
@@ -21,4 +21,4 @@ request_text = "Any slime, please! I've always wanted one."
 required = Array[ExtResource("1_3b772")]([SubResource("Resource_lkwm5")])
 reward_money = 80
 reward_rep = 3
-deadline_days = 4
+deadline_days = 7

@@ -53,6 +53,16 @@ func test_day_loop_content() -> void:
 		check(kinds.has(k), "some order asks for %s" % k)
 	check(db.orders.values().filter(func(o: OrderTemplate) -> bool: return o.min_rep_tier == 0).size() >= 4,
 		"at least 4 tier-0 orders")
+	for o: OrderTemplate in db.orders.values():
+		if o.min_rep_tier != 0:
+			continue  # tier 1+ may expect stock on hand
+		var needs_raising := false
+		for g in o.required:
+			for r in (g.any_of if g else []):
+				if r.kind in ["species", "line", "lineage"]:
+					needs_raising = true
+		if needs_raising:
+			check(o.deadline_days >= 7, "%s: an egg takes 6 days to raise; deadline_days >= 7" % o.id)
 	for loc: Location in db.locations.values():
 		check(not loc.challenges.is_empty() and not loc.loot.is_empty(), "%s has challenges and loot" % loc.id)
 		check(loc.money_min <= loc.money_max, "%s money range" % loc.id)
