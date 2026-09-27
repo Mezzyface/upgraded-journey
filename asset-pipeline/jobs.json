@@ -9,5 +9,6 @@
   {"name": "shop_door", "type": "sprite", "prompt": "an arched wooden shop door with a hanging lantern, front view, no shadow on the ground", "size": [128, 256], "colors": 32, "refs": ["art-example/splashscreen1.gif"], "key_shadow_fix": true},
   {"name": "pen_grass", "type": "sprite", "prompt": "a small fenced grassy creature pen seen from the front, a low wooden fence around a patch of grass, empty, no shadow on the ground", "size": [300, 196], "colors": 32, "refs": ["art-example/splashscreen1.gif"], "key_shadow_fix": true},
   {"name": "stable_hay", "type": "sprite", "prompt": "a cosy stable stall with a straw bed and a hay bale, seen from the front, empty", "size": [190, 196], "colors": 32, "refs": ["art-example/splashscreen1.gif"]},
-  {"name": "egg", "type": "sprite", "prompt": "a single speckled cream-coloured creature egg, no shadow on the ground", "size": "tiny", "colors": 16}
+  {"name": "egg", "type": "sprite", "prompt": "a single speckled cream-coloured creature egg, no shadow on the ground", "size": "tiny", "colors": 16},
+  {"name": "order_board", "type": "prop", "prompt": "a small wooden notice board on two posts with three pinned paper order slips", "size": [32, 32]}
 ]

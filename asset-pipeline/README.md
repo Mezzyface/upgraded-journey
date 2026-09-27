@@ -1,7 +1,7 @@
 # Asset pipeline
 
 Generates pixel-art game assets with nano-banana through the local Antigravity CLI (`agy`, your Gemini account),
-using the art in `art-example/`, `80_Monster_Packs/` and `ui-pack/` as style references.
+using the art in `art-example/`, `80_Monster_Packs/` and `sprout-lands/` as style references.
 
 ```bash
 python asset-pipeline/gen.py              # every job in jobs.json (skips already-rendered)
@@ -56,10 +56,17 @@ environment if it is not at `C:/Program Files/Aseprite/Aseprite.exe`.
 | portrait | 3:4    | portrait | 32     | white bg keyed to transparent, nearest     | art-example portraits      |
 | splash   | 16:9   | splash   | 64     | nearest resize only                        | art-example splash screens |
 | sprite   | 1:1    | small    | 16     | magenta bg keyed, nearest resize           | Monster Pack 1 slime       |
-| ui       | 1:1    | button   | 0      | magenta bg keyed, smooth (Lanczos) resize  | ui-pack decorated buttons  |
-
-`ui` is smooth vector-style art because the Isle of Lore pack is; set `colors` and swap the prefix in `STYLES`
-if you want pixel-art UI instead.
+| ui       | 1:1    | 32       | —      | magenta keyed, nearest, Sprout palette     | Sprout UI sheet + dialog box |
+| prop     | 1:1    | small    | —      | magenta keyed, nearest, Sprout palette     | Sprout trees, work station, chest |
+| restyle  | 1:1    | small    | —      | magenta keyed, nearest, Sprout palette     | job refs: creature frame first, then Sprout refs |
 
 Style prefixes live in `STYLES` in `gen.py`; edit them there to steer the look.
 Needs `agy` on PATH (logged in), Pillow, and Aseprite (optional; skipped if not found).
+
+## Palette lock
+
+`"palette": "sprout"` (default for `ui`, `prop`, `restyle`) makes `refine.lua` remap the image to the Sprout Lands
+palette PNG instead of quantizing to `colors`. After the pass `gen.py` prints a `WARN` if any opaque pixel is off the
+palette or the remap made pixels transparent. `python asset-pipeline/gen.py --remap <png>[#x,y,w,h] [--out <png>]`
+puts any existing image (or one cell of a sheet) on the palette without a model call. Refs accept the same
+`#x,y,w,h` suffix to use one frame of a sprite sheet. Checks: `python asset-pipeline/test_gen.py`.

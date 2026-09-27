@@ -6,10 +6,12 @@ Everything lives under asset-pipeline/ (its .gdignore keeps Godot from importing
     python asset-pipeline/gen.py --force hero_fox        # regenerate even if it exists
     python asset-pipeline/gen.py --reprocess blue_slime  # re-run keying/resize on the saved .raw without regenerating
     python asset-pipeline/gen.py --review blue_slime     # just run the reviewer on an existing asset
+    python asset-pipeline/gen.py --remap <png>[#x,y,w,h] [--out <png>]  # put an existing image on a palette, no API call
 
-Job fields: name, type (portrait|splash|sprite|ui), prompt, refs (optional, <=3 paths), aspect, size (sprite/ui px),
-colors (palette size for the Aseprite pass; 0 skips it).
-Each type has a style prefix + default reference images pulled from art-example / the packs.
+Job fields: name, type (portrait|splash|sprite|ui|prop|restyle), prompt, refs (optional, <=3 paths, accept a
+"#x,y,w,h" crop suffix), aspect, size (sprite/ui px), colors (palette size for the Aseprite pass; 0 skips it),
+palette (name from PALETTES; locks the Aseprite pass to that palette PNG instead of quantizing to `colors`).
+Each type has a style prefix + default reference images pulled from art-example / the packs / sprout-lands.
 """
 import glob, json, os, re, shutil, subprocess, sys, tempfile, time
 from collections import deque
@@ -26,6 +28,12 @@ SIZES = {  # standard sprite sizes (px, square); portrait/splash match the art-e
     "icon": 32, "button": 128,
     "portrait": (540, 720), "splash": (1280, 720),
 }
+
+SL = "sprout-lands/"
+SL_PREM = SL + "Sprout Lands - Sprites - premium pack/"
+SL_UI_BASIC = SL + "Sprout Lands - UI Pack - Basic pack/"
+SL_UI_PREM = SL + "Sprout Lands - UI Pack - Premium pack/"
+PALETTES = {"sprout": SL_PREM + "Sprout Lands color pallet/Sprout Lands defautlt palette.png"}
 
 STYLES = {
     "portrait": dict(
@@ -46,26 +54,66 @@ STYLES = {
                "chibi proportions, thick dark outline, 3-4 shades per color, one creature centered and facing right, "
                "idle pose, drop shadow, no text, on a solid flat magenta #FF00FF background. Creature: ",
         refs=["80_Monster_Packs/Monster Packs/Monster Pack 1 (Slimes)/Slime.gif"]),
-    "ui": dict(  # the ui-pack is smooth vector-style art, not pixel art, so no palette quantization here
-        aspect="1:1", size="button", colors=0, resample=Image.LANCZOS,
-        prefix="Clean 2D game UI element matching the style of the reference (Isle of Lore 2 UI pack) exactly: "
-               "smooth anti-aliased dark outline, soft gradient shading, rounded beveled edges, glossy highlight, "
-               "centered, no text, on a solid flat magenta #FF00FF background. Element: ",
-        refs=["ui-pack/Documentation/files/examples/buttons/2_button_square_decorated_0.png",
-              "ui-pack/Documentation/files/examples/buttons/6_button_round_big_0.png"]),
+    "ui": dict(
+        aspect="1:1", size=32, colors=0, palette="sprout",
+        prefix="Tiny pixel art game UI element matching the style of the reference (Sprout Lands UI pack) exactly: "
+               "soft cream and wood-brown pastel palette, 1px dark outline, flat shading with a one-pixel highlight, "
+               "no anti-aliasing, centered, no text, on a solid flat magenta #FF00FF background. Element: ",
+        refs=[SL_UI_BASIC + "Sprite sheets/Sprite sheet for Basic Pack.png",
+              SL_UI_PREM + "UI Sprites/Dialouge UI/dialog box.png"]),
+    "prop": dict(
+        aspect="1:1", size="small", colors=0, palette="sprout",
+        prefix="Tiny top-down (3/4 view) pixel art farm game object matching the style of the reference sprite sheets "
+               "exactly (Sprout Lands): soft pastel palette, 1px dark brown outline, simple flat shading, no "
+               "anti-aliasing, sized for a 16x16 tile grid, one object centered, no text, on a solid flat magenta "
+               "#FF00FF background. Object: ",
+        refs=[SL_PREM + "Objects/Trees, stumps and bushes.png", SL_PREM + "Objects/work station.png",
+              SL_PREM + "Tilesets/Building parts/Chest.png"]),
 }
 
 
-def as_png(path):
-    """generate_image only takes still images; cache a PNG of GIF refs' first frame."""
+def as_png(ref):
+    """generate_image only takes still images: GIF refs become a PNG of their first frame, and 'path#x,y,w,h'
+    refs become a PNG of that region (e.g. one frame of a sprite sheet). Cached in the temp dir."""
+    path, _, crop = ref.partition("#")
     path = os.path.join(ROOT, path)
-    if not path.lower().endswith(".gif"):
+    if not crop and not path.lower().endswith(".gif"):
         return path
-    cached = os.path.join(tempfile.gettempdir(), "agy_refs", os.path.basename(path) + ".png")
+    tag = ("_" + crop.replace(",", "_")) if crop else ""
+    cached = os.path.join(tempfile.gettempdir(), "agy_refs", os.path.basename(path) + tag + ".png")
     if not os.path.exists(cached):
         os.makedirs(os.path.dirname(cached), exist_ok=True)
-        Image.open(path).convert("RGB").save(cached)
+        im = Image.open(path)
+        if crop:
+            x, y, w, h = map(int, crop.split(","))
+            im = im.convert("RGBA").crop((x, y, x + w, y + h))
+        else:
+            im = im.convert("RGB")
+        im.save(cached)
     return cached
+
+
+def _rgba(png):
+    b = Image.open(png).convert("RGBA").tobytes()
+    return (tuple(b[i:i + 4]) for i in range(0, len(b), 4))
+
+
+def palette_colors(png):
+    return {c[:3] for c in _rgba(png) if c[3]}
+
+
+def opaque_count(png):
+    return sum(1 for c in _rgba(png) if c[3])
+
+
+def off_palette(png, pal_png):
+    pal = palette_colors(pal_png)
+    return sum(1 for c in _rgba(png) if c[3] and c[:3] not in pal)
+
+
+def palette_of(job):
+    name = job.get("palette", STYLES[job["type"]].get("palette"))
+    return os.path.join(ROOT, PALETTES[name]) if name else None
 
 
 def agy(instruction, schema=None, tries=3):
@@ -226,13 +274,27 @@ def review(dest, job):
 
 
 def refine(dest, job):
-    """Aseprite pass: quantize palette, save a .aseprite next to the PNG for hand edits."""
+    """Aseprite pass: remap to the job's palette PNG (or quantize to `colors`), save a .aseprite for hand edits."""
     colors = job.get("colors", STYLES[job["type"]]["colors"])
-    if not colors or not os.path.exists(ASEPRITE):
+    pal = palette_of(job)
+    if not (colors or pal) or not os.path.exists(ASEPRITE):
         return
-    r = subprocess.run([ASEPRITE, "-b", "--script-param", f"in={dest}", "--script-param", f"colors={colors}",
+    before = opaque_count(dest)
+    param = f"palette={pal}" if pal else f"colors={colors}"
+    r = subprocess.run([ASEPRITE, "-b", "--script-param", f"in={dest}", "--script-param", param,
                         "--script", os.path.join(ROOT, "refine.lua")], capture_output=True, text=True)
     print("     ", (r.stdout.strip() or r.stderr.strip()).splitlines()[-1])
+    if pal:
+        off, lost = off_palette(dest, pal), before - opaque_count(dest)
+        if off or lost:
+            print(f"WARN  {dest}: {off} pixels off the palette, {lost} opaque pixels lost in the remap")
+
+
+def remap(ref, out):
+    """Put an existing image on the Sprout palette (no model call): `gen.py --remap <path[#x,y,w,h]> [--out <png>]`."""
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    Image.open(as_png(ref)).convert("RGBA").save(out)
+    refine(out, {"type": "prop", "palette": "sprout"})
 
 
 def run(job, force=False, reprocess=False):
@@ -269,6 +331,13 @@ def run(job, force=False, reprocess=False):
 
 
 if __name__ == "__main__":
+    if "--remap" in sys.argv:
+        ref = sys.argv[sys.argv.index("--remap") + 1]
+        name = os.path.basename(os.path.dirname(ref.partition("#")[0]))
+        out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.join(OUT, "restyle", name + "_palette.png")
+        remap(ref, out)
+        print(f"wrote {out}")
+        sys.exit()
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     jobs = json.load(open(os.path.join(ROOT, "jobs.json")))
     for job in jobs:

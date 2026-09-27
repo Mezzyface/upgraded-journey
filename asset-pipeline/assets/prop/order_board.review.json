@@ -1,0 +1,16 @@
+{
+ "attempts": [
+  {
+   "pass": false,
+   "issues": "Replace the letter-like glyphs ('n' and 'G') with three distinct rectangular paper order slips, each fastened with a visible pin or tack at the top."
+  },
+  {
+   "pass": false,
+   "issues": "Match the Sprout Lands palette using warm honey-brown tones for the wood and cream for the paper slips instead of desaturated pinkish-tan. Replace harsh black outlines with soft dark warm brown outlines, clean up noisy pixel clustering on the board surface, and remove dark purple fringe/halo pixels along the outer edges so only pure #FF00FF background remains."
+  },
+  {
+   "pass": false,
+   "issues": "Add a consistent dark outline around the wooden board matching the reference style; render three distinct paper slips with clean edges and visible pins; shade the posts with wood tones rather than flat silhouettes; clean up noisy wood dithering into cohesive pixel clusters; and add a soft ground drop shadow beneath the posts."
+  }
+ ]
+}
