@@ -104,18 +104,29 @@ def generate(job, notes=""):
     return max(files, key=os.path.getmtime)
 
 
+def is_key_narrow(r, g, b):
+    """Fixed-brightness key-colour test (the default): matches the bright #FF00FF key and close
+    variants. Safe to run on every keyed job -- doesn't match this style's dark-purple outline/
+    shading colour (verified against asset-pipeline/assets/sprite/blue_slime.png, see task report)."""
+    return r > 140 and b > 130 and g < 90
+
+
 def is_key_hue(r, g, b):
-    """True for magenta/purple key-colour tones by hue, not fixed brightness: catches dark
-    shadow-tinted purples (e.g. (127,41,128)) as well as the bright #FF00FF key itself."""
+    """Wide hue-based key-colour test: also catches dark shadow-tinted purples (e.g.
+    (127,41,128)) that fall under is_key_narrow's brightness cutoff. NOT safe as a default --
+    it also matches this style's legitimate dark-purple outline/cel-shading colour (removes 89 of
+    blue_slime.png's 306 opaque pixels, incl. art beside the crown, vs 2 for is_key_narrow). Only
+    ever run behind the opt-in "key_shadow_fix" job flag."""
     return r > 100 and b > 100 and g < min(r, b) - 60
 
 
-def despill(im):
+def despill(im, is_key=is_key_narrow):
     """Flood-fill from the already-transparent background into any adjoining key-coloured
     (magenta/purple) pixels, clearing them too -- catches a keyed shadow/halo the corner
     flood-fill and the global halo-strip above miss (e.g. drop shadows dark enough to fall
     outside the halo-strip's threshold). Only pixels *connected* to transparent background
-    are cleared, so key-coloured art fully enclosed by opaque pixels is left alone."""
+    are cleared, so key-coloured art fully enclosed by opaque pixels is left alone. Uses the
+    narrow (safe-by-default) key test unless a job opts into the wide one via is_key."""
     w, h = im.size
     px = im.load()
     seen = bytearray(w * h)
@@ -130,24 +141,25 @@ def despill(im):
         for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
             if 0 <= nx < w and 0 <= ny < h and not seen[ny * w + nx]:
                 r, g, b, a = px[nx, ny]
-                if a > 0 and is_key_hue(r, g, b):
+                if a > 0 and is_key(r, g, b):
                     px[nx, ny] = (r, g, b, 0)
                     seen[ny * w + nx] = 1
                     q.append((nx, ny))
     return im
 
 
-def neutral_shadow(im):
-    """Opt-in (job "neutral_shadow": true): recolour any key-coloured pixels the edge-connected
-    despill couldn't reach (fully enclosed by opaque art, e.g. a shadow band under a fence) into
-    a plain dark shadow, same shape/alpha-ish. Runs over the whole image, so it's only wired in
-    per job -- never on a type/job where a purple creature or prop is legitimate art."""
+def neutral_shadow(im, is_key=is_key_hue):
+    """Part of the opt-in "key_shadow_fix" path only (never called by default): recolour any
+    key-coloured pixels the edge-connected wide despill couldn't reach (fully enclosed by opaque
+    art, e.g. a shadow band under a fence) into a plain dark shadow, same shape/alpha-ish. Runs
+    over the whole image, so it must stay opt-in -- on any job with legitimately purple art it
+    would repaint that art too."""
     w, h = im.size
     px = im.load()
     for y in range(h):
         for x in range(w):
             r, g, b, a = px[x, y]
-            if a > 0 and is_key_hue(r, g, b):
+            if a > 0 and is_key(r, g, b):
                 px[x, y] = (35, 30, 28, 140)
     return im
 
@@ -165,9 +177,11 @@ def postprocess(src, job):
                                                            b.point(lambda v: 255 if v > 150 else 0)),
                                        g.point(lambda v: 255 if v < 120 else 0))
             im.putalpha(ImageChops.subtract(a, halo))
-            im = despill(im)
-            if job.get("neutral_shadow"):
-                im = neutral_shadow(im)
+            if job.get("key_shadow_fix"):  # opt-in: wide hue despill + neutral-shadow the rest
+                im = despill(im, is_key_hue)
+                im = neutral_shadow(im, is_key_hue)
+            else:
+                im = despill(im)  # default: narrow test, safe for every keyed job
     size = job.get("size", style.get("size"))
     size = SIZES.get(size, size) if isinstance(size, (str, int)) else size  # ponytail: [w, h] sizes aren't hashable
     if size:

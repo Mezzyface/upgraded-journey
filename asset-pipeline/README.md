@@ -34,7 +34,7 @@ environment if it is not at `C:/Program Files/Aseprite/Aseprite.exe`.
  "refs": ["optional/up/to/3.png"], "aspect": "1:1", "size": "small", "colors": 16}
 ```
 
-`"neutral_shadow": true` (keyed types only): after despill, recolours any key-coloured pixels still left anywhere in the image (e.g. a shadow band fully enclosed by opaque art, which an edge-connected despill can't reach) into a plain dark shadow instead of leaving them key-coloured; opt in per job since it would wrongly recolour a legitimately purple creature/prop.
+`"key_shadow_fix": true` (keyed types only): swaps despill's default narrow, fixed-brightness key-colour test for a wider hue-based one that also catches dark shadow-tinted purples, then recolours any key-coloured pixels still left anywhere in the image (e.g. a shadow band fully enclosed by opaque art, which an edge-connected despill can't reach) into a plain dark shadow. Opt in per job only -- the wide test also matches this style's legitimate dark-purple outline/shading colour, so it must never run by default.
 
 ## Standard sizes
 
