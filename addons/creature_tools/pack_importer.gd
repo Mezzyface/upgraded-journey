@@ -29,9 +29,18 @@ static func common_prefix(files: Array) -> String:
 	return p.left(cut + 1) if cut >= 0 else ""
 
 
+## Where a pack keeps its variant folders: "Spritesheets/" (most packs), "Spritesheet/" (a few), or the pack
+## folder itself (e.g. Knights 3-6, Tales 5-7).
+static func sheets_dir(pack_dir: String) -> String:
+	for name in ["Spritesheets", "Spritesheet"]:
+		if DirAccess.dir_exists_absolute(pack_dir.path_join(name)):
+			return pack_dir.path_join(name)
+	return pack_dir
+
+
 ## pack_dir is an absolute OS path. Returns {variant_id: {anim: res_path}}; already-copied files are reused.
 static func copy_pack(pack_dir: String) -> Dictionary:
-	var sheets := pack_dir.path_join("Spritesheets")
+	var sheets := sheets_dir(pack_dir)
 	var out := {}
 	for folder in DirAccess.get_directories_at(sheets):
 		if folder.begins_with("Old"):

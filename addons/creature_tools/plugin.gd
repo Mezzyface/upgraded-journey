@@ -34,7 +34,7 @@ func _open() -> void:
 func _import(pack_dir: String) -> void:
 	var copied := Importer.copy_pack(pack_dir)
 	if copied.is_empty():
-		push_warning("[creature_tools] no spritesheets under %s/Spritesheets" % pack_dir)
+		push_warning("[creature_tools] no spritesheets found in %s" % pack_dir)
 		return
 	var fs := EditorInterface.get_resource_filesystem()
 	fs.scan()

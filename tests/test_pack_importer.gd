@@ -27,3 +27,14 @@ func test_frames_from_textures_slices_cells_by_facing() -> void:
 	eq(frame.region, Rect2(128, 256, 128, 128), "row 2 = right, column 1")
 	check(sf.get_animation_loop(&"move_down"), "move loops")
 	check(not sf.get_animation_loop(&"attack_down"), "attack plays once")
+
+
+func test_sheets_dir_handles_all_three_pack_layouts() -> void:
+	var root := ProjectSettings.globalize_path("user://test_packs")
+	for layout in ["Spritesheets", "Spritesheet"]:
+		var pack := root.path_join("pack_" + layout)
+		DirAccess.make_dir_recursive_absolute(pack.path_join(layout).path_join("Updated Slime"))
+		eq(Importer.sheets_dir(pack), pack.path_join(layout), layout)
+	var flat := root.path_join("pack_flat")
+	DirAccess.make_dir_recursive_absolute(flat.path_join("Monk"))
+	eq(Importer.sheets_dir(flat), flat, "variant folders directly in the pack folder")
