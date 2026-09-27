@@ -1,6 +1,7 @@
 class_name Lifecycle
 extends RefCounted
 ## End-of-day growth for one creature: eggs hatch, babies grow up, adults may evolve, cooldowns tick.
+## Retired creatures are pickled: they never age or evolve, only their breeding cooldown ticks.
 ## Inspiration fires at hatch, at mid-growth and at adulthood. Returns events for the day summary.
 
 const GROW_DAYS := 4  ## baby -> adult
@@ -11,8 +12,10 @@ static func advance_day(c: CreatureData, db: Db, rng: RandomNumberGenerator) -> 
 	var events: PackedStringArray = []
 	if c.status == CreatureData.Status.GONE:
 		return events
-	c.age_days += 1
 	c.breed_cooldown = maxi(c.breed_cooldown - 1, 0)
+	if c.status == CreatureData.Status.RETIRED:
+		return events  # pickled: a retired creature only breeds, so only its breeding cooldown ticks
+	c.age_days += 1
 	match c.stage:
 		"egg":
 			c.days_left -= 1

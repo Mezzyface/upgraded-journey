@@ -7,7 +7,22 @@ const BASE_GAIN := 40
 const MOOD_COST := 10
 
 
+## "" when `c` can train, otherwise the reason (shown in the training panel).
+static func can_train(c: CreatureData) -> String:
+	if c.status == CreatureData.Status.RETIRED:
+		return "retired creatures only breed"
+	if c.status == CreatureData.Status.GONE:
+		return "no longer in the shop"
+	if c.stage == "egg":
+		return "eggs cannot train"
+	return ""
+
+
 static func train(c: CreatureData, stat: String, location: Location, db: Db, rng: RandomNumberGenerator) -> Dictionary:
+	var reason := can_train(c)
+	if reason != "":
+		push_error("Training.train: " + reason)
+		return {"gain": 0, "trait": "", "moves": [] as Array[StringName]}
 	var mult := 1.0
 	var p: Personality = db.personalities.get(c.personality)
 	if p:

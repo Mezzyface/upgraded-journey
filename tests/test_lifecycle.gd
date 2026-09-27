@@ -74,3 +74,17 @@ func test_gone_creatures_are_frozen() -> void:
 	c.status = CreatureData.Status.GONE
 	Lifecycle.advance_day(c, db, Fixtures.rng())
 	eq(c.age_days, 0, "no ageing")
+
+
+func test_retired_creatures_are_pickled() -> void:
+	var db := Fixtures.db()
+	var st := GameState.new()
+	var c := Fixtures.adult(st, "spider")
+	c.traits.append(&"darksight")  # would evolve into Spider Albino if it were active
+	Sparks.retire(c, db, Fixtures.rng())
+	c.breed_cooldown = 2
+	var events := Lifecycle.advance_day(c, db, Fixtures.rng())
+	eq(c.species, &"spider", "no evolution in the breeding stable")
+	eq(events.size(), 0, "nothing happens")
+	eq(c.age_days, 0, "no ageing")
+	eq(c.breed_cooldown, 1, "the breeding cooldown still ticks")

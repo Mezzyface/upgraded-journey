@@ -21,6 +21,19 @@ static func roll(c: CreatureData, db: Db, rng: RandomNumberGenerator) -> Array[D
 	return out
 
 
+## "" when `c` can retire to the breeding stable, otherwise the reason.
+static func can_retire(c: CreatureData) -> String:
+	if c.status != CreatureData.Status.OWNED:
+		return "already retired" if c.status == CreatureData.Status.RETIRED else "no longer in the shop"
+	if c.stage != "adult":
+		return "only grown-up creatures can retire"
+	return ""
+
+
 static func retire(c: CreatureData, db: Db, rng: RandomNumberGenerator) -> void:
+	var reason := can_retire(c)
+	if reason != "":
+		push_error("Sparks.retire: " + reason)
+		return
 	c.sparks = roll(c, db, rng)
 	c.status = CreatureData.Status.RETIRED

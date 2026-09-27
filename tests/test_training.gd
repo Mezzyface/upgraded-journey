@@ -55,3 +55,21 @@ func test_location_teaches_its_trait_once() -> void:
 	r = Training.train(c, "power", mine, db, Fixtures.rng())
 	eq(r["trait"], "", "not learned twice")
 	eq(c.traits.count(&"tunnel_wise"), 1, "one copy")
+
+
+func test_only_active_creatures_can_train() -> void:
+	var db := Fixtures.db()
+	var st := GameState.new()
+	var c := Fixtures.adult(st, "spider")
+	eq(Training.can_train(c), "", "owned adult")
+	c.stage = "baby"
+	eq(Training.can_train(c), "", "babies can train")
+	c.stage = "egg"
+	check(Training.can_train(c) != "", "eggs cannot")
+	c.stage = "adult"
+	Sparks.retire(c, db, Fixtures.rng())
+	check(Training.can_train(c) != "", "retired creatures cannot")
+	var r := Training.train(c, "power", null, db, Fixtures.rng())  # logs an error by design
+	eq(r["gain"], 0, "no gain")
+	eq(c.stats["power"], 200, "stat unchanged")
+	eq(c.mood, 50, "mood untouched")

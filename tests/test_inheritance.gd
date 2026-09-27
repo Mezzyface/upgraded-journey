@@ -195,3 +195,20 @@ func test_darksight_can_pass_two_generations() -> void:
 			got_grandchild += 1
 	check(got_child > 0, "some children inherit Darksight (%d/60)" % got_child)
 	check(got_grandchild > 0, "some grandchildren inherit Darksight (%d)" % got_grandchild)
+
+
+func test_only_owned_adults_can_retire() -> void:
+	var db := Fixtures.db()
+	var st := GameState.new()
+	var c := Fixtures.adult(st, "spider")
+	for stage in ["egg", "baby"]:
+		c.stage = stage
+		check(Sparks.can_retire(c) != "", "%s cannot retire" % stage)
+		Sparks.retire(c, db, Fixtures.rng())  # logs an error by design
+		eq(c.status, CreatureData.Status.OWNED, "%s stays owned" % stage)
+		check(c.sparks.is_empty(), "%s gets no sparks" % stage)
+	c.stage = "adult"
+	eq(Sparks.can_retire(c), "", "adult can retire")
+	Sparks.retire(c, db, Fixtures.rng())
+	eq(c.status, CreatureData.Status.RETIRED, "retired")
+	check(Sparks.can_retire(c) != "", "cannot retire twice")
