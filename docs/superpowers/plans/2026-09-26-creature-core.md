@@ -2409,7 +2409,8 @@ Must-do first tasks:
   unreachable in a fresh game and the 2-generation trait-spark goal cannot be played.
 
 Decided by the owner (2026-09-26):
-- Retired creatures may keep evolving in the stable (current behavior stays).
+- Retired creatures do NOT evolve in the stable: skip the evolution check for RETIRED creatures in
+  `Lifecycle.advance_day` (today they still evolve), with a test.
 - Retired creatures cannot train, and only adults can retire: add rules-level guards with tests.
 - After evolving, the new form's move unlocks join the creature's learnable pool; they are learned through training as
   usual (current behavior; no automatic learn on evolve).
