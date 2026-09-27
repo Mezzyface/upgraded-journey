@@ -45,3 +45,21 @@ func test_placeholder_stations_toast() -> void:
 	shop.get_node("%MarketStall").pressed.emit()
 	check(shop.get_node("%Toast").text != "", "coming-soon message")
 	_done(shop)
+
+
+## Regression for the almost-unclickable counter: a later sibling drawn on top of a station must not eat its
+## clicks unless it explicitly ignores the mouse (creature Hit buttons, which are descendants, still work).
+func test_no_later_sibling_blocks_a_station() -> void:
+	var shop := _shop()
+	await tree.process_frame
+	var children := shop.get_children()
+	for station_name in ["%Counter", "%MarketStall", "%Door"]:
+		var station: Control = shop.get_node(station_name)
+		var station_rect := station.get_global_rect()
+		var idx := children.find(station)
+		for i in range(idx + 1, children.size()):
+			var sib := children[i]
+			if sib is Control and sib.get_global_rect().intersects(station_rect):
+				eq(sib.mouse_filter, Control.MOUSE_FILTER_IGNORE,
+						"%s overlaps %s and must ignore the mouse" % [sib.name, station.name])
+	_done(shop)

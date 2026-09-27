@@ -106,6 +106,7 @@ offset_left = 40.0
 offset_top = 290.0
 offset_right = 640.0
 offset_bottom = 680.0
+mouse_filter = 2
 texture = ExtResource("6_cd0xb")
 expand_mode = 1
 
@@ -133,6 +134,7 @@ offset_left = 660.0
 offset_top = 290.0
 offset_right = 1040.0
 offset_bottom = 680.0
+mouse_filter = 2
 texture = ExtResource("8_pafut")
 expand_mode = 1
 
