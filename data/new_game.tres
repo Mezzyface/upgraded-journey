@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="NewGameSetup" format=3]
+[gd_resource type="Resource" script_class="NewGameSetup" format=3 uid="uid://cv31w67p6mmya"]
 
-[ext_resource type="Script" path="res://creatures/defs/new_game_setup.gd" id="1_gtyhn"]
-[ext_resource type="Script" path="res://creatures/defs/species.gd" id="2_1mavb"]
-[ext_resource type="Resource" path="res://data/species/spider.tres" id="3_gvxcg"]
-[ext_resource type="Resource" path="res://data/species/slime.tres" id="4_2ouus"]
-[ext_resource type="Resource" path="res://data/species/green_golem.tres" id="5_qk35w"]
+[ext_resource type="Script" uid="uid://dd3072ykgeh6g" path="res://creatures/defs/new_game_setup.gd" id="1_gtyhn"]
+[ext_resource type="Script" uid="uid://d4h8yds2fgbk0" path="res://creatures/defs/species.gd" id="2_1mavb"]
+[ext_resource type="Resource" uid="uid://w44dvcfebsir" path="res://data/species/spider.tres" id="3_gvxcg"]
+[ext_resource type="Resource" uid="uid://b5mu1di3dheu7" path="res://data/species/slime.tres" id="4_2ouus"]
+[ext_resource type="Resource" uid="uid://bsb6kbljayfjh" path="res://data/species/green_golem.tres" id="5_qk35w"]
 
 [resource]
 script = ExtResource("1_gtyhn")
