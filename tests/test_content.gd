@@ -62,6 +62,7 @@ func test_day_loop_content() -> void:
 		"the Mine can find Spider Albino")
 	var setup: NewGameSetup = load("res://data/new_game.tres")
 	check(setup != null and setup.species.size() == 3, "new game setup")
+	check(setup.species.size() <= Market.PEN_BASE, "new game fits the starting pens")
 	var sold := db.species.values().filter(func(s: Species) -> bool: return s.market_tier >= 0)
 	eq(sold.size(), 5, "five species sold as eggs")
 	for s: Species in sold:
