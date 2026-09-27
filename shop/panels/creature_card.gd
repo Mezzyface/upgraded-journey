@@ -3,13 +3,15 @@ extends PanelContainer
 ## goes through Game; a refused one shows its reason. Closes itself if the creature leaves the shop.
 
 var creature: CreatureData
+var _pending_sell := false  ## Sell/Retire are two-step: the first press only arms the button
+var _pending_retire := false
 
 
 func _ready() -> void:
 	%Feed.pressed.connect(_act.bind(func() -> String: return Game.care(creature, "feed")))
 	%Play.pressed.connect(_act.bind(func() -> String: return Game.care(creature, "play")))
-	%Retire.pressed.connect(_act.bind(func() -> String: return Game.retire(creature)))
-	%Sell.pressed.connect(_act.bind(func() -> String: return Game.sell(creature)))
+	%Retire.pressed.connect(_press_retire)
+	%Sell.pressed.connect(_press_sell)
 	%Close.pressed.connect(_close)
 	var menu: PopupMenu = %Train.get_popup()
 	for s in Stats.NAMES:
@@ -23,9 +25,40 @@ func show_creature(c: CreatureData) -> void:
 	_refresh()
 
 
+## Sell and Retire are irreversible, so they take two presses: the first arms the button (and disarms the
+## other one) without acting; the second — while still armed — performs the action.
+func _press_sell() -> void:
+	if not _pending_sell:
+		_pending_sell = true
+		_pending_retire = false
+		_update_action_buttons()
+		return
+	_act(func() -> String: return Game.sell(creature))
+
+
+func _press_retire() -> void:
+	if not _pending_retire:
+		_pending_retire = true
+		_pending_sell = false
+		_update_action_buttons()
+		return
+	_act(func() -> String: return Game.retire(creature))
+
+
 func _act(action: Callable) -> void:
+	_pending_sell = false
+	_pending_retire = false
 	var reason: String = action.call()
 	%Message.text = reason.left(1).to_upper() + reason.substr(1)
+	_update_action_buttons()
+
+
+func _update_action_buttons() -> void:
+	if creature == null:
+		return
+	%Sell.text = "Sure? Sell · %d" % Game.sell_price(creature) if _pending_sell \
+			else "Sell · %d" % Game.sell_price(creature)
+	%Retire.text = "Sure? Retire" if _pending_retire else "Retire"
 
 
 func _refresh() -> void:
@@ -34,6 +67,8 @@ func _refresh() -> void:
 	if creature.status == CreatureData.Status.GONE:
 		_close()
 		return
+	_pending_sell = false
+	_pending_retire = false
 	var sp := Game.species_of(creature)
 	%Portrait.texture = CreatureAnim.portrait(sp.sprite_frames) if sp else null
 	%Name.text = "%s #%d" % [sp.display_name if sp else String(creature.species), creature.id]
@@ -52,7 +87,7 @@ func _refresh() -> void:
 	_fill_stats()
 	_fill_chips()
 	%Family.text = _family()
-	%Sell.text = "Sell · %d" % Game.sell_price(creature)
+	_update_action_buttons()
 
 
 func _fill_stats() -> void:
