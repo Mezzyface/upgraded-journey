@@ -41,10 +41,7 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 mouse_cursor/custom_image="res://art/sprout/ui/Catpaw Mouse icon.png"
-mouse_cursor/custom_image_hotspot={
-"x": 2.0,
-"y": 2.0
-}
+mouse_cursor/custom_image_hotspot=Vector2(2, 2)
 
 [editor_plugins]
 
