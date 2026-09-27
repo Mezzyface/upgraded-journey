@@ -48,7 +48,7 @@ mouse_cursor/custom_image_hotspot={
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/creature_tools/plugin.cfg", "res://addons/godot_ai/plugin.cfg", "res://addons/godot_omni/plugin.cfg", "res://addons/iol_theme/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/sprout_tools/plugin.cfg")
+enabled=PackedStringArray("res://addons/creature_tools/plugin.cfg", "res://addons/godot_ai/plugin.cfg", "res://addons/godot_omni/plugin.cfg", "res://addons/resources_spreadsheet_view/plugin.cfg", "res://addons/sprout_tools/plugin.cfg")
 
 [gui]
 

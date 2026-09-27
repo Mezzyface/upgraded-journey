@@ -22,10 +22,9 @@ editor cannot open and change, and nothing may silently overwrite what was chang
 
 ## Layout
 
-- `ui/theme/isle_of_lore.tres` is the project theme (`gui/theme/custom`). Edit it in the Theme editor.
-  `Project > Tools > Isle of Lore` has "Sync UI pack files" and "Rebuild theme from pack (overwrites edits)".
-  The pack art it references lives in `ui/theme/pack/` (git-ignored, licensed) and is filled by the sync tool
-  from `asset-pipeline/ui-pack/`.
+- `ui/theme/sprout_lands.tres` is the project theme (`gui/theme/custom`), on a 640×360 pixel grid. Edit it in the
+  Theme editor. `Project > Tools > Sprout Lands: Sync pack files` copies the pack art it uses from
+  `asset-pipeline/sprout-lands/` (git-ignored, licensed) into `art/sprout/` (art ignored, `.import` files committed).
 - `ui/gallery.tscn` shows every themed control; keep it updated when adding theme types.
 - Page scrollbars: `VSlider` + `PackScrollBar` variation + `ui/pack_scroll_bar.gd` beside a ScrollContainer
   whose own bar is hidden (see README). Do not restyle `VScrollBar` to fake it; its grabber always stretches.

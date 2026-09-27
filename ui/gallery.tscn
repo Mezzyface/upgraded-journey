@@ -76,7 +76,7 @@ theme_override_constants/separation = 18
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"BannerLabel"
-text = "Isle of Lore Theme"
+text = "Sprout Lands"
 horizontal_alignment = 1
 
 [node name="H1" type="Label" parent="Scroll/Margin/Rows" unique_id=2114721262]

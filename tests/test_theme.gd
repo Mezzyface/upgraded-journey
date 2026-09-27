@@ -46,6 +46,23 @@ func test_variations_keep_their_names_and_bases() -> void:
 	check(theme.get_icon("grabber", "PackScrollBar") != null, "PackScrollBar grabber")
 
 
+func test_nothing_references_isle_of_lore() -> void:
+	for path in _project_text_files("res://"):
+		var text := FileAccess.get_file_as_string(path)
+		check(not text.contains("ui/theme/pack/") and not text.contains("isle_of_lore"), "still referenced in %s" % path)
+
+
+func _project_text_files(dir: String) -> PackedStringArray:
+	var out := PackedStringArray()
+	for d in DirAccess.get_directories_at(dir):
+		if not d.begins_with(".") and d not in ["addons", "asset-pipeline", "docs", "tests"]:
+			out.append_array(_project_text_files(dir.path_join(d)))
+	for f in DirAccess.get_files_at(dir):
+		if f.get_extension() in ["tscn", "tres", "godot", "gd"]:
+			out.append(dir.path_join(f))
+	return out
+
+
 func _theme_resource_paths(theme: Theme) -> PackedStringArray:
 	var out := PackedStringArray()
 	var add := func(r: Resource) -> void:

@@ -41,24 +41,21 @@ Notes:
 - `godot_ai/auto_configure_clients=false` so the addon never rewrites `~/.claude.json` behind your back.
 - Requires `uv` (`pip install uv`). The first launch downloads the pinned wheel + deps.
 
-## UI theme (Isle of Lore 2 UI Pack)
+## UI theme (Sprout Lands)
 
-`ui/theme/isle_of_lore.tres` is the project-wide theme (`gui/theme/custom`). Edit it in Godot's Theme editor
-like any resource. The `addons/iol_theme` plugin adds two entries under **Project > Tools**:
+`ui/theme/sprout_lands.tres` is the project theme (`gui/theme/custom`); edit it in the Theme editor. The game renders
+on a 640×360 pixel grid (`canvas_items` stretch, window 1280×720). Pack art is licensed and git-ignored:
 
-- **Isle of Lore: Sync UI pack files** copies the ~45 PNGs and two fonts the theme uses from
-  `asset-pipeline/ui-pack/` into `ui/theme/pack/` (git-ignored: licensed art, public repo) and composes the
-  CheckButton switch images.
-- **Isle of Lore: Rebuild theme from pack (overwrites edits)** regenerates the `.tres` from scratch with the
-  nine-patch margins from the pack docs. Only use it to reset; it discards Theme-editor edits.
+1. Put the Sprout Lands zips in `asset-pipeline/sprout-lands/` and extract each one there.
+2. **Project > Tools > Sprout Lands: Sync pack files** copies the files the project uses into `art/sprout/`
+   (headless: `godot --headless --path . -s res://addons/sprout_tools/sync_cli.gd`, then `--import`).
 
-Fresh clone: drop the pack into `asset-pipeline/ui-pack/`, open the project, run Sync, wait for the import, and
-the committed theme just works (Rebuild is not needed). Headless equivalent: `addons/iol_theme/rebuild_cli.gd`.
+The `.import` files under `art/sprout/` are committed so UIDs and the pixel-font import settings survive a clone. Add a
+line to `FILES` in `addons/sprout_tools/sprout_sync.gd` whenever a scene or resource starts using another pack file.
+Maaack's Sprout-Lands-Tilemap/UI addons in the pack folder are reference only; never enable them.
 
-`ui/gallery.tscn` (the current main scene) shows every themed control. Type variations available via
-`theme_type_variation`: `DecoratedButton`, `HeaderLabel`, `BannerLabel`, `OnDarkLabel`, `FlatPanel`, `BarPanel`,
-`InsetPanel`, `InventorySlot`, `InventorySlotSelected`, `NamePlate`, `PackScrollBar`. Round buttons are not nine-patch art; use a
-`TextureButton` with `button_round_*` as in the gallery.
+Type variations: `DecoratedButton`, `HeaderLabel`, `BannerLabel`, `OnDarkLabel`, `FlatPanel`, `BarPanel`, `InsetPanel`,
+`InventorySlot`, `InventorySlotSelected`, `NamePlate`, `PackScrollBar`, `TooltipLabel`, `TooltipPanel`.
 
 Scrollbars: the pack draws a scrollbar as a thin bar with a fixed-size knob, which is a `VSlider` in Godot (a
 `VScrollBar` stretches its grabber). For a scrolling page, hide the ScrollContainer's own bar (vertical scroll
@@ -74,7 +71,7 @@ them in the Inspector. **Project > Tools > Creatures: Import monster pack…** c
 file; delete a file first to regenerate it. Tests: `godot --headless --path . -s res://tests/run_tests.gd`.
 
 The tests and the Db need the licensed pack art, which is git-ignored: on a fresh clone, drop the monster packs
-into `asset-pipeline/80_Monster_Packs/` and run the Creatures import (and the UI pack sync, above) before running
+into `asset-pipeline/80_Monster_Packs/` and run the Creatures import (and the Sprout Lands sync, above) before running
 tests, otherwise `test_content` fails and SpriteFrames report missing textures.
 
 Rule for all Godot work (see `CLAUDE.md`): changes go through the editor, and anything generated is an explicit

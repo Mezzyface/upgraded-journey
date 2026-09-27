@@ -5,7 +5,6 @@ Aseprite*
 .godot/
 asset-pipeline/80_Monster_Packs/
 asset-pipeline/ui-pack/
-ui/theme/pack/
 creatures/pack/
 asset-pipeline/sprout-lands/
 # Sprout Lands art copied by Project > Tools > Sprout Lands: Sync pack files (licensed). Keep the .import files so
