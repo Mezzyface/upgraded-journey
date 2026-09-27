@@ -45,7 +45,8 @@ Later, separately: expeditions (reuse the TileSet; Sorry pack Dungeon/Ocean sets
   under `asset-pipeline/sprout-lands/`; the tool copies them and triggers an import. It only writes pack art
   (PNG/TTF/WAV), never a `.tres`/`.tscn`. Missing sources are listed in one error, not silently skipped. Only files
   a resource actually uses are listed; add entries as later sub-projects need them.
-- `art/sprout/` is git-ignored. `sprout-lands/` at the root is removed once moved.
+- `art/sprout/` art is git-ignored; its `.import` files are committed so UIDs and import settings (the pixel font
+  without antialiasing) survive a fresh clone. `sprout-lands/` at the root is removed once moved.
 - **One-time starting resources:** Maaack's `sprout_lands_theme.tres` is copied to `ui/theme/sprout_lands.tres`
   with its texture path rewritten to `art/sprout/ui/…`, UIDs stripped, and opened/re-saved in the editor. From then
   on the Theme editor owns it. (The TileSet gets the same treatment in sub-project 2.)
@@ -59,7 +60,7 @@ Later, separately: expeditions (reuse the TileSet; Sorry pack Dungeon/Ocean sets
   at the size that renders crisp (confirmed by screenshot), with antialiasing off.
 - **Variations keep their names** so scenes keep their `theme_type_variation`: `DecoratedButton`, `HeaderLabel`,
   `BannerLabel`, `OnDarkLabel`, `FlatPanel`, `BarPanel`, `InsetPanel`, `InventorySlot`, `InventorySlotSelected`,
-  `NamePlate`, `PackScrollBar`. Each is redefined with Sprout art in the Theme editor — the Basic sheet first,
+  `NamePlate`, `PackScrollBar`, `TooltipLabel`, `TooltipPanel`. Each is redefined with Sprout art in the Theme editor — the Basic sheet first,
   premium sprites (dialog boxes, inventory slots, slider) added to the sync list where the Basic sheet has nothing.
   `PackScrollBar` stays a `VSlider` + `ui/pack_scroll_bar.gd` beside a ScrollContainer.
 - **Relayout in the editor (godot-ai MCP):** `creature_card.tscn`, `orders_panel.tscn`, `day_summary.tscn` and
