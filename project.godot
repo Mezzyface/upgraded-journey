@@ -35,9 +35,16 @@ Game="*res://game/game.gd"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=640
+window/size/viewport_height=360
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="canvas_items"
+mouse_cursor/custom_image="res://art/sprout/ui/Catpaw Mouse icon.png"
+mouse_cursor/custom_image_hotspot={
+"x": 2.0,
+"y": 2.0
+}
 
 [editor_plugins]
 
@@ -45,8 +52,9 @@ enabled=PackedStringArray("res://addons/creature_tools/plugin.cfg", "res://addon
 
 [gui]
 
-theme/custom="res://ui/theme/isle_of_lore.tres"
+theme/custom="res://ui/theme/sprout_lands.tres"
 
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_transforms_to_pixel=true
