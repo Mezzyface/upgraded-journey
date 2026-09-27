@@ -67,10 +67,10 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 		push_warning("save: 'creatures' is not a list; save not loaded")
 		return null
 	var g := GameState.new()
-	g.day = _int_field(d, "day", g.day)
-	g.ap = _int_field(d, "ap", g.ap)
-	g.money = _int_field(d, "money", g.money)
-	g.reputation = _int_field(d, "reputation", g.reputation)
+	g.day = maxi(_int_field(d, "day", g.day), 1)
+	g.ap = clampi(_int_field(d, "ap", g.ap), 0, Day.BASE_AP + 1)
+	g.money = maxi(_int_field(d, "money", g.money), 0)
+	g.reputation = maxi(_int_field(d, "reputation", g.reputation), 0)
 	g.next_id = _int_field(d, "next_id", g.next_id)
 	var highest_id := 0
 	for cd in creatures_v:
@@ -93,7 +93,8 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 		highest_id = maxi(highest_id, c.id)
 	g.next_id = maxi(g.next_id, highest_id + 1)  # never reuse an id, even if the saved next_id fell behind
 	g.board = _known_ids(d.get("board", []), db.orders)
-	g.recent_templates = _known_ids(d.get("recent_templates", []), db.orders)
+	g.recent_templates = _known_ids(d.get("recent_templates", []), db.orders, false)  # legitimately repeats: the
+	## same template can be re-offered on non-consecutive mornings while still inside the last RECENT_LIMIT
 	g.upgrades = _known_ids(d.get("upgrades", []), db.upgrades)
 	for o in _list(d.get("orders", [])):
 		if o is Dictionary and o.get("template") is String and db.orders.has(StringName(o["template"])) \
@@ -109,7 +110,7 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 			continue
 		var team: Array = []
 		for t in _list(e.get("team", [])):
-			if CreatureData._is_num(t) and g.creatures.has(int(t)):
+			if CreatureData._is_num(t) and g.creatures.has(int(t)) and not team.has(int(t)):
 				team.append(int(t))
 		if not team.is_empty():
 			g.expeditions.append({"location": e["location"], "team": team})
@@ -127,10 +128,10 @@ static func _list(v: Variant) -> Array:
 	return v if v is Array else []
 
 
-static func _known_ids(v: Variant, table: Dictionary) -> Array[StringName]:
+static func _known_ids(v: Variant, table: Dictionary, dedupe := true) -> Array[StringName]:
 	var out: Array[StringName] = []
 	for id in _list(v):
-		if id is String and table.has(StringName(id)):
+		if id is String and table.has(StringName(id)) and not (dedupe and out.has(StringName(id))):
 			out.append(StringName(id))
 	return out
 
@@ -138,7 +139,7 @@ static func _known_ids(v: Variant, table: Dictionary) -> Array[StringName]:
 static func _known_creatures(v: Variant, g: GameState) -> Array[int]:
 	var out: Array[int] = []
 	for id in _list(v):
-		if CreatureData._is_num(id) and g.creatures.has(int(id)):
+		if CreatureData._is_num(id) and g.creatures.has(int(id)) and not out.has(int(id)):
 			out.append(int(id))
 	return out
 

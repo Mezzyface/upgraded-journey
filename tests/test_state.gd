@@ -259,6 +259,30 @@ func test_version_1_save_loads_with_empty_v2_fields() -> void:
 	eq(g.creatures[2].injured_days, 0, "injured default")
 
 
+func test_untrusted_save_values_are_clamped_and_deduped() -> void:
+	var db := Fixtures.db()
+	var d := _sample().to_dict()
+	d["ap"] = 999
+	d["money"] = -5
+	d["reputation"] = -10
+	d["day"] = -2
+	d["expeditions"] = [{"location": "cave", "team": [2, 2, 2]}]
+	d["busy"] = [2, 2]
+	d["cared"] = [2, 2]
+	d["board"] = ["t0_slime", "t0_slime"]
+	d["upgrades"] = ["extra_pen", "extra_pen"]
+	var back := GameState.from_dict(d, db)
+	eq(back.ap, Day.BASE_AP + 1, "ap clamped to max")
+	eq(back.money, 0, "money clamped to >= 0")
+	eq(back.reputation, 0, "reputation clamped to >= 0")
+	eq(back.day, 1, "day clamped to >= 1")
+	eq(back.expeditions[0]["team"], [2], "expedition team de-duplicated")
+	eq(back.busy, [2], "busy de-duplicated")
+	eq(back.cared, [2], "cared de-duplicated")
+	eq(back.board, [&"t0_slime"], "board de-duplicated")
+	eq(back.upgrades, [&"extra_pen"], "upgrades de-duplicated")
+
+
 func test_v2_fields_with_unknown_ids_or_bad_types_are_dropped() -> void:
 	var d := _sample().to_dict()
 	d["board"] = ["t0_slime", "gone_template", 5]
