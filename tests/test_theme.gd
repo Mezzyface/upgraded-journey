@@ -28,6 +28,24 @@ func test_theme_art_is_all_synced() -> void:
 		check(FileAccess.file_exists(p), "synced (run Sprout Lands: Sync pack files): %s" % p)
 
 
+const VARIATIONS := {
+	"DecoratedButton": &"Button", "HeaderLabel": &"Label", "BannerLabel": &"Label", "OnDarkLabel": &"Label",
+	"FlatPanel": &"PanelContainer", "BarPanel": &"PanelContainer", "InsetPanel": &"PanelContainer",
+	"InventorySlot": &"PanelContainer", "InventorySlotSelected": &"PanelContainer", "NamePlate": &"PanelContainer",
+	"PackScrollBar": &"VSlider", "TooltipLabel": &"Label", "TooltipPanel": &"PanelContainer",
+}
+
+
+func test_variations_keep_their_names_and_bases() -> void:
+	var theme: Theme = load(THEME)
+	for v in VARIATIONS:
+		eq(theme.get_type_variation_base(v), VARIATIONS[v], "%s base" % v)
+	for v in ["FlatPanel", "BarPanel", "InsetPanel", "InventorySlot", "InventorySlotSelected", "NamePlate", "TooltipPanel"]:
+		check(theme.get_stylebox("panel", v) is StyleBoxTexture, "%s has a Sprout panel" % v)
+	check(theme.get_stylebox("normal", "DecoratedButton") is StyleBoxTexture, "DecoratedButton normal")
+	check(theme.get_icon("grabber", "PackScrollBar") != null, "PackScrollBar grabber")
+
+
 func _theme_resource_paths(theme: Theme) -> PackedStringArray:
 	var out := PackedStringArray()
 	var add := func(r: Resource) -> void:
