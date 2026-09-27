@@ -40,11 +40,12 @@ refused. No `Game` autoload or `Events` bus in 2a — they arrive with the UI in
 Care is refused for retired creatures and eggs; injured creatures can be cared for.
 
 **`Day.end_day()`** (the evening), in order:
+0. Injuries tick down (first, so a fresh injury lasts two full days).
 1. Expeditions resolve (section 3).
 2. Babies that received no care today lean Timid.
 3. `Lifecycle.advance_day` for every creature (growth, three inspirations, evolution; retired creatures only tick
    their breeding cooldown).
-4. Every non-retired creature gets mood +10 (overnight rest), capped at 100; `injured_days` tick down.
+4. Every non-retired creature gets mood +10 (overnight rest), capped at 100.
 5. Active orders past their deadline are removed and cost their `reward_rep` (reputation floor 0).
 6. Unaccepted board offers expire; busy flags clear.
 7. Day +1, AP refills (5, +1 with the upgrade), new morning offers are posted.
