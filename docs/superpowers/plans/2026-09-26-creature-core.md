@@ -2408,13 +2408,19 @@ Must-do first tasks:
 - Give Darksight a source (a location/care trait or Spider Albino eggs from market/expedition): today Spider Albino is
   unreachable in a fresh game and the 2-generation trait-spark goal cannot be played.
 
-Rulings needed / behavior to add with the day loop:
-- Should retired creatures still evolve in the stable? (today they do; it changes species after sparks are locked)
-- Rules-level guards: retired creatures cannot train; only adults can retire.
-- Call `Training.learn_moves` after evolution; decide same-evening evolution (spec order implies it; today it is the next day).
-- Missing spec pieces: `held_item` evolution condition; a per-creature "raised here" flag for the Gene Scanner mystery rule.
-- Save the RNG state for the seeded 10-day playthrough.
-- Pens: idle fallback for variants without `move_*` (party_mushroom), `melee` vs `attack` naming, spider has no attack.
-- Importer: 12 of 80 packs use `Spritesheet/` (singular) — handle when importing more packs.
+Decided by the owner (2026-09-26):
+- Retired creatures may keep evolving in the stable (current behavior stays).
+- Retired creatures cannot train, and only adults can retire: add rules-level guards with tests.
+- After evolving, the new form's move unlocks join the creature's learnable pool; they are learned through training as
+  usual (current behavior; no automatic learn on evolve).
+- Evolution stays on the day after growing up for now, to see how it feels.
+- Add the `held_item` evolution condition and a per-creature "raised here" flag for the Gene Scanner mystery rule.
+- Missing animations: play a default so every creature animates — tracked in
+  https://github.com/Mezzyface/upgraded-journey/issues/1
+- Importer pack layouts: 12 of 80 packs don't use `Spritesheets/` — 4 use `Spritesheet/`, 8 keep the variant folders
+  directly in the pack folder. The importer should accept all three layouts.
+
+Open question: saving the random-number state (only needed if reloading must not re-roll outcomes, i.e. no
+save-scumming; a seeded test run can simply seed at the start).
 - Owner check once in the editor: Tools > "Creatures: Import monster pack…" is present, species/moves open and edit in
   the Inspector, and the ResourceTables tab shows data/ folders (MCP screenshots cannot capture docks).
