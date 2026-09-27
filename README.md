@@ -8,15 +8,32 @@ Godot 4.7 project (root) + AI asset pipeline (`asset-pipeline/`, see its README)
 (MIT). `.mcp.json` registers the `godot-ai` server for Claude Code in project scope; Claude Code asks once to
 approve it on the next session start.
 
-Order matters on this machine: start Claude Code (it spawns the server), then open the project in Godot:
+Order matters on this machine: the Claude session starts the server first (any `godot-ai` tool call), then the
+editor opens and *adopts* it. The plugin cannot use a server it launches itself on Windows: its launch never passes
+the identity proof, and it binds `0.0.0.0`, which the plugin's own port check then reads as "free" and never
+adopts. The two sides authenticate through a record in `%LOCALAPPDATA%\godot-ai\capabilities\http-<port>.json`.
 
-```bash
-"C:/Users/ozark/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe" --editor --path .
-```
+- **Claude Code CLI in a normal terminal:** open the editor normally:
 
-The plugin attaches to the running server and the **Godot MCP** dock turns green. If Godot is opened first, the
-plugin tries to spawn its own server, which fails the process-identity check on Windows; just restart Claude Code
-or press the dock's reconnect button.
+  ```bash
+  "C:/Users/ozark/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe" --editor --path .
+  ```
+
+- **Claude desktop app:** the app is MSIX-packaged, so its `%LOCALAPPDATA%` writes are redirected to
+  `%LOCALAPPDATA%\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Local\` and the editor would never see the record.
+  Open the editor with `LOCALAPPDATA` pointed there (a `.cmd` launcher kept outside the repo):
+
+  ```bat
+  set "LOCALAPPDATA=%USERPROFILE%\AppData\Local\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Local"
+  start "" "C:\Users\ozark\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64.exe" --editor --path "C:\upgraded-journey"
+  ```
+
+  Junctions/symlinks don't work: godot-ai refuses record paths through a reparse point.
+
+The **Godot MCP** dock turns green once it adopts the server. If it shows "WebSocket port 9500 is already in use" or
+"status probe failed: http_401", a stale server or record is in the way: quit Godot, end the leftover godot-ai
+`python.exe` (its command line has `--pid-file …godot_ai_server.pid`), make a `godot-ai` call from Claude, then open
+the editor again. Keep `godot_ai/keep_server_on_exit` off so editor-launched servers don't linger.
 
 Notes:
 - Server HTTP port is **8765** (Docker owns 8000). Set in `.mcp.json` and in Godot Editor Settings `godot_ai/http_port`.
