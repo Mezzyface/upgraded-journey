@@ -21,6 +21,16 @@ const FILES := {
 	"ui/Weather_UI.png": UI_PREM + "emojis/emoji style ui/weather/Weather_UI.png",
 	"sprites/Farming Plants items.png": SPRITES_PREM + "Objects/Items/Farming Plants items.png",
 	"sprites/grass-n-ground-tile-items.png": SPRITES_PREM + "Objects/Items/grass-n-ground-tile-items.png",
+	"tiles/Grass_tiles_v2.png": SPRITES_PREM + "Tilesets/ground tiles/New tiles/Grass_tiles_v2.png",
+	"tiles/Soil_Ground_Tiles.png": SPRITES_PREM + "Tilesets/ground tiles/New tiles/Soil_Ground_Tiles.png",
+	"tiles/Fences.png": SPRITES_PREM + "Tilesets/Building parts/Fences.png",
+	"tiles/Wooden_House_Walls_Tilset.png": SPRITES_PREM + "Tilesets/Building parts/Wooden_House_Walls_Tilset.png",
+	"objects/Basic_Furniture.png": SPRITES_PREM + "Tilesets/Building parts/Basic_Furniture.png",
+	"objects/Chikcen_Houses.png": SPRITES_PREM + "Tilesets/Building parts/Animal Structures/Chikcen_Houses.png",
+	"objects/Barn structures.png": SPRITES_PREM + "Tilesets/Building parts/Animal Structures/Barn structures.png",
+	"objects/Fence gates animation sprites .png": SPRITES_PREM + "Tilesets/Building parts/Fence gates animation sprites .png",
+	"objects/signs.png": SPRITES_PREM + "Objects/signs.png",
+	"objects/Egg_Spritesheet.png": SPRITES_PREM + "Animals/Chicken_Egg/Egg_Spritesheet.png",
 	"fonts/pixelFont-7-8x14-sproutLands.ttf": UI_PREM + "fonts/Font files TTF/pixelFont-7-8x14-sproutLands.ttf",
 }
 
