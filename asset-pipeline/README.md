@@ -77,5 +77,12 @@ Props used in the game are copied by hand from assets/prop/ into ranch/art/ (com
 
 Palette-remap (not full model restyle) is the recommended default -- it kept each creature's identity; full
 restyle lost the golem's features; creatures read well at about 32 px against 16 px tiles (a rough midpoint of the
-15-30 px measured); sub-project 2 uses this for `sprite_scale`. Run: `python asset-pipeline/restyle_compare.py`
-(outputs git-ignored).
+15-30 px measured); sub-project 2 uses this for `sprite_scale`.
+
+## Creature variants review
+
+Every creature has a `restyle_<species>` job (one idle frame facing right, redrawn in Sprout style) writing
+`assets/restyle/restyle_<species>.png` (git-ignored). `python asset-pipeline/gen.py restyle_wolf` makes one;
+`python asset-pipeline/gen.py` makes any missing; `--force restyle_wolf` redoes one. Review them in Godot in
+`creatures/variants_review.tscn` (original | Sprout palette swap | still, on ranch grass); from the command line:
+`godot --path . res://creatures/variants_review.tscn -- --screenshot=out.png --scroll=0`.
