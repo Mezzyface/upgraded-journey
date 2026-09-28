@@ -96,6 +96,15 @@ def test_missing_palette_stops_before_any_model_call():  # same pre-check, for a
         del gen.PALETTES["_missing_test2"]
 
 
+def test_step_errors_surface_what_agy_swallowed():  # agy replies "done" even when generate_image hit a 429
+    conv = os.path.join(TMP, "conv")
+    os.makedirs(os.path.join(conv, ".system_generated", "steps", "2"))
+    with open(os.path.join(conv, ".system_generated", "steps", "2", "output.txt"), "w") as f:
+        f.write("Encountered error in step execution: failed to generate content: 429 Too Many Requests, body: {\n}")
+    assert "429 Too Many Requests" in gen.step_errors(conv)
+    assert gen.step_errors(TMP) == ""
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

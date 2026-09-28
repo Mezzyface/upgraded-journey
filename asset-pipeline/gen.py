@@ -143,6 +143,17 @@ def job_refs(job):
     return [as_png(r) for r in job.get("refs", STYLES[job["type"]]["refs"])][:3]
 
 
+def step_errors(conv_dir):
+    """agy's reply can be "done" even when generate_image failed (e.g. a 429 quota error); the real error is in
+    the conversation's step outputs. Returns their first lines joined, or "" if there are none."""
+    errors = []
+    for f in sorted(glob.glob(os.path.join(conv_dir, ".system_generated", "steps", "*", "output.txt"))):
+        text = open(f, encoding="utf-8", errors="replace").read()
+        if text.startswith("Encountered error"):
+            errors.append(text.splitlines()[0][:200])
+    return "; ".join(errors)
+
+
 def generate(job, notes=""):
     style = STYLES[job["type"]]
     refs = job_refs(job)
@@ -158,7 +169,9 @@ def generate(job, notes=""):
     files = glob.glob(os.path.join(BRAIN, info["conversation_id"], "*.*"))
     files = [f for f in files if f.lower().endswith((".jpg", ".png", ".jpeg"))]
     if not files:
-        raise RuntimeError(f"no image in brain dir for {info['conversation_id']}: {info.get('response')}")
+        conv = os.path.join(BRAIN, info["conversation_id"])
+        raise RuntimeError(f"no image in brain dir for {info['conversation_id']}: "
+                           f"{step_errors(conv) or info.get('response')}")
     return max(files, key=os.path.getmtime)
 
 
