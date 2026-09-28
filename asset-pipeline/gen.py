@@ -76,7 +76,7 @@ STYLES = {
                "style of the OTHER reference images (Sprout Lands): same creature, same pose and silhouette, colours "
                "moved to that soft pastel palette, 1px dark outline, simple flat shading, no anti-aliasing, one "
                "creature centered and facing right, no text, on a solid flat magenta #FF00FF background. Creature: ",
-        refs=[SL_PREM + "Animals/Chicken/chicken default.png", SL_PREM + "Characters/Premium Charakter Spritesheet.png"]),
+        refs=[SL_PREM + "Animals/Cow/Light cow animations.png#0,0,32,32", SL_PREM + "Animals/Chicken/chicken default.png#0,0,16,16"]),
 }
 
 
