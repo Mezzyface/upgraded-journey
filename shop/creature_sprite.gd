@@ -1,7 +1,7 @@
 class_name CreatureSprite
 extends Node2D
 ## One creature in a pen: idles a moment, then walks to a random point in its SpawnArea, facing left or right.
-## Eggs show the Egg sprite (shop/art/egg.png) until they hatch. Clicking it emits `clicked`.
+## Eggs show the Egg sprite (creatures/egg.tres, from the Sprout Lands egg sheet) until they hatch. Clicking it emits `clicked`.
 
 signal clicked(c: CreatureData)
 

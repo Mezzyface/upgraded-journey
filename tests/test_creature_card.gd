@@ -77,7 +77,7 @@ func test_an_eggs_portrait_is_the_egg_texture() -> void:
 	var c: CreatureData = parts[2]
 	c.stage = "egg"
 	card.show_creature(c)
-	eq(card.get_node("%Portrait").texture, load("res://shop/art/egg.png"),
+	eq(card.get_node("%Portrait").texture, load("res://creatures/egg.tres"),
 			"an egg shows the egg texture, not the species portrait")
 	parts[0].queue_free()
 

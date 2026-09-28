@@ -2,7 +2,7 @@ extends PanelContainer
 ## The creature card: stats against their caps, traits and moves, family, and this creature's actions. Every action
 ## goes through Game; a refused one shows its reason. Closes itself if the creature leaves the shop.
 
-const EGG_TEXTURE := preload("res://shop/art/egg.png")
+const EGG_TEXTURE := preload("res://creatures/egg.tres")
 
 var creature: CreatureData
 var _pending_sell := false  ## Sell/Retire are two-step: the first press only arms the button
