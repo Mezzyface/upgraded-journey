@@ -19,7 +19,8 @@ const SLOT := 60.0  ## x distance between original, swap and still inside a grou
 const ORIGIN := Vector2(48, 60)  ## centre of the first group's original
 const SCROLL_STEP := 32.0
 
-var restyle_dir := RESTYLE_DIR  ## tests point this elsewhere before the scene enters the tree
+var restyle_dir := RESTYLE_DIR  ## tests point this (and frames_dir) elsewhere before the scene enters the tree
+var frames_dir := FRAMES_DIR
 
 @onready var _camera: Camera2D = $Camera
 
@@ -62,7 +63,7 @@ func build() -> void:
 	if swap == null or swap.get_shader_parameter("palette") == null:
 		push_warning("[variants_review] Sprout palette missing: run Project > Tools > Sprout Lands: Sync pack files")
 	var ids := PackedStringArray()
-	for f in ResourceLoader.list_directory(FRAMES_DIR):
+	for f in ResourceLoader.list_directory(frames_dir):
 		if f.ends_with(".tres"):
 			ids.append(f.get_basename())
 	ids.sort()
@@ -83,7 +84,7 @@ func _group(id: String, at: Vector2, swap: Material) -> Node2D:
 	var g := Node2D.new()
 	g.name = id
 	g.position = at
-	var frames := load(FRAMES_DIR.path_join(id + ".tres")) as SpriteFrames
+	var frames := load(frames_dir.path_join(id + ".tres")) as SpriteFrames
 	for n in ["Original", "Swap"]:
 		var s := AnimatedSprite2D.new()
 		s.name = n
@@ -92,7 +93,7 @@ func _group(id: String, at: Vector2, swap: Material) -> Node2D:
 		if n == "Swap":
 			s.position.x = SLOT
 			s.material = swap
-		s.play(&"idle_right")
+		s.play(CreatureAnim.pick(frames, "idle", "right"))  # the pens' fallback when a pack lacks idle_right
 		g.add_child(s)
 	var img := Image.new()
 	var path := ProjectSettings.globalize_path(restyle_dir.path_join("restyle_%s.png" % id))

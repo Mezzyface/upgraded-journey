@@ -42,7 +42,7 @@ func test_one_group_per_species_with_all_three_slots() -> void:
 		if g == null:
 			continue
 		var orig := g.get_node_or_null("Original") as AnimatedSprite2D
-		check(orig != null and orig.sprite_frames.has_animation(&"idle_right") and orig.is_playing(), "%s original plays idle_right" % id)
+		check(orig != null and orig.animation == CreatureAnim.pick(orig.sprite_frames, "idle", "right") and orig.is_playing(), "%s original plays its idle (or the game's fallback)" % id)
 		var sw := g.get_node_or_null("Swap") as AnimatedSprite2D
 		check(sw != null and sw.material == swap and sw.is_playing(), "%s swap uses sprout_palette.tres" % id)
 		check(g.has_node("Still") != g.has_node("Missing"), "%s has a still or the missing label" % id)
@@ -86,6 +86,26 @@ func test_built_nodes_are_not_saved() -> void:
 	packed.pack(r)
 	eq(packed.get_state().get_node_count(), 2, "saved nodes (root + Camera)")
 	r.queue_free()
+
+
+## A species without idle_right (the game's CreatureAnim falls back, e.g. to move_right) still shows in the review.
+func test_species_without_idle_right_uses_the_game_fallback() -> void:
+	var dir := "user://variants_frames_test"
+	DirAccess.make_dir_recursive_absolute(dir)
+	var src := load(FRAMES_DIR.path_join("slime.tres")) as SpriteFrames
+	var frames := SpriteFrames.new()
+	frames.remove_animation(&"default")
+	frames.add_animation(&"move_right")
+	frames.add_frame(&"move_right", src.get_frame_texture(&"move_right", 0))
+	ResourceSaver.save(frames, dir.path_join("nomove.tres"))
+	var r: Node = load(SCENE).instantiate()
+	r.set("frames_dir", dir)
+	tree.root.add_child(r)
+	await tree.process_frame
+	var orig := r.get_node_or_null("nomove/Original") as AnimatedSprite2D
+	check(orig != null and orig.animation == &"move_right" and orig.is_playing(), "falls back to move_right")
+	r.queue_free()
+	DirAccess.remove_absolute(dir.path_join("nomove.tres"))
 
 
 func test_builds_without_the_palette() -> void:
