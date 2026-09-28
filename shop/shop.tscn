@@ -3,14 +3,72 @@
 [ext_resource type="Script" uid="uid://w2b7518gooom" path="res://shop/shop.gd" id="1_xad5q"]
 [ext_resource type="Texture2D" uid="uid://7js1hj7xo565" path="res://shop/art/shop_floor.png" id="2_ljlg5"]
 [ext_resource type="Texture2D" uid="uid://vgkbmfmheeod" path="res://shop/art/shop_counter.png" id="3_bv5vx"]
+[ext_resource type="Texture2D" uid="uid://dn3dkmt36doc3" path="res://art/sprout/ui/ALL UI ASSETS on one sheet.png" id="3_hv745"]
+[ext_resource type="Texture2D" uid="uid://0k1keg5doc4w" path="res://art/sprout/ui/Inventory_Spritesheet.png" id="3_yrv44"]
+[ext_resource type="Texture2D" uid="uid://c67otcle8mnai" path="res://art/sprout/ui/Weather_Icons_Big.png" id="4_c8ks2"]
 [ext_resource type="Texture2D" uid="uid://dkosh17elkaj0" path="res://shop/art/market_stall.png" id="4_mmyc1"]
+[ext_resource type="Texture2D" uid="uid://b2wfegckd8dy7" path="res://art/sprout/ui/Weather_UI.png" id="4_pafut"]
+[ext_resource type="FontFile" uid="uid://cewnhafgcaoy3" path="res://art/sprout/fonts/pixelFont-7-8x14-sproutLands.ttf" id="5_hv745"]
 [ext_resource type="Texture2D" uid="uid://b534vdu47nojw" path="res://shop/art/shop_door.png" id="5_orod7"]
 [ext_resource type="Texture2D" uid="uid://c51n6fwevwr3j" path="res://shop/art/pen_grass.png" id="6_cd0xb"]
 [ext_resource type="SpriteFrames" uid="uid://dk13gkbm5wyga" path="res://creatures/frames/slime.tres" id="7_mmyc1"]
 [ext_resource type="Script" uid="uid://bg12tx378yav2" path="res://shop/spawn_area.gd" id="7_yrv44"]
+[ext_resource type="Texture2D" uid="uid://cnrenmp756gi3" path="res://art/sprout/sprites/Farming Plants items.png" id="8_k6x22"]
 [ext_resource type="Texture2D" uid="uid://drbg2kfuwbx8u" path="res://shop/art/stable_hay.png" id="8_pafut"]
+[ext_resource type="Texture2D" uid="uid://d1pnqkb6mf1kh" path="res://art/sprout/sprites/grass-n-ground-tile-items.png" id="9_mtsdc"]
 [ext_resource type="SpriteFrames" uid="uid://dkj5n6u6r8hjl" path="res://creatures/frames/spider.tres" id="9_orod7"]
 [ext_resource type="Script" uid="uid://ey0ju0iqjbkn" path="res://shop/panel_host.gd" id="11_cd0xb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ej18p"]
+atlas = ExtResource("3_hv745")
+region = Rect2(711, 712, 19, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hv745"]
+atlas = ExtResource("3_hv745")
+region = Rect2(775, 712, 19, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wawdm"]
+atlas = ExtResource("3_hv745")
+region = Rect2(371, 306, 90, 27)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k6x22"]
+atlas = ExtResource("3_hv745")
+region = Rect2(371, 306, 90, 27)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nsvsr"]
+atlas = ExtResource("4_c8ks2")
+region = Rect2(199, 295, 34, 34)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c8ks2"]
+atlas = ExtResource("3_yrv44")
+region = Rect2(275, 161, 43, 45)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3x823"]
+atlas = ExtResource("4_pafut")
+region = Rect2(119, 6, 93, 51)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wawdm"]
+font = ExtResource("5_hv745")
+
+[sub_resource type="LabelSettings" id="LabelSettings_k6x22"]
+font = ExtResource("5_hv745")
+font_size = 12
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nije4"]
+atlas = ExtResource("3_hv745")
+region = Rect2(789, 581, 22, 23)
+
+[sub_resource type="LabelSettings" id="LabelSettings_nsvsr"]
+font = ExtResource("5_hv745")
+font_size = 8
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sigkv"]
+atlas = ExtResource("8_k6x22")
+region = Rect2(16, 128, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wobyc"]
+atlas = ExtResource("9_mtsdc")
+region = Rect2(16, 0, 16, 16)
 
 [node name="Shop" type="Control" unique_id=1935750032]
 layout_mode = 3
@@ -20,6 +78,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xad5q")
+heart_full = SubResource("AtlasTexture_ej18p")
+heart_empty = SubResource("AtlasTexture_hv745")
 
 [node name="Floor" type="TextureRect" parent="." unique_id=294044166]
 texture_filter = 1
@@ -34,43 +94,242 @@ texture = ExtResource("2_ljlg5")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HUD" type="PanelContainer" parent="." unique_id=571209694]
-layout_mode = 1
-anchors_preset = 10
+[node name="Hud" type="Control" parent="." unique_id=1198593616]
+anchors_preset = 0
 anchor_right = 1.0
-offset_bottom = 32.0
-grow_horizontal = 2
-theme_type_variation = &"BarPanel"
+anchor_bottom = 1.0
+mouse_filter = 2
 
-[node name="HudRow" type="HBoxContainer" parent="HUD" unique_id=1430248193]
-layout_mode = 2
-theme_override_constants/separation = 24
+[node name="TopLeft" type="Control" parent="Hud" unique_id=1519602024]
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 141.0
+offset_bottom = 116.0
+mouse_filter = 2
 
-[node name="DayLabel" type="Label" parent="HUD/HudRow" unique_id=1556326706]
+[node name="Heart-Plate" type="NinePatchRect" parent="Hud/TopLeft" unique_id=1602241100]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 53.0
+offset_right = 133.0
+offset_bottom = 80.0
+texture = SubResource("AtlasTexture_wawdm")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 6
+
+[node name="Money-Plate" type="NinePatchRect" parent="Hud/TopLeft" unique_id=797188633]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 82.0
+offset_right = 57.0
+offset_bottom = 101.0
+texture = SubResource("AtlasTexture_k6x22")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 6
+
+[node name="Feed-Plate" type="NinePatchRect" parent="Hud/TopLeft" unique_id=750912032]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 82.0
+offset_right = 95.0
+offset_bottom = 101.0
+texture = SubResource("AtlasTexture_k6x22")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 6
+
+[node name="Pen-Plate" type="NinePatchRect" parent="Hud/TopLeft" unique_id=1461821110]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 82.0
+offset_right = 133.0
+offset_bottom = 101.0
+texture = SubResource("AtlasTexture_k6x22")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 6
+
+[node name="WeatherSlot" type="TextureRect" parent="Hud/TopLeft" unique_id=1877068296]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 7.0
+offset_right = 75.0
+offset_bottom = 47.0
+texture = SubResource("AtlasTexture_nsvsr")
+
+[node name="DayBacking" type="TextureRect" parent="Hud/TopLeft" unique_id=315101500]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 47.0
+offset_bottom = 49.0
+texture = SubResource("AtlasTexture_c8ks2")
+
+[node name="DayPanel" type="TextureRect" parent="Hud/TopLeft" unique_id=1860054533]
+layout_mode = 0
+offset_right = 93.0
+offset_bottom = 51.0
+texture = SubResource("AtlasTexture_3x823")
+
+[node name="DayNumber" type="Label" parent="Hud/TopLeft/DayPanel" unique_id=715376806]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
+offset_left = 10.0
+offset_top = 25.0
+offset_right = 43.0
+offset_bottom = 43.0
+text = "1"
+label_settings = SubResource("LabelSettings_wawdm")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ApLabel" type="Label" parent="HUD/HudRow" unique_id=479457805]
+[node name="DayTitle" type="Label" parent="Hud/TopLeft/DayPanel" unique_id=608942664]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 43.0
+offset_bottom = 28.0
+text = "Day"
+label_settings = SubResource("LabelSettings_k6x22")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ApHearts" type="HBoxContainer" parent="Hud/TopLeft" unique_id=776399862]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
+offset_left = 5.0
+offset_top = 57.0
+offset_right = 129.0
+offset_bottom = 74.0
+theme_override_constants/separation = 2
 
-[node name="MoneyLabel" type="Label" parent="HUD/HudRow" unique_id=464357858]
+[node name="Heart1" type="TextureRect" parent="Hud/TopLeft/ApHearts" unique_id=1286561861]
+layout_mode = 2
+texture = SubResource("AtlasTexture_ej18p")
+
+[node name="Heart2" type="TextureRect" parent="Hud/TopLeft/ApHearts" unique_id=1355070682]
+layout_mode = 2
+texture = SubResource("AtlasTexture_ej18p")
+
+[node name="Heart3" type="TextureRect" parent="Hud/TopLeft/ApHearts" unique_id=1270411922]
+layout_mode = 2
+texture = SubResource("AtlasTexture_ej18p")
+
+[node name="Heart4" type="TextureRect" parent="Hud/TopLeft/ApHearts" unique_id=1982709843]
+layout_mode = 2
+texture = SubResource("AtlasTexture_ej18p")
+
+[node name="Heart5" type="TextureRect" parent="Hud/TopLeft/ApHearts" unique_id=1592657119]
+layout_mode = 2
+texture = SubResource("AtlasTexture_ej18p")
+
+[node name="Heart6" type="TextureRect" parent="Hud/TopLeft/ApHearts" unique_id=608778431]
+layout_mode = 2
+texture = SubResource("AtlasTexture_ej18p")
+
+[node name="MoneyRow" type="Control" parent="Hud/TopLeft" unique_id=32863799]
+anchors_preset = 0
+offset_left = 5.0
+offset_top = 85.0
+offset_right = 57.0
+offset_bottom = 108.0
+mouse_filter = 2
+
+[node name="Coin" type="TextureRect" parent="Hud/TopLeft/MoneyRow" unique_id=466973843]
+layout_mode = 0
+offset_right = 22.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("AtlasTexture_nije4")
+
+[node name="MoneyLabel" type="Label" parent="Hud/TopLeft/MoneyRow" unique_id=156560698]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
+offset_left = 12.0
+offset_top = 1.0
+offset_right = 52.0
+offset_bottom = 13.0
+text = "1000"
+label_settings = SubResource("LabelSettings_nsvsr")
 
-[node name="RepLabel" type="Label" parent="HUD/HudRow" unique_id=330842084]
+[node name="FeedRow" type="Control" parent="Hud/TopLeft" unique_id=1767177792]
+anchors_preset = 0
+offset_left = 62.0
+offset_top = 83.0
+offset_right = 95.0
+offset_bottom = 99.0
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="Hud/TopLeft/FeedRow" unique_id=1006576471]
+layout_mode = 0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_sigkv")
+
+[node name="FeedLabel" type="Label" parent="Hud/TopLeft/FeedRow" unique_id=1453427534]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
+offset_left = 17.0
+offset_top = 3.0
+offset_right = 35.0
+offset_bottom = 15.0
+text = "10"
+label_settings = SubResource("LabelSettings_nsvsr")
 
-[node name="Spacer" type="Control" parent="HUD/HudRow" unique_id=580242534]
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="PenRow" type="Control" parent="Hud/TopLeft" unique_id=1822557682]
+anchors_preset = 0
+offset_left = 100.0
+offset_top = 83.0
+offset_right = 133.0
+offset_bottom = 99.0
+mouse_filter = 2
 
-[node name="EndDayButton" type="Button" parent="HUD/HudRow" unique_id=399663739]
+[node name="Icon" type="TextureRect" parent="Hud/TopLeft/PenRow" unique_id=350345912]
+layout_mode = 0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_wobyc")
+
+[node name="PenSpaceLabel" type="Label" parent="Hud/TopLeft/PenRow" unique_id=87979145]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
+offset_left = 17.0
+offset_top = 3.0
+offset_right = 35.0
+offset_bottom = 15.0
+text = "3/6"
+label_settings = SubResource("LabelSettings_nsvsr")
+
+[node name="EndDayButton" type="Button" parent="Hud" unique_id=399663739]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 28.0
+grow_horizontal = 0
 theme_type_variation = &"DecoratedButton"
 text = "End day"
+
+[node name="RepLabel" type="Label" parent="Hud" unique_id=330842084]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -200.0
+offset_top = 30.0
+offset_right = -4.0
+offset_bottom = 46.0
+grow_horizontal = 0
+theme_type_variation = &"OnDarkLabel"
+horizontal_alignment = 2
 
 [node name="Counter" type="TextureButton" parent="." unique_id=1056247634]
 unique_name_in_owner = true

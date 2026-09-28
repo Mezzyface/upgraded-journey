@@ -21,8 +21,12 @@ func test_shop_shows_the_creatures_and_the_hud() -> void:
 	await tree.process_frame
 	eq(shop.get_node("%Pens").sprites().size(), Game.owned().size(), "one sprite per owned creature")
 	eq(shop.get_node("%Stable").sprites().size(), 0, "nobody retired yet")
-	check(shop.get_node("%DayLabel").text.contains("1"), "day 1: %s" % shop.get_node("%DayLabel").text)
+	eq(shop.get_node("%DayNumber").text, "1", "day 1")
 	check(shop.get_node("%MoneyLabel").text.contains("500"), "money")
+	eq(_full_hearts(shop), Game.state.ap, "one full heart per AP left")
+	eq(shop.get_node("%FeedLabel").text, str(Game.state.inventory.get("feed", 0)), "feed stock")
+	eq(shop.get_node("%PenSpaceLabel").text, "%d/%d" % [Market.pen_used(Game.state), Market.pen_capacity(Game.state)],
+		"pen space used / total")
 	_done(shop)
 
 
@@ -35,8 +39,17 @@ func test_actions_refresh_the_pens_and_hud() -> void:
 	eq(shop.get_node("%Pens").sprites().size(), Game.owned().size(), "and left the pens")
 	shop.get_node("%EndDayButton").pressed.emit()
 	await tree.process_frame
-	check(shop.get_node("%DayLabel").text.contains("2"), "day 2 after End day")
+	eq(shop.get_node("%DayNumber").text, "2", "day 2 after End day")
 	_done(shop)
+
+
+func _full_hearts(shop: Node) -> int:
+	var full: Texture2D = shop.heart_full
+	var n := 0
+	for heart: TextureRect in shop.get_node("%ApHearts").get_children():
+		if heart.visible and heart.texture == full:
+			n += 1
+	return n
 
 
 func test_placeholder_stations_toast() -> void:

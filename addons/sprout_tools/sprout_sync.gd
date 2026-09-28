@@ -8,12 +8,19 @@ const SRC := "res://asset-pipeline/sprout-lands"
 const DST := "res://art/sprout"
 const UI_BASIC := "Sprout Lands - UI Pack - Basic pack/"
 const UI_PREM := "Sprout Lands - UI Pack - Premium pack/"
+const SPRITES_PREM := "Sprout Lands - Sprites - premium pack/"
 
 ## destination (relative to DST) -> source (relative to SRC)
 const FILES := {
 	"ui/Sprite sheet for Basic Pack.png": UI_BASIC + "Sprite sheets/Sprite sheet for Basic Pack.png",
 	"ui/Catpaw Mouse icon.png": UI_PREM + "UI Sprites/Mouse sprites/Catpaw Mouse icon.png",
 	"ui/backdrops_a1.png": UI_PREM + "UI Sprites/Dialouge UI/Character Backdrop-frame/backdrops_a1.png",
+	"ui/ALL UI ASSETS on one sheet.png": UI_PREM + "UI Sprites/ALL UI ASSETS on one sheet.png",
+	"ui/Inventory_Spritesheet.png": UI_PREM + "emojis/emoji style ui/Inventory_Spritesheet.png",
+	"ui/Weather_Icons_Big.png": UI_PREM + "emojis/emoji style ui/weather/Weather_Icons_Big.png",
+	"ui/Weather_UI.png": UI_PREM + "emojis/emoji style ui/weather/Weather_UI.png",
+	"sprites/Farming Plants items.png": SPRITES_PREM + "Objects/Items/Farming Plants items.png",
+	"sprites/grass-n-ground-tile-items.png": SPRITES_PREM + "Objects/Items/grass-n-ground-tile-items.png",
 	"fonts/pixelFont-7-8x14-sproutLands.ttf": UI_PREM + "fonts/Font files TTF/pixelFont-7-8x14-sproutLands.ttf",
 }
 

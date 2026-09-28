@@ -7,6 +7,10 @@ const CARD := preload("res://shop/panels/creature_card.tscn")
 const ORDERS := preload("res://shop/panels/orders_panel.tscn")
 const SUMMARY := preload("res://shop/panels/day_summary.tscn")
 
+## AP hearts: each child of %ApHearts shows one AP point, full while unspent.
+@export var heart_full: Texture2D
+@export var heart_empty: Texture2D
+
 var _rng := RandomNumberGenerator.new()
 
 
@@ -66,9 +70,17 @@ func _ready() -> void:
 
 func _refresh() -> void:
 	var s := Game.state
-	%DayLabel.text = "Day %d" % s.day
-	%ApLabel.text = "AP %d / %d" % [s.ap, Day.max_ap(s)]
-	%MoneyLabel.text = "%d gold" % s.money
+	%DayNumber.text = str(s.day)
+	var max_ap := Day.max_ap(s)
+	for i in %ApHearts.get_child_count():
+		var heart: TextureRect = %ApHearts.get_child(i)
+		# ponytail: hearts are placed in the editor (6 = max AP today); add nodes there if max AP grows
+		heart.visible = i < max_ap
+		heart.texture = heart_full if i < s.ap else heart_empty
+
+	%MoneyLabel.text = str(s.money)
+	%FeedLabel.text = str(s.inventory.get("feed", 0))
+	%PenSpaceLabel.text = "%d/%d" % [Market.pen_used(s), Market.pen_capacity(s)]
 	%RepLabel.text = "Reputation %d · tier %d" % [s.reputation, Game.tier()]
 	%Pens.sync(Game.owned(), Game.db, _rng)
 	%Stable.sync(Game.retired(), Game.db, _rng)
