@@ -120,7 +120,7 @@ patch_margin_top = 5
 patch_margin_right = 5
 patch_margin_bottom = 4
 
-[node name="RoomFloor" type="TextureRect" parent="Ranch/House" unique_id=63058060]
+[node name="Floor" type="TextureRect" parent="Ranch/House" unique_id=63058060]
 offset_left = 245.0
 offset_top = 53.0
 offset_right = 395.0

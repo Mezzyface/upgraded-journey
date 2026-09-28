@@ -108,5 +108,12 @@ func test_creatures_stay_inside_their_areas() -> void:
 func test_the_shop_uses_no_side_view_art() -> void:
 	var text := FileAccess.get_file_as_string("res://shop/shop.tscn")
 	check(not text.contains("res://shop/art/"), "shop.tscn references res://shop/art/")
+	# Node names are only unique per parent (Ranch/House/Floor is a legitimate Task 6 node), so match
+	# each removed node at the Shop root specifically, not by a bare name substring anywhere in the file.
 	for gone in ["Floor", "PenFrame", "StableFrame"]:
-		check(not text.contains("[node name=\"%s\"" % gone), "%s node removed" % gone)
+		var at_root := false
+		for line in text.split("\n"):
+			if line.contains("[node name=\"%s\"" % gone) and line.contains("parent=\".\""):
+				at_root = true
+				break
+		check(not at_root, "%s node removed from the root" % gone)
