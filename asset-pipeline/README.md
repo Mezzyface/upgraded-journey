@@ -86,6 +86,10 @@ Every creature has a `restyle_<species>` job (one idle frame facing right, redra
 `python asset-pipeline/gen.py` makes any missing; `--force restyle_wolf` redoes one. Each restyle gets three single-subject
 refs (the tool takes at most 3): the trimmed creature frame, the owner's chosen conversion
 (`assets/restyle/favourites/restyle_yellow_golem.png`, `STYLE_EXAMPLE` in gen.py) and a palette card; the prompt also lists
-the Sprout palette ramps as hex, and the Aseprite pass still snaps the result to the palette. Review them in Godot in
+the Sprout palette ramps as hex, and the Aseprite pass still snaps the result to the palette.
+
+Images made elsewhere (e.g. the Gemini web app, which takes more refs and has a separate quota from `agy`) go
+through the same key/resize/palette pass with `python asset-pipeline/gen.py --ingest restyle_wolf <image>`; the
+source is kept as `restyle_wolf.raw.<ext>`. No review runs on ingested images. Review them in Godot in
 `creatures/variants_review.tscn` (original | Sprout palette swap | still, on ranch grass); from the command line:
 `godot --path . res://creatures/variants_review.tscn -- --screenshot=out.png --scroll=0`.
