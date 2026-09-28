@@ -33,6 +33,10 @@ region = Rect2(711, 712, 19, 17)
 atlas = ExtResource("3_hv745")
 region = Rect2(775, 712, 19, 17)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5yfe"]
+atlas = ExtResource("4_auoiy")
+region = Rect2(16, 16, 16, 16)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_wawdm"]
 atlas = ExtResource("3_hv745")
 region = Rect2(371, 306, 90, 27)
@@ -115,6 +119,16 @@ patch_margin_top = 5
 patch_margin_right = 5
 patch_margin_bottom = 4
 
+[node name="Floor" type="TextureRect" parent="Ranch/House" unique_id=63058060]
+offset_left = 245.0
+offset_top = 53.0
+offset_right = 395.0
+offset_bottom = 124.0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_q5yfe")
+expand_mode = 1
+stretch_mode = 1
+
 [node name="FrontLeft" type="NinePatchRect" parent="Ranch/House" unique_id=843588343]
 offset_left = 240.0
 offset_top = 128.0
@@ -147,7 +161,7 @@ position = Vector2(296, 104)
 texture = ExtResource("5_o26su")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 80, 48, 16)
+region_rect = Rect2(48, 80, 32, 16)
 
 [node name="Plant" type="Sprite2D" parent="Ranch/Decor" unique_id=927125887]
 position = Vector2(248, 104)
