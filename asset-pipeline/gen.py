@@ -72,7 +72,7 @@ STYLES = {
               SL_PREM + "Tilesets/Building parts/Chest.png"]),
     "restyle": dict(  # job refs: [creature frame to redraw, style ref, style ref]
         aspect="1:1", size="small", colors=0, palette="sprout",
-        prefix="Redraw the creature from the FIRST reference image as a tiny 16-bit farm game sprite in the exact "
+        prefix="Redraw the creature from the FIRST reference image as a 16-bit farm game sprite whose creature fills about half the image height in the exact "
                "style of the OTHER reference images (Sprout Lands): same creature, same pose and silhouette, colours "
                "moved to that soft pastel palette, 1px dark outline, simple flat shading, no anti-aliasing, one "
                "creature centered and facing right, no text, on a solid flat magenta #FF00FF background. Creature: ",
