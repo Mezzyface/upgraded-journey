@@ -23,6 +23,7 @@ BRAIN = os.path.expanduser("~/.gemini/antigravity-cli/brain")
 ASEPRITE = os.environ.get("ASEPRITE", "C:/Program Files/Aseprite/Aseprite.exe")
 MAGENTA = (255, 0, 255)
 REWORKS = 2
+TRIM_PAD = 2  # px kept around the creature when a restyle source frame is trimmed
 SIZES = {  # standard sprite sizes (px, square); portrait/splash match the art-example dimensions
     "tiny": 32, "small": 64, "large": 128, "boss": 256,
     "icon": 32, "button": 128,
@@ -79,14 +80,15 @@ STYLES = {
 }
 
 
-def as_png(ref):
+def as_png(ref, trim=False):
     """generate_image only takes still images: GIF refs become a PNG of their first frame, and 'path#x,y,w,h'
-    refs become a PNG of that region (e.g. one frame of a sprite sheet). Cached in the temp dir."""
+    refs become a PNG of that region (e.g. one frame of a sprite sheet). trim=True also crops to the opaque
+    pixels plus TRIM_PAD, so a small creature in a big cell fills the ref. Cached in the temp dir."""
     path, _, crop = ref.partition("#")
     path = os.path.join(ROOT, path)
-    if not crop and not path.lower().endswith(".gif"):
+    if not crop and not trim and not path.lower().endswith(".gif"):
         return path
-    tag = ("_" + crop.replace(",", "_")) if crop else ""
+    tag = (("_" + crop.replace(",", "_")) if crop else "") + ("_trim" if trim else "")
     # ponytail: basename alone collides when refs share a filename (e.g. creatures/pack/*/idle.png) --
     # prefix a hash of the full path so distinct sources never share a cache entry.
     h = hashlib.sha1(path.encode()).hexdigest()[:8]
@@ -99,6 +101,11 @@ def as_png(ref):
             im = im.convert("RGBA").crop((x, y, x + w, y + h))
         else:
             im = im.convert("RGB")
+        if trim:
+            im = im.convert("RGBA")
+            box = im.getbbox()
+            if box:
+                im = im.crop((box[0] - TRIM_PAD, box[1] - TRIM_PAD, box[2] + TRIM_PAD, box[3] + TRIM_PAD))
         im.save(cached)
     return cached
 
@@ -140,7 +147,9 @@ def agy(instruction, schema=None, tries=3):
 
 
 def job_refs(job):
-    return [as_png(r) for r in job.get("refs", STYLES[job["type"]]["refs"])][:3]
+    refs = job.get("refs", STYLES[job["type"]]["refs"])[:3]
+    # restyle: the first ref is the creature to redraw; trim it so the model sees the creature, not an empty cell
+    return [as_png(r, trim=job["type"] == "restyle" and i == 0) for i, r in enumerate(refs)]
 
 
 def step_errors(conv_dir):
@@ -265,6 +274,28 @@ REVIEW_SCHEMA = {"type": "object", "required": ["pass", "issues"],
                  "properties": {"pass": {"type": "boolean"}, "issues": {"type": "string"}}}
 
 
+def review_instruction(view, job, refs):
+    """The reviewer prompt. For restyle jobs the first ref is the creature being redrawn, so identity is checked
+    against it and only the remaining refs are style references."""
+    if job["type"] == "restyle":
+        look = f"the source creature {json.dumps(refs[0])} and then the style references {json.dumps(refs[1:])}"
+        identity = ("it is not recognisably the same creature as the source creature (lost distinctive features such "
+                    "as its eyes, spikes, crystals, cap, antenna, legs or markings, or a different body shape), "
+                    "it does not face right, ")
+    else:
+        look, identity = f"the style references {json.dumps(refs)}", ""
+    return (
+        f"You are an art director QA-ing a game asset. Use view_file ONLY (never run_command) to look at the "
+        f"candidate {view} and then {look}. The candidate was generated for: "
+        f"{json.dumps(job['prompt'])} as a {job['type']} in the reference style. Fail it if: it does not depict the "
+        f"prompt, {identity}it is not pixel art in the reference style, it contains text, watermarks or extra subjects, or "
+        f"(for portrait/sprite/ui) any background other than the flat magenta remains (magenta #FF00FF in the candidate "
+        f"means transparent and is correct; a small drop shadow under the subject is part of the sprite, not background). "
+        f"Be strict but not pedantic. "
+        f"Reply with JSON: pass (bool) and issues (short concrete fix instructions, empty if pass)."
+    )
+
+
 def review(dest, job):
     """Gemini vision looks at the finished asset next to the references and judges it. Returns the verdict dict."""
     im = Image.open(dest).convert("RGBA")
@@ -275,16 +306,7 @@ def review(dest, job):
     bg.alpha_composite(im)
     bg.convert("RGB").save(view)
     refs = job_refs(job)
-    instruction = (
-        f"You are an art director QA-ing a game asset. Use view_file ONLY (never run_command) to look at the "
-        f"candidate {view} and then the style references {json.dumps(refs)}. The candidate was generated for: "
-        f"{json.dumps(job['prompt'])} as a {job['type']} in the reference style. Fail it if: it does not depict the "
-        f"prompt, it is not pixel art in the reference style, it contains text, watermarks or extra subjects, or "
-        f"(for portrait/sprite/ui) any background other than the flat magenta remains (magenta #FF00FF in the candidate "
-        f"means transparent and is correct; a small drop shadow under the subject is part of the sprite, not background). "
-        f"Be strict but not pedantic. "
-        f"Reply with JSON: pass (bool) and issues (short concrete fix instructions, empty if pass)."
-    )
+    instruction = review_instruction(view, job, refs)
     info = agy(instruction, REVIEW_SCHEMA)
     for m in reversed(re.findall(r"\{[^{}]*\}", info.get("response", ""))):  # response may wrap the JSON in prose/fences
         try:

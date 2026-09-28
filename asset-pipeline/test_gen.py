@@ -105,6 +105,33 @@ def test_step_errors_surface_what_agy_swallowed():  # agy replies "done" even wh
     assert gen.step_errors(TMP) == ""
 
 
+def test_restyle_review_checks_identity_against_the_source():
+    text = gen.review_instruction("v.png", {"type": "restyle", "prompt": "a golem"}, ["src.png", "s1.png", "s2.png"])
+    assert "source creature" in text and '"src.png"' in text and "distinctive features" in text
+    other = gen.review_instruction("v.png", {"type": "prop", "prompt": "a crate"}, ["s1.png"])
+    assert "source creature" not in other and "distinctive features" not in other
+
+
+def test_as_png_trims_to_opaque_bounds_with_padding():
+    src = save("cell.png", (16, 16), {(5, 6): (255, 0, 0, 255), (7, 9): (0, 255, 0, 255)})
+    out = Image.open(gen.as_png(src + "#0,0,16,16", trim=True)).convert("RGBA")
+    assert out.size == (3 + 2 * gen.TRIM_PAD, 4 + 2 * gen.TRIM_PAD)
+    assert out.getpixel((gen.TRIM_PAD, gen.TRIM_PAD)) == (255, 0, 0, 255)
+
+
+def test_restyle_trims_only_the_source_ref():
+    calls, orig = [], gen.as_png
+    gen.as_png = lambda r, trim=False: calls.append(trim) or r
+    try:
+        gen.job_refs({"type": "restyle", "refs": ["a#0,0,1,1", "b", "c"]})
+        assert calls == [True, False, False]
+        calls.clear()
+        gen.job_refs({"type": "prop", "refs": ["a", "b"]})
+        assert calls == [False, False]
+    finally:
+        gen.as_png = orig
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):
