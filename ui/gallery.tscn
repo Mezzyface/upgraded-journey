@@ -334,6 +334,11 @@ layout_mode = 2
 text = "Welcome, traveller. The conversation box uses FlatPanel and NamePlate."
 autowrap_mode = 3
 
+[node name="OnMap" type="Label" parent="Scroll/Margin/Rows/Panels/Right/Talk/Speech" unique_id=903993877]
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "On the map"
+
 [node name="H5" type="Label" parent="Scroll/Margin/Rows" unique_id=1138597749]
 layout_mode = 2
 theme_type_variation = &"HeaderLabel"
@@ -368,6 +373,6 @@ offset_left = -14.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_type_variation = &"PackScrollBar"
-max_value = 644.0
-value = 644.0
+max_value = 405.0
+value = 405.0
 script = ExtResource("8_kq1tw")

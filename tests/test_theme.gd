@@ -30,6 +30,7 @@ func test_theme_art_is_all_synced() -> void:
 
 const VARIATIONS := {
 	"DecoratedButton": &"Button", "HeaderLabel": &"Label", "BannerLabel": &"Label", "OnDarkLabel": &"Label",
+	"OnMapLabel": &"Label",
 	"FlatPanel": &"PanelContainer", "BarPanel": &"PanelContainer", "InsetPanel": &"PanelContainer",
 	"InventorySlot": &"PanelContainer", "InventorySlotSelected": &"PanelContainer", "NamePlate": &"PanelContainer",
 	"PackScrollBar": &"VSlider", "TooltipLabel": &"Label", "TooltipPanel": &"PanelContainer",

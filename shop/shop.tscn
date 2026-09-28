@@ -440,7 +440,7 @@ offset_top = 30.0
 offset_right = -4.0
 offset_bottom = 46.0
 grow_horizontal = 0
-theme_type_variation = &"OnDarkLabel"
+theme_type_variation = &"OnMapLabel"
 horizontal_alignment = 2
 
 [node name="Pens" type="Control" parent="." unique_id=665469268]
@@ -520,7 +520,7 @@ offset_top = -24.0
 offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_type_variation = &"OnDarkLabel"
+theme_type_variation = &"OnMapLabel"
 horizontal_alignment = 1
 
 [node name="PanelHost" type="Control" parent="." unique_id=194054736]
