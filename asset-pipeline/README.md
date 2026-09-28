@@ -58,7 +58,7 @@ environment if it is not at `C:/Program Files/Aseprite/Aseprite.exe`.
 | sprite   | 1:1    | small    | 16     | magenta bg keyed, nearest resize           | Monster Pack 1 slime       |
 | ui       | 1:1    | 32       | —      | magenta keyed, nearest, Sprout palette     | Sprout UI sheet + dialog box |
 | prop     | 1:1    | small    | —      | magenta keyed, nearest, Sprout palette     | Sprout trees, work station, chest |
-| restyle  | 1:1    | small    | —      | magenta keyed, nearest, Sprout palette     | job refs: creature frame first, then Sprout refs |
+| restyle  | 1:1    | small    | —      | magenta keyed, nearest, Sprout palette     | job ref: the creature frame; gen.py adds `STYLE_EXAMPLE` + a palette card |
 
 Style prefixes live in `STYLES` in `gen.py`; edit them there to steer the look.
 Needs `agy` on PATH (logged in), Pillow, and Aseprite (optional; skipped if not found).
@@ -83,6 +83,9 @@ restyle lost the golem's features; creatures read well at about 32 px against 16
 
 Every creature has a `restyle_<species>` job (one idle frame facing right, redrawn in Sprout style) writing
 `assets/restyle/restyle_<species>.png` (git-ignored). `python asset-pipeline/gen.py restyle_wolf` makes one;
-`python asset-pipeline/gen.py` makes any missing; `--force restyle_wolf` redoes one. Review them in Godot in
+`python asset-pipeline/gen.py` makes any missing; `--force restyle_wolf` redoes one. Each restyle gets three single-subject
+refs (the tool takes at most 3): the trimmed creature frame, the owner's chosen conversion
+(`assets/restyle/favourites/restyle_yellow_golem.png`, `STYLE_EXAMPLE` in gen.py) and a palette card; the prompt also lists
+the Sprout palette ramps as hex, and the Aseprite pass still snaps the result to the palette. Review them in Godot in
 `creatures/variants_review.tscn` (original | Sprout palette swap | still, on ranch grass); from the command line:
 `godot --path . res://creatures/variants_review.tscn -- --screenshot=out.png --scroll=0`.

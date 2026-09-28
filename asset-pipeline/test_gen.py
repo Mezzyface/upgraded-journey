@@ -106,8 +106,10 @@ def test_step_errors_surface_what_agy_swallowed():  # agy replies "done" even wh
 
 
 def test_restyle_review_checks_identity_against_the_source():
-    text = gen.review_instruction("v.png", {"type": "restyle", "prompt": "a golem"}, ["src.png", "s1.png", "s2.png"])
+    text = gen.review_instruction("v.png", {"type": "restyle", "prompt": "a golem"}, ["src.png", "ex.png", "card.png"])
     assert "source creature" in text and '"src.png"' in text and "distinctive features" in text
+    assert '"ex.png"' in text and '"card.png"' in text and "more than one creature" in text
+    assert "pastel" in text and "face right" not in text  # the pastel recolour and a front-on pose are intended
     other = gen.review_instruction("v.png", {"type": "prop", "prompt": "a crate"}, ["s1.png"])
     assert "source creature" not in other and "distinctive features" not in other
 
@@ -119,17 +121,53 @@ def test_as_png_trims_to_opaque_bounds_with_padding():
     assert out.getpixel((gen.TRIM_PAD, gen.TRIM_PAD)) == (255, 0, 0, 255)
 
 
-def test_restyle_trims_only_the_source_ref():
+def test_restyle_refs_are_source_example_and_palette_card():  # three single-subject files (agy takes at most 3)
     calls, orig = [], gen.as_png
-    gen.as_png = lambda r, trim=False: calls.append(trim) or r
+    gen.as_png = lambda r, trim=False: calls.append((r, trim)) or r
     try:
-        gen.job_refs({"type": "restyle", "refs": ["a#0,0,1,1", "b", "c"]})
-        assert calls == [True, False, False]
+        refs = gen.job_refs({"type": "restyle", "refs": ["a#0,0,1,1", "ignored"]})
+        assert calls == [("a#0,0,1,1", True), (gen.STYLE_EXAMPLE, True)]
+        assert refs[2] == gen.palette_card(gen.palette_of({"type": "restyle"})) and len(refs) == 3
         calls.clear()
         gen.job_refs({"type": "prop", "refs": ["a", "b"]})
-        assert calls == [False, False]
+        assert calls == [("a", False), ("b", False)]
     finally:
         gen.as_png = orig
+
+
+def test_as_png_trims_a_whole_png_by_alpha():
+    src = save("whole.png", (16, 16), {(5, 6): (255, 0, 0, 255), (7, 9): (0, 255, 0, 255)})
+    out = Image.open(gen.as_png(src, trim=True)).convert("RGBA")
+    assert out.size == (3 + 2 * gen.TRIM_PAD, 4 + 2 * gen.TRIM_PAD)
+
+
+def test_palette_ramps_follow_the_sprout_layout():
+    ramps = gen.palette_ramps(gen.palette_of({"type": "restyle"}))
+    assert len(ramps) == 12 and all(len(r) >= 8 for r in ramps)
+    assert ramps[0][0] == "713970" and ramps[0][-1] == "f3d8c5"  # first ramp, dark to light
+    assert ramps[-1][0] == "353738" and ramps[-1][-1] == "f3f4e7"  # grey ramp keeps the extra light grey
+    assert sum(len(r) for r in ramps) == len(gen.palette_colors(gen.palette_of({"type": "restyle"})))
+
+
+def test_palette_card_has_one_row_per_ramp():
+    pal = gen.palette_of({"type": "restyle"})
+    card = Image.open(gen.palette_card(pal)).convert("RGB")
+    assert card.height == 12 * gen.SWATCH and card.getpixel((gen.SWATCH // 2, gen.SWATCH // 2)) == (0x71, 0x39, 0x70)
+
+
+def test_restyle_prompt_names_one_creature_and_the_palette():
+    text = gen.job_prompt({"type": "restyle", "prompt": "a golem"})
+    assert "exactly ONE creature" in text and "a golem" in text and "713970" in text and "never pure black" in text
+    assert "713970" not in gen.job_prompt({"type": "prop", "prompt": "a crate"})
+    assert "fix these issues: x" in gen.job_prompt({"type": "prop", "prompt": "a crate"}, "x")
+
+
+def test_restyle_without_a_source_ref_stops_clearly():
+    try:
+        gen.check_inputs({"name": "no_src", "type": "restyle", "prompt": "a golem"})
+        raise AssertionError("expected RuntimeError for a restyle job without refs")
+    except RuntimeError as e:
+        assert "no_src" in str(e) and "creature frame" in str(e)
 
 
 if __name__ == "__main__":

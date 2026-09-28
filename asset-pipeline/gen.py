@@ -24,6 +24,9 @@ ASEPRITE = os.environ.get("ASEPRITE", "C:/Program Files/Aseprite/Aseprite.exe")
 MAGENTA = (255, 0, 255)
 REWORKS = 2
 TRIM_PAD = 2  # px kept around the creature when a restyle source frame is trimmed
+SWATCH = 32  # px per colour on the palette card handed to the model
+# the owner's pick of a good Sprout conversion (a restyle output, git-ignored); every restyle sees it as the target look
+STYLE_EXAMPLE = "assets/restyle/favourites/restyle_yellow_golem.png"
 SIZES = {  # standard sprite sizes (px, square); portrait/splash match the art-example dimensions
     "tiny": 32, "small": 64, "large": 128, "boss": 256,
     "icon": 32, "button": 128,
@@ -70,13 +73,16 @@ STYLES = {
                "#FF00FF background. Object: ",
         refs=[SL_PREM + "Objects/Trees, stumps and bushes.png", SL_PREM + "Objects/work station.png",
               SL_PREM + "Tilesets/Building parts/Chest.png"]),
-    "restyle": dict(  # job refs: [creature frame to redraw, style ref, style ref]
+    "restyle": dict(  # job refs: [creature frame to redraw]; job_refs() adds STYLE_EXAMPLE and the palette card
         aspect="1:1", size="small", colors=0, palette="sprout",
-        prefix="Redraw the creature from the FIRST reference image as a 16-bit farm game sprite whose creature fills about half the image height in the exact "
-               "style of the OTHER reference images (Sprout Lands): same creature, same pose and silhouette, colours "
-               "moved to that soft pastel palette, 1px dark outline, simple flat shading, no anti-aliasing, one "
-               "creature centered and facing right, no text, on a solid flat magenta #FF00FF background. Creature: ",
-        refs=[SL_PREM + "Animals/Cow/Light cow animations.png#0,0,32,32", SL_PREM + "Animals/Chicken/chicken default.png#0,0,16,16"]),
+        prefix="Redraw the creature from the FIRST image as a 16-bit farm game sprite in the Sprout Lands style. Draw "
+               "exactly ONE creature: the one in the FIRST image, with its pose, silhouette and distinctive features "
+               "(spikes, crystals, eyes, cap, antenna, legs, markings). The SECOND image is only an example of a "
+               "finished conversion: match its look, do not draw it. The THIRD image is the colour palette. Body in "
+               "light pastel colours with the creature's accent colour (crystals, eyes, cap) brightest, simple flat "
+               "shading, no anti-aliasing, the creature filling about half the image height, centered, no text, on "
+               "a solid flat magenta #FF00FF background. Creature: ",
+        refs=[STYLE_EXAMPLE]),
 }
 
 
@@ -100,7 +106,7 @@ def as_png(ref, trim=False):
             x, y, w, h = map(int, crop.split(","))
             im = im.convert("RGBA").crop((x, y, x + w, y + h))
         else:
-            im = im.convert("RGB")
+            im = im.convert("RGBA" if trim else "RGB")
         if trim:
             im = im.convert("RGBA")
             box = im.getbbox()
@@ -128,6 +134,39 @@ def off_palette(png, pal_png):
     return sum(1 for c in _rgba(png) if c[3] and c[:3] not in pal)
 
 
+def palette_ramps(png):
+    """The palette's hue ramps, dark to light, as hex strings. The Sprout palette PNG is row-major 8-step ramps and
+    then one extra light grey, before a transparent cell and filler: read colours in order up to the first
+    transparent pixel, chunk by 8, and fold a short leftover into the last ramp."""
+    order = []
+    for c in _rgba(png):
+        if not c[3]:
+            break
+        h = "%02x%02x%02x" % c[:3]
+        if h not in order:
+            order.append(h)
+    ramps = [order[i:i + 8] for i in range(0, len(order), 8)]
+    if len(ramps) > 1 and len(ramps[-1]) < 8:
+        leftover = ramps.pop()  # not `ramps[-2] += ramps.pop()`: that writes back to the index after the pop
+        ramps[-1] += leftover
+    return ramps
+
+
+def palette_card(png):
+    """The palette as a reference image for the model: one row of SWATCH-px squares per ramp, dark to light."""
+    ramps = palette_ramps(png)
+    card = Image.new("RGB", (max(map(len, ramps)) * SWATCH, len(ramps) * SWATCH), MAGENTA)
+    draw = ImageDraw.Draw(card)
+    for y, ramp in enumerate(ramps):
+        for x, h in enumerate(ramp):
+            draw.rectangle((x * SWATCH, y * SWATCH, (x + 1) * SWATCH - 1, (y + 1) * SWATCH - 1), fill="#" + h)
+    tag = hashlib.sha1(png.encode()).hexdigest()[:8]
+    out = os.path.join(tempfile.gettempdir(), "agy_refs", f"palette_card_{tag}.png")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    card.save(out)
+    return out
+
+
 def palette_of(job):
     name = job.get("palette", STYLES[job["type"]].get("palette"))
     return os.path.join(ROOT, PALETTES[name]) if name else None
@@ -146,10 +185,30 @@ def agy(instruction, schema=None, tries=3):
     raise RuntimeError(f"agy failed: {info}")
 
 
+def raw_refs(job):
+    """Ref paths (optional #crop) before conversion. restyle: the job's creature frame, then STYLE_EXAMPLE."""
+    if job["type"] == "restyle":
+        return job.get("refs", [])[:1] + STYLES["restyle"]["refs"]
+    return job.get("refs", STYLES[job["type"]]["refs"])[:3]
+
+
 def job_refs(job):
-    refs = job.get("refs", STYLES[job["type"]]["refs"])[:3]
-    # restyle: the first ref is the creature to redraw; trim it so the model sees the creature, not an empty cell
-    return [as_png(r, trim=job["type"] == "restyle" and i == 0) for i, r in enumerate(refs)]
+    """Images for generate_image (it takes at most 3). restyle: trimmed creature frame, trimmed style example, palette
+    card -- three single-subject files, so the model is not shown a sheet of several creatures to copy."""
+    restyle = job["type"] == "restyle"
+    refs = [as_png(r, trim=restyle) for r in raw_refs(job)]
+    return refs + [palette_card(palette_of(job))] if restyle else refs
+
+
+def job_prompt(job, notes=""):
+    prompt = STYLES[job["type"]]["prefix"] + job["prompt"]
+    if job["type"] == "restyle":
+        ramps = "; ".join(" ".join("#" + h for h in r) for r in palette_ramps(palette_of(job)))
+        prompt += (". Use ONLY these palette colours, each group one ramp from dark to light: " + ramps +
+                   ". Shade within one ramp and outline with the darkest step of the same ramp, never pure black.")
+    if notes:
+        prompt += " IMPORTANT, a reviewer rejected the previous attempt, fix these issues: " + notes
+    return prompt
 
 
 def step_errors(conv_dir):
@@ -166,9 +225,7 @@ def step_errors(conv_dir):
 def generate(job, notes=""):
     style = STYLES[job["type"]]
     refs = job_refs(job)
-    prompt = style["prefix"] + job["prompt"]
-    if notes:
-        prompt += " IMPORTANT, a reviewer rejected the previous attempt, fix these issues: " + notes
+    prompt = job_prompt(job, notes)
     instruction = (
         f"Call generate_image exactly once with Prompt={json.dumps(prompt)}, ImageName='{job['name']}', "
         f"AspectRatio='{job.get('aspect', style['aspect'])}', ImagePaths={json.dumps(refs)}. "
@@ -274,14 +331,20 @@ REVIEW_SCHEMA = {"type": "object", "required": ["pass", "issues"],
                  "properties": {"pass": {"type": "boolean"}, "issues": {"type": "string"}}}
 
 
+PASTEL_NOTE = ("The recolour to light pastel palette colours is intended: do not fail it for being lighter or paler "
+               "than the source creature, and a front-on pose is fine. ")
+
+
 def review_instruction(view, job, refs):
     """The reviewer prompt. For restyle jobs the first ref is the creature being redrawn, so identity is checked
     against it and only the remaining refs are style references."""
     if job["type"] == "restyle":
-        look = f"the source creature {json.dumps(refs[0])} and then the style references {json.dumps(refs[1:])}"
+        look = (f"the source creature {json.dumps(refs[0])}, the style example {json.dumps(refs[1])} and the palette "
+                f"card {json.dumps(refs[2])}")
         identity = ("it is not recognisably the same creature as the source creature (lost distinctive features such "
-                    "as its eyes, spikes, crystals, cap, antenna, legs or markings, or a different body shape), "
-                    "it does not face right, ")
+                    "as its eyes, spikes, crystals, cap, antenna, legs or markings, or a different body shape), it shows "
+                    "more than one creature or draws the style example instead of the source, it uses pure black or "
+                    "colours clearly outside the palette card, ")
     else:
         look, identity = f"the style references {json.dumps(refs)}", ""
     return (
@@ -291,7 +354,7 @@ def review_instruction(view, job, refs):
         f"prompt, {identity}it is not pixel art in the reference style, it contains text, watermarks or extra subjects, or "
         f"(for portrait/sprite/ui) any background other than the flat magenta remains (magenta #FF00FF in the candidate "
         f"means transparent and is correct; a small drop shadow under the subject is part of the sprite, not background). "
-        f"Be strict but not pedantic. "
+        f"{PASTEL_NOTE if job['type'] == 'restyle' else ''}Be strict but not pedantic. "
         f"Reply with JSON: pass (bool) and issues (short concrete fix instructions, empty if pass)."
     )
 
@@ -358,7 +421,9 @@ def check_inputs(job):
     if pal and not os.path.exists(pal):
         raise RuntimeError(f"{job['name']}: palette not found at {pal} -- "
                             f"extract the Sprout Lands zips into asset-pipeline/sprout-lands/")
-    for ref in job.get("refs", STYLES[job["type"]]["refs"]):
+    if job["type"] == "restyle" and not job.get("refs"):
+        raise RuntimeError(f"{job['name']}: a restyle job needs refs[0] = the creature frame to redraw")
+    for ref in raw_refs(job):
         path = os.path.join(ROOT, ref.partition("#")[0])
         if not os.path.exists(path):
             raise RuntimeError(f"{job['name']}: ref not found at {path} -- "
