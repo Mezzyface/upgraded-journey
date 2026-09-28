@@ -2,7 +2,9 @@ shader_type canvas_item;
 // Sprout Lands palette swap: every opaque pixel becomes the nearest colour of the palette texture.
 // Used by creatures/sprout_palette.tres (creature variants review, docs/superpowers/specs/2026-09-28-creature-variants-review-design.md).
 
-uniform sampler2D palette : filter_nearest;
+// hint_default_transparent: with no palette set (fresh clone before Sync) every texel is skipped, so pixels
+// pass through unchanged instead of all mapping to the default white texture.
+uniform sampler2D palette : filter_nearest, hint_default_transparent;
 
 void fragment() {
 	vec4 c = COLOR;

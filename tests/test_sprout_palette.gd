@@ -21,6 +21,26 @@ func test_opaque_pixels_land_on_the_palette() -> void:
 	if DisplayServer.get_name() == "headless":
 		print("  skip: sprout palette render check needs a window (see tests/test_sprout_palette.gd)")
 		return
+	var out: Image = await _render(load(SWAP_PATH))
+	var got := out.get_pixel(0, 0)
+	check(_palette().any(func(p: Color) -> bool: return _close(p, got)), "opaque pixel %s is a palette colour" % got.to_html())
+	check(not _close(got, SOURCE), "opaque pixel was recoloured")
+	eq(out.get_pixel(1, 0).a8, 0, "transparent pixel alpha")
+
+
+## Fresh clone before Sync: the editor loads the material with no palette; creatures must render unchanged, not white.
+func test_no_palette_leaves_pixels_unchanged() -> void:
+	if DisplayServer.get_name() == "headless":
+		print("  skip: sprout palette render check needs a window (see tests/test_sprout_palette.gd)")
+		return
+	var m := (load(SWAP_PATH) as ShaderMaterial).duplicate() as ShaderMaterial
+	m.set_shader_parameter("palette", null)
+	var got: Color = (await _render(m)).get_pixel(0, 0)
+	check(_close(got, SOURCE), "no palette: pixel %s stays %s" % [got.to_html(), SOURCE.to_html()])
+
+
+## Draws SOURCE and a transparent pixel through `material` into a 2x1 SubViewport and returns the result.
+func _render(material: Material) -> Image:
 	var src := Image.create(2, 1, false, Image.FORMAT_RGBA8)
 	src.set_pixel(0, 0, SOURCE)
 	src.set_pixel(1, 0, Color(0, 0, 0, 0))
@@ -31,17 +51,14 @@ func test_opaque_pixels_land_on_the_palette() -> void:
 	var s := Sprite2D.new()
 	s.texture = ImageTexture.create_from_image(src)
 	s.centered = false
-	s.material = load(SWAP_PATH)
+	s.material = material
 	vp.add_child(s)
 	tree.root.add_child(vp)
 	await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
 	var out := vp.get_texture().get_image()
-	var got := out.get_pixel(0, 0)
-	check(_palette().any(func(p: Color) -> bool: return _close(p, got)), "opaque pixel %s is a palette colour" % got.to_html())
-	check(not _close(got, SOURCE), "opaque pixel was recoloured")
-	eq(out.get_pixel(1, 0).a8, 0, "transparent pixel alpha")
 	vp.queue_free()
+	return out
 
 
 func _palette() -> Array:
