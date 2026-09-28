@@ -31,11 +31,14 @@ func _sync() -> void:
 func _set_up_terrains() -> void:
 	var ts := load(TILESET) as TileSet
 	if ts == null:
-		push_error("[sprout_tools] %s not found — create it first (see docs/superpowers/plans/2026-09-27-ranch-scene.md, Task 3)" % TILESET)
+		push_error("[sprout_tools] %s not found — create it with a TileSet from RanchTerrains.new_tileset() (see README)" % TILESET)
 		return
 	var errors := Terrains.apply(ts)
 	if not errors.is_empty():
 		push_error("[sprout_tools] terrains not set up:\n" + "\n".join(errors))
 		return
-	ResourceSaver.save(ts, TILESET)
+	var err := ResourceSaver.save(ts, TILESET)
+	if err != OK:
+		push_error("[sprout_tools] failed to save %s: %s" % [TILESET, error_string(err)])
+		return
 	print("[sprout_tools] ranch terrains set up in %s" % TILESET)

@@ -56,13 +56,30 @@ The `.import` files under `art/sprout/` are committed so UIDs and the pixel-font
 line to `FILES` in `addons/sprout_tools/sprout_sync.gd` whenever a scene or resource starts using another pack file.
 Maaack's Sprout-Lands-Tilemap/UI addons in the pack folder are reference only; never enable them.
 
-Type variations: `DecoratedButton`, `HeaderLabel`, `BannerLabel`, `OnDarkLabel`, `FlatPanel`, `BarPanel`, `InsetPanel`,
-`InventorySlot`, `InventorySlotSelected`, `NamePlate`, `PackScrollBar`, `TooltipLabel`, `TooltipPanel`.
+Type variations: `DecoratedButton`, `HeaderLabel`, `BannerLabel`, `OnDarkLabel`, `OnMapLabel`, `FlatPanel`, `BarPanel`,
+`InsetPanel`, `InventorySlot`, `InventorySlotSelected`, `NamePlate`, `PackScrollBar`, `TooltipLabel`, `TooltipPanel`.
+`OnDarkLabel` is for text on a dark panel; `OnMapLabel` is for text drawn straight over the ranch map (Toast,
+`Hud/RepLabel`) — same near-white font color, plus a dark outline so it reads on grass.
 
 Scrollbars: the pack draws a scrollbar as a thin bar with a fixed-size knob, which is a `VSlider` in Godot (a
 `VScrollBar` stretches its grabber). For a scrolling page, hide the ScrollContainer's own bar (vertical scroll
 mode "Show Never"), add a `VSlider` beside it with `theme_type_variation = PackScrollBar` and the
 `ui/pack_scroll_bar.gd` script, and point its `scroll_path` at the container. The gallery does this.
+
+## Ranch map
+
+The ranch lives in `shop/shop.tscn` under the `Ranch` node, using the `ranch/ranch_tileset.tres` TileSet. Paint
+grass on `Ranch/Ground` and soil on `Ranch/Paths` with the terrain brush — never paint soil on `Ground`, since the
+soil edge tiles are transparent outside the soil area and would show the ground beneath instead of blending.
+Fences go on `Ranch/Fences`, also with the terrain brush.
+
+**Project > Tools > Sprout Lands: Set up ranch terrains (overwrites terrain bits)** rebuilds terrain sets 0
+(Grass/Soil) and 1 (Fence) on the TileSet from the Sprout Lands bitmask reference. It removes ALL terrain sets on
+the TileSet first, so if you've added any other terrain sets, re-add them after running it. Collision and custom
+data on existing tiles are left alone.
+
+If `ranch/ranch_tileset.tres` is ever lost, `RanchTerrains.new_tileset()` (`addons/sprout_tools/ranch_terrains.gd`)
+recreates it from scratch.
 
 ## Creatures
 

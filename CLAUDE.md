@@ -26,6 +26,8 @@ editor cannot open and change, and nothing may silently overwrite what was chang
   Theme editor. `Project > Tools > Sprout Lands: Sync pack files` copies the pack art it uses from
   `asset-pipeline/sprout-lands/` (git-ignored, licensed) into `art/sprout/` (art ignored, `.import` files committed).
 - `ui/gallery.tscn` shows every themed control; keep it updated when adding theme types.
+- `ranch/ranch_tileset.tres` is the ranch TileSet; its terrain bits come from
+  `Project > Tools > Sprout Lands: Set up ranch terrains (overwrites terrain bits)`.
 - Page scrollbars: `VSlider` + `PackScrollBar` variation + `ui/pack_scroll_bar.gd` beside a ScrollContainer
   whose own bar is hidden (see README). Do not restyle `VScrollBar` to fake it; its grabber always stretches.
 - `addons/godot_ai`, `addons/godot_omni`: Godot-MCP. Server port 8765 (Docker owns 8000). Start Claude Code
