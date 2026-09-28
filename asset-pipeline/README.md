@@ -71,6 +71,8 @@ palette or the remap made pixels transparent. `python asset-pipeline/gen.py --re
 puts any existing image (or one cell of a sheet) on the palette without a model call. Refs accept the same
 `#x,y,w,h` suffix to use one frame of a sprite sheet. Checks: `python asset-pipeline/test_gen.py`.
 
+Props used in the game are copied by hand from assets/prop/ into ranch/art/ (committed; they are our own art, not pack art).
+
 ## Restyle experiment result
 
 Palette-remap (not full model restyle) is the recommended default -- it kept each creature's identity; full
