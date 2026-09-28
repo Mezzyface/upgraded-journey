@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bo3loxu2bkwds"]
+
+[ext_resource type="Script" uid="uid://bxn1nwku86sa3" path="res://creatures/variants_review.gd" id="1_2ntfv"]
+
+[node name="VariantsReview" type="Node2D" unique_id=1767724702]
+script = ExtResource("1_2ntfv")
+
+[node name="Camera" type="Camera2D" parent="." unique_id=169429688]
+position = Vector2(320, 180)
