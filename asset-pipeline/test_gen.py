@@ -170,6 +170,34 @@ def test_restyle_without_a_source_ref_stops_clearly():
         assert "no_src" in str(e) and "creature frame" in str(e)
 
 
+def test_postprocess_keeps_the_aspect_of_a_wide_image():  # Gemini web returns 16:9 unless told otherwise
+    im = Image.new("RGB", (200, 100), (255, 0, 255))
+    for x in range(80, 120):
+        for y in range(30, 70):
+            im.putpixel((x, y), (10, 200, 30))  # a 40x40 square
+    path = os.path.join(TMP, "wide.png")
+    im.save(path)
+    out = gen.postprocess(path, {"type": "restyle", "prompt": "x"})
+    x0, y0, x1, y1 = out.getbbox()
+    assert out.size == (64, 64) and abs((x1 - x0) - (y1 - y0)) <= 1  # still square, not squashed
+
+
+def test_ingest_saves_the_still_and_the_raw_source():
+    im = Image.new("RGB", (64, 64), (255, 0, 255))
+    for x in range(20, 44):
+        for y in range(20, 44):
+            im.putpixel((x, y), (0x78, 0xa1, 0x58))
+    src = os.path.join(TMP, "web.jpg")
+    im.save(src)
+    out_dir, gen.OUT = gen.OUT, TMP
+    try:
+        dest = gen.ingest({"name": "ingest_test", "type": "restyle", "prompt": "x"}, src)
+        assert dest == os.path.join(TMP, "restyle", "ingest_test.png") and gen.opaque_count(dest) > 0
+        assert os.path.exists(os.path.join(TMP, "restyle", "ingest_test.raw.jpg"))
+    finally:
+        gen.OUT = out_dir
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

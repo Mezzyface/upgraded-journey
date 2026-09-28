@@ -7,6 +7,7 @@ Everything lives under asset-pipeline/ (its .gdignore keeps Godot from importing
     python asset-pipeline/gen.py --reprocess blue_slime  # re-run keying/resize on the saved .raw without regenerating
     python asset-pipeline/gen.py --review blue_slime     # just run the reviewer on an existing asset
     python asset-pipeline/gen.py --remap <png>[#x,y,w,h] [--out <png>]  # put an existing image on a palette, no API call
+    python asset-pipeline/gen.py --ingest <job> <image>  # use an image made elsewhere (Gemini web) as that job's output
 
 Job fields: name, type (portrait|splash|sprite|ui|prop|restyle), prompt, refs (optional, <=3 paths, accept a
 "#x,y,w,h" crop suffix), aspect, size (sprite/ui px), colors (palette size for the Aseprite pass; 0 skips it),
@@ -323,6 +324,12 @@ def postprocess(src, job):
     size = SIZES.get(size, size) if isinstance(size, (str, int)) else size  # ponytail: [w, h] sizes aren't hashable
     if size:
         size = (size, size) if isinstance(size, int) else tuple(size)
+        # pad (transparent, centered) to the target aspect first, so a 16:9 source is not squashed into a square
+        w, h = (max(im.width, round(im.height * size[0] / size[1])), max(im.height, round(im.width * size[1] / size[0])))
+        if (w, h) != im.size:
+            padded = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+            padded.paste(im, ((w - im.width) // 2, (h - im.height) // 2))
+            im = padded
         im = im.resize(size, style.get("resample", Image.NEAREST))  # ponytail: nearest; a pixel-grid detector is better
     return im
 
@@ -430,6 +437,17 @@ def check_inputs(job):
                                 f"extract the Sprout Lands zips into asset-pipeline/sprout-lands/")
 
 
+def ingest(job, src):
+    """Use an image made outside agy (e.g. in the Gemini web app) for a job: same key/resize/palette pass as a
+    generated one, the untouched source kept as .raw. `gen.py --ingest <job name> <image>`. No review."""
+    dest = os.path.join(OUT, job["type"], job["name"] + ".png")
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    postprocess(src, job).save(dest)
+    refine(dest, job)
+    shutil.copy(src, dest[:-4] + ".raw" + os.path.splitext(src)[1])
+    return dest
+
+
 def run(job, force=False, reprocess=False):
     dest = os.path.join(OUT, job["type"], job["name"] + ".png")
     raw = glob.glob(dest[:-4] + ".raw.*")
@@ -474,6 +492,10 @@ if __name__ == "__main__":
         sys.exit()
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     jobs = json.load(open(os.path.join(ROOT, "jobs.json")))
+    if "--ingest" in sys.argv:
+        name, src = sys.argv[sys.argv.index("--ingest") + 1:sys.argv.index("--ingest") + 3]
+        print("wrote", ingest(next(j for j in jobs if j["name"] == name), src))
+        sys.exit()
     for job in jobs:
         if not args or job["name"] in args:
             run(job, force="--force" in sys.argv,
