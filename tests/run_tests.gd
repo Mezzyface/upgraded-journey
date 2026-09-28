@@ -1,6 +1,6 @@
 extends SceneTree
 ## Headless test runner (no framework). From the repo root:
-##   godot --headless --path . -s res://tests/run_tests.gd
+##   godot --headless --path . -s res://tests/run_tests.gd   (add `-- --only=test_x.gd` to run one file)
 ## Runs every test_* method of every tests/test_*.gd. A test may be a coroutine
 ## (`await tree.process_frame`) — scene tests use this. Exit code 1 if anything fails.
 
@@ -25,8 +25,12 @@ func _run() -> void:
 	OS.add_logger(catcher)
 	var ran := 0
 	var failed := 0
+	var only := ""  ## `-- --only=test_x.gd` runs just that file (e.g. a render test, without --headless)
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.trim_prefix("--only=")
 	for file in ResourceLoader.list_directory("res://tests"):
-		if not (file.begins_with("test_") and file.ends_with(".gd")):
+		if not (file.begins_with("test_") and file.ends_with(".gd")) or (only != "" and file != only):
 			continue
 		var script: Script = load("res://tests/" + file)
 		if script == null or not script.can_instantiate():

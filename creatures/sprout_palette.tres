@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cmepjichwma5m"]
+
+[ext_resource type="Shader" uid="uid://brptl8pju8ky3" path="res://creatures/sprout_palette.gdshader" id="1_j7dti"]
+[ext_resource type="Texture2D" uid="uid://c46ppx3uqtdfr" path="res://art/sprout/palette/Sprout Lands default palette.png" id="2_0nhho"]
+
+[resource]
+shader = ExtResource("1_j7dti")
+shader_parameter/palette = ExtResource("2_0nhho")

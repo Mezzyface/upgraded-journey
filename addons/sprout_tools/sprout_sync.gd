@@ -21,6 +21,7 @@ const FILES := {
 	"ui/Weather_UI.png": UI_PREM + "emojis/emoji style ui/weather/Weather_UI.png",
 	"sprites/Farming Plants items.png": SPRITES_PREM + "Objects/Items/Farming Plants items.png",
 	"sprites/grass-n-ground-tile-items.png": SPRITES_PREM + "Objects/Items/grass-n-ground-tile-items.png",
+	"palette/Sprout Lands default palette.png": SPRITES_PREM + "Sprout Lands color pallet/Sprout Lands defautlt palette.png",
 	"tiles/Grass_tiles_v2.png": SPRITES_PREM + "Tilesets/ground tiles/New tiles/Grass_tiles_v2.png",
 	"tiles/Soil_Ground_Tiles.png": SPRITES_PREM + "Tilesets/ground tiles/New tiles/Soil_Ground_Tiles.png",
 	"tiles/Fences.png": SPRITES_PREM + "Tilesets/Building parts/Fences.png",
