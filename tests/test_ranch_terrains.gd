@@ -66,6 +66,56 @@ func test_painting_picks_the_right_tiles() -> void:
 	layer.queue_free()
 
 
+## A 4x3 rectangle with one corner notched out forces the painter to pick inner-corner tiles
+## next to the notch, not just the plain edge/corner tiles a solid rectangle uses.
+func test_painting_a_notched_rectangle_picks_inner_corner_tiles() -> void:
+	var ts := T.new_tileset()
+	T.apply(ts)
+	var layer := TileMapLayer.new()
+	layer.tile_set = ts
+	tree.root.add_child(layer)
+	var offset := Vector2i(30, 0)
+	var painted: Array[Vector2i] = []
+	for y in 3:
+		for x in 4:
+			if Vector2i(x, y) != Vector2i(3, 0):
+				painted.append(Vector2i(x, y) + offset)
+	layer.set_cells_terrain_connect(painted, 0, 0)
+	var painted_set := {}
+	for c in painted:
+		painted_set[c] = true
+	# (2, 1) is diagonally inside the notch: every neighbour is painted except the top-right corner.
+	# (2, 0) and (3, 1) sit on the two straight edges next to the notch.
+	for rel in [Vector2i(2, 1), Vector2i(2, 0), Vector2i(3, 1)]:
+		var cell: Vector2i = rel + offset
+		var mask := _blob_mask(painted_set, cell)
+		var expected := Vector2i(-1, -1)
+		for coords in T.BLOB:
+			if T.BLOB[coords] == mask:
+				expected = coords
+				break
+		check(expected != Vector2i(-1, -1), "mask %s (from painted cell %s) found in BLOB" % [mask, rel])
+		eq(layer.get_cell_atlas_coords(cell), expected, "notch cell %s picks the BLOB tile for mask %s" % [rel, mask])
+	layer.queue_free()
+
+
+## Builds the 3x3 blob mask string RanchTerrains.BLOB uses for `cell`, from the set of painted
+## cells: a corner bit is only set when the diagonal neighbour AND both of its adjacent sides are
+## also painted (the blob rule the pack's art follows).
+func _blob_mask(painted: Dictionary, cell: Vector2i) -> String:
+	var has := func(c: Vector2i) -> bool: return painted.has(c)
+	var n: bool = has.call(cell + Vector2i(0, -1))
+	var s: bool = has.call(cell + Vector2i(0, 1))
+	var e: bool = has.call(cell + Vector2i(1, 0))
+	var w: bool = has.call(cell + Vector2i(-1, 0))
+	var tl: bool = has.call(cell + Vector2i(-1, -1)) and n and w
+	var tr: bool = has.call(cell + Vector2i(1, -1)) and n and e
+	var bl: bool = has.call(cell + Vector2i(-1, 1)) and s and w
+	var br: bool = has.call(cell + Vector2i(1, 1)) and s and e
+	var b := func(v: bool) -> String: return "#" if v else "."
+	return "%s%s%s/%s#%s/%s%s%s" % [b.call(tl), b.call(n), b.call(tr), b.call(w), b.call(e), b.call(bl), b.call(s), b.call(br)]
+
+
 func test_missing_texture_is_named_and_nothing_is_written() -> void:
 	var ts := T.new_tileset()
 	(ts.get_source(T.SOIL) as TileSetAtlasSource).texture = null
