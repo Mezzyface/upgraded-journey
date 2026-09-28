@@ -88,3 +88,25 @@ func test_no_later_sibling_blocks_a_station() -> void:
 				eq(sib.mouse_filter, Control.MOUSE_FILTER_IGNORE,
 						"%s overlaps %s and must ignore the mouse" % [sib.name, station.name])
 	_done(shop)
+
+
+func test_creatures_stay_inside_their_areas() -> void:
+	var shop := _shop()
+	await tree.process_frame
+	Game.retire(Game.owned()[0])
+	await tree.process_frame
+	for area_name in ["%Pens", "%Stable"]:
+		var area: SpawnArea = shop.get_node(area_name)
+		eq(area.get_parent(), shop, "%s sits on the ranch, not in an old frame" % area_name)
+		check(area.sprites().size() > 0, "%s has creatures" % area_name)
+		for s in area.sprites():
+			check(Rect2(Vector2.ZERO, area.size).has_point(s.position), "%s creature inside: %s" % [area_name, s.position])
+		eq(area.sprite_scale, 1.4, "%s sprite_scale" % area_name)
+	_done(shop)
+
+
+func test_the_shop_uses_no_side_view_art() -> void:
+	var text := FileAccess.get_file_as_string("res://shop/shop.tscn")
+	check(not text.contains("res://shop/art/"), "shop.tscn references res://shop/art/")
+	for gone in ["Floor", "PenFrame", "StableFrame"]:
+		check(not text.contains("[node name=\"%s\"" % gone), "%s node removed" % gone)
