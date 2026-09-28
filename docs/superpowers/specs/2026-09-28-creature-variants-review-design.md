@@ -65,9 +65,10 @@ short "Creature variants review" section (how to regenerate stills, how to open 
 
 ## 3. Review scene
 
-- **`creatures/variants_review.tscn`**: `Node2D` root, `TileMapLayer` (ranch TileSet), `Camera2D`. Script
-  **`creatures/variants_review.gd`** (`@tool`) builds the content in `_ready()` as unowned nodes, so it shows (animated)
-  in the editor's 2D view and is never saved into the scene.
+- **`creatures/variants_review.tscn`**: `Node2D` root and `Camera2D`. Script **`creatures/variants_review.gd`**
+  (`@tool`) builds the content in `_ready()` as unowned nodes, including the grass `TileMapLayer` (ranch TileSet;
+  painting a saved layer would write cells into the scene), so it shows (animated) in the editor's 2D view and is
+  never saved into the scene.
 - One group per `creatures/frames/*.tres`, 3 groups per row:
   - original: `AnimatedSprite2D`, `idle_right`, scale 1.4 (the pens' `sprite_scale`);
   - palette swap: the same with `material = sprout_palette.tres`;
