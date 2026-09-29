@@ -11,8 +11,13 @@ func test_every_panel_fits_on_screen() -> void:
 	tree.root.add_child(shop)
 	await tree.process_frame
 	var screen := Rect2(Vector2.ZERO, Vector2(640, 360))
+	for i in 12:  # a full stable must still fit
+		Fixtures.adult(Game.state, "spider").status = CreatureData.Status.RETIRED
+	Game.changed.emit()
 	var opens := {"card": func(): shop.call("open_card", Game.owned()[0]),
-		"orders": Callable(shop, "open_orders"), "summary": Callable(shop, "end_day")}
+		"orders": Callable(shop, "open_orders"), "summary": Callable(shop, "end_day"),
+		"stable": Callable(shop, "open_stable"), "market": Callable(shop, "open_market"),
+		"expedition": Callable(shop, "open_expedition")}
 	for name in opens:
 		opens[name].call()
 		await tree.process_frame

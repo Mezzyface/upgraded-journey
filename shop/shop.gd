@@ -1,22 +1,21 @@
 extends Control
-## The shop floor. Everything visible is laid out in the editor; creatures are spawned into %Pens and %Stable
-## (SpawnAreas) and panels into %PanelHost at runtime.
+## The farm. The map is laid out in the editor; creatures are spawned into %Pens, the hanging %TopBar shows the
+## state and its tags (and %ShopDoor, over the shop building) open popups in %PanelHost, each its own scene.
 
 const TOAST_SECONDS := 2.5
 const CARD := preload("res://shop/panels/creature_card.tscn")
 const ORDERS := preload("res://shop/panels/orders_panel.tscn")
 const SUMMARY := preload("res://shop/panels/day_summary.tscn")
-
-## AP hearts: each child of %ApHearts shows one AP point, full while unspent.
-@export var heart_full: Texture2D
-@export var heart_empty: Texture2D
+const STABLE := preload("res://shop/panels/stable_panel.tscn")
+const MARKET := preload("res://shop/panels/market_panel.tscn")
+const EXPEDITION := preload("res://shop/panels/expedition_panel.tscn")
 
 var _rng := RandomNumberGenerator.new()
 
 
-## After `--`: `--save=<path>` uses that save file (for screenshots), `--open=card|orders|summary` opens a panel,
-## `--screenshot=<path>` saves a capture and quits. The same pattern as ui/gallery.gd.
-## `--screenshot=` without an explicit `--save=` never touches the real save: it defaults to a throwaway path.
+## After `--`: `--save=<path>` uses that save file (for screenshots),
+## `--open=card|orders|summary|stable|market|expedition` opens a popup, `--screenshot=<path>` saves a capture and
+## quits. The same pattern as ui/gallery.gd. `--screenshot=` without `--save=` never touches the real save.
 func _read_save_arg() -> void:
 	var args := OS.get_cmdline_user_args()
 	var has_save := false
@@ -42,6 +41,12 @@ func _handle_cmdline() -> void:
 				open_orders()
 			"--open=summary":
 				end_day()
+			"--open=stable":
+				open_stable()
+			"--open=market":
+				open_market()
+			"--open=expedition":
+				open_expedition()
 		if arg.begins_with("--screenshot="):
 			shot = arg.trim_prefix("--screenshot=")
 	if shot != "":
@@ -58,32 +63,20 @@ func _ready() -> void:
 	if Game.state == null:
 		Game.start()
 	Game.changed.connect(_refresh)
-	%EndDayButton.pressed.connect(end_day)
-	%Counter.pressed.connect(open_orders)
-	%MarketStall.pressed.connect(toast.bind("The market opens soon"))
-	%Door.pressed.connect(toast.bind("Expeditions start soon"))
+	%TopBar.orders_pressed.connect(open_orders)
+	%TopBar.stable_pressed.connect(open_stable)
+	%TopBar.expedition_pressed.connect(open_expedition)
+	%TopBar.market_pressed.connect(open_market)
+	%TopBar.end_day_pressed.connect(end_day)
+	%ShopDoor.pressed.connect(open_orders)
 	%Pens.creature_clicked.connect(open_card)
-	%Stable.creature_clicked.connect(open_card)
 	_refresh()
 	_handle_cmdline()
 
 
 func _refresh() -> void:
-	var s := Game.state
-	%DayNumber.text = str(s.day)
-	var max_ap := Day.max_ap(s)
-	for i in %ApHearts.get_child_count():
-		var heart: TextureRect = %ApHearts.get_child(i)
-		# ponytail: hearts are placed in the editor (6 = max AP today); add nodes there if max AP grows
-		heart.visible = i < max_ap
-		heart.texture = heart_full if i < s.ap else heart_empty
-
-	%MoneyLabel.text = str(s.money)
-	%FeedLabel.text = str(s.inventory.get("feed", 0))
-	%PenSpaceLabel.text = "%d/%d" % [Market.pen_used(s), Market.pen_capacity(s)]
-	%RepLabel.text = "Reputation %d · tier %d" % [s.reputation, Game.tier()]
+	%TopBar.show_state(Game.state, Game.tier())
 	%Pens.sync(Game.owned(), Game.db, _rng)
-	%Stable.sync(Game.retired(), Game.db, _rng)
 
 
 func open_card(c: CreatureData) -> void:
@@ -94,6 +87,21 @@ func open_card(c: CreatureData) -> void:
 
 func open_orders() -> void:
 	%PanelHost.open(ORDERS.instantiate())
+
+
+func open_stable() -> void:
+	var stable: StablePanel = STABLE.instantiate()
+	%PanelHost.open(stable)
+	stable.show_creatures(Game.retired())
+	stable.creature_chosen.connect(open_card)
+
+
+func open_market() -> void:
+	%PanelHost.open(MARKET.instantiate())
+
+
+func open_expedition() -> void:
+	%PanelHost.open(EXPEDITION.instantiate())
 
 
 func end_day() -> void:
