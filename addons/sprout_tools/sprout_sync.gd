@@ -9,6 +9,8 @@ const DST := "res://art/sprout"
 const UI_BASIC := "Sprout Lands - UI Pack - Basic pack/"
 const UI_PREM := "Sprout Lands - UI Pack - Premium pack/"
 const SPRITES_PREM := "Sprout Lands - Sprites - premium pack/"
+const SORRY := "Sprout Sorry pack/"
+const GROUND := SPRITES_PREM + "Tilesets/ground tiles/"
 
 ## destination (relative to DST) -> source (relative to SRC)
 const FILES := {
@@ -24,6 +26,22 @@ const FILES := {
 	"palette/Sprout Lands default palette.png": SPRITES_PREM + "Sprout Lands color pallet/Sprout Lands defautlt palette.png",
 	"tiles/Grass_tiles_v2.png": SPRITES_PREM + "Tilesets/ground tiles/New tiles/Grass_tiles_v2.png",
 	"tiles/Soil_Ground_Tiles.png": SPRITES_PREM + "Tilesets/ground tiles/New tiles/Soil_Ground_Tiles.png",
+	"tiles/Bitmask references 2.png": GROUND + "Bitmask references 2.png",
+	"tiles/Bush_Tiles.png": GROUND + "New tiles/Bush_Tiles.png",
+	"tiles/Darker_Grass_Hills_Tiles_v2.png": GROUND + "New tiles/Darker_Grass_Hills_Tiles_v2.png",
+	"tiles/Darker_Grass_Tiles_v2.png": GROUND + "New tiles/Darker_Grass_Tiles_v2.png",
+	"tiles/Darker_Grass_Tile_Layers2.png": GROUND + "New tiles/Darker_Grass_Tile_Layers2.png",
+	"tiles/Darker_Grass_Tile_Layers.png": GROUND + "New tiles/Darker_Grass_Tile_Layers.png",
+	"tiles/Darker_Soil_Ground_Hills_Tiles.png": GROUND + "New tiles/Darker_Soil_Ground_Hills_Tiles.png",
+	"tiles/Darker_Soil_Ground_Tiles.png": GROUND + "New tiles/Darker_Soil_Ground_Tiles.png",
+	"tiles/Grass_Hill_Tiles_v2.png": GROUND + "New tiles/Grass_Hill_Tiles_v2.png",
+	"tiles/Grass_Tile_layers2.png": GROUND + "New tiles/Grass_Tile_layers2.png",
+	"tiles/Grass_Tile_Layers.png": GROUND + "New tiles/Grass_Tile_Layers.png",
+	"tiles/Soil_Ground_HiIls_Tiles.png": GROUND + "New tiles/Soil_Ground_HiIls_Tiles.png",
+	"tiles/Stone_Ground_Hills_Tiles.png": GROUND + "New tiles/Stone_Ground_Hills_Tiles.png",
+	"tiles/Stone_Ground_Tiles.png": GROUND + "New tiles/Stone_Ground_Tiles.png",
+	"objects/Fences.png": SPRITES_PREM + "Tilesets/Building parts/Fences.png",
+	"objects/grey_brick_houses_with_doors_grass.png": SORRY + "Early Access/Village pack/houses/Grey brick house/grey_brick_houses_with_doors_grass.png",
 	"tiles/Fences.png": SPRITES_PREM + "Tilesets/Building parts/Fences.png",
 	"tiles/Wooden_House_Walls_Tilset.png": SPRITES_PREM + "Tilesets/Building parts/Wooden_House_Walls_Tilset.png",
 	"objects/Basic_Furniture.png": SPRITES_PREM + "Tilesets/Building parts/Basic_Furniture.png",

@@ -30,3 +30,14 @@ func _text_files(dir: String) -> PackedStringArray:
 		if f.get_extension() in ["tscn", "tres", "godot"]:
 			out.append(dir.path_join(f))
 	return out
+
+
+func test_ground_art_is_listed() -> void:
+	for rel in ["tiles/Grass_tiles_v2.png", "tiles/Soil_Ground_Tiles.png", "tiles/Bitmask references 2.png",
+			"tiles/Bush_Tiles.png", "tiles/Darker_Grass_Hills_Tiles_v2.png", "tiles/Darker_Grass_Tiles_v2.png",
+			"tiles/Darker_Grass_Tile_Layers2.png", "tiles/Darker_Grass_Tile_Layers.png",
+			"tiles/Darker_Soil_Ground_Hills_Tiles.png", "tiles/Darker_Soil_Ground_Tiles.png",
+			"tiles/Grass_Hill_Tiles_v2.png", "tiles/Grass_Tile_layers2.png", "tiles/Grass_Tile_Layers.png",
+			"tiles/Soil_Ground_HiIls_Tiles.png", "tiles/Stone_Ground_Hills_Tiles.png", "tiles/Stone_Ground_Tiles.png",
+			"objects/Fences.png", "objects/grey_brick_houses_with_doors_grass.png"]:
+		check(Sync.FILES.has(rel), "SproutSync.FILES lists %s" % rel)
