@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://dabkrpgeb8mx8"]
+
+[ext_resource type="Script" uid="uid://ci4qqx3hvkg5l" path="res://shop/panels/closable_panel.gd" id="1_oo8tl"]
+
+[node name="ExpeditionPanel" type="PanelContainer" unique_id=537861118]
+custom_minimum_size = Vector2(260, 120)
+script = ExtResource("1_oo8tl")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=97302562]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=481120778]
+layout_mode = 2
+
+[node name="Title" type="HBoxContainer" parent="Margin/Rows" unique_id=1365797198]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/Rows/Title" unique_id=1068915310]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderLabel"
+text = "Expedition"
+
+[node name="Close" type="Button" parent="Margin/Rows/Title" unique_id=1939501037]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Text" type="Label" parent="Margin/Rows" unique_id=566210927]
+layout_mode = 2
+text = "Expeditions start soon."

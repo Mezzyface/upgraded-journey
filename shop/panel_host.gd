@@ -1,10 +1,13 @@
 @tool
 class_name PanelHost
 extends Control
-## Where panels open over the shop, one at a time, centred in this rect. In the editor it draws a placeholder
-## frame so its position and size can be adjusted; Esc or the panel's close button closes the open panel.
+## Where panels open over the farm, one at a time, centred in this rect over a dim backdrop. In the editor it draws
+## a placeholder frame so its position and size can be adjusted; Esc or the panel's close button closes the open panel.
 
 const OUTLINE := Color(1, 1, 1, 0.7)
+const DIM := Color(0, 0, 0, 0.35)  ## backdrop over the farm while a window is open
+
+var backdrop := false
 
 
 func _ready() -> void:
@@ -13,6 +16,8 @@ func _ready() -> void:
 
 func _draw() -> void:
 	if not Engine.is_editor_hint():
+		if backdrop:
+			draw_rect(Rect2(Vector2.ZERO, size), DIM)
 		return
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.15))
 	draw_rect(Rect2(Vector2.ZERO, size), OUTLINE, false, 2.0)
@@ -25,6 +30,8 @@ func open(panel: Control) -> void:
 	panel.size = panel.get_combined_minimum_size()
 	panel.position = ((size - panel.size) / 2.0).max(Vector2.ZERO)
 	mouse_filter = Control.MOUSE_FILTER_STOP  # the scene behind doesn't take clicks while a panel is open
+	backdrop = true
+	queue_redraw()
 
 
 func close() -> void:
@@ -32,6 +39,8 @@ func close() -> void:
 		remove_child(child)
 		child.queue_free()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop = false
+	queue_redraw()
 
 
 func current() -> Control:

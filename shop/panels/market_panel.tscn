@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://barrqx0pts5kw"]
+
+[ext_resource type="Script" uid="uid://ci4qqx3hvkg5l" path="res://shop/panels/closable_panel.gd" id="1_lhyux"]
+
+[node name="MarketPanel" type="PanelContainer" unique_id=1591691446]
+custom_minimum_size = Vector2(260, 120)
+script = ExtResource("1_lhyux")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=2139927402]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=72381409]
+layout_mode = 2
+
+[node name="Title" type="HBoxContainer" parent="Margin/Rows" unique_id=1008014341]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/Rows/Title" unique_id=1684613910]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderLabel"
+text = "Market"
+
+[node name="Close" type="Button" parent="Margin/Rows/Title" unique_id=2116177701]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Text" type="Label" parent="Margin/Rows" unique_id=1314996245]
+layout_mode = 2
+text = "The market opens soon."

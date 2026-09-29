@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://i046ddkjqfl3"]
+
+[ext_resource type="Script" uid="uid://dhvypw3rjvvxv" path="res://shop/panels/stable_panel.gd" id="1_kkx6v"]
+
+[node name="StablePanel" type="PanelContainer" unique_id=270691957]
+custom_minimum_size = Vector2(260, 200)
+script = ExtResource("1_kkx6v")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=2039645236]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=1056605576]
+layout_mode = 2
+
+[node name="Title" type="HBoxContainer" parent="Margin/Rows" unique_id=106179446]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/Rows/Title" unique_id=965750735]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderLabel"
+text = "Stable"
+
+[node name="Close" type="Button" parent="Margin/Rows/Title" unique_id=933251335]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Empty" type="Label" parent="Margin/Rows" unique_id=2091591039]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No retired creatures yet"
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Rows" unique_id=111309868]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="Margin/Rows/Scroll" unique_id=798103137]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
