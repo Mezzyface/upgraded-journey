@@ -1,0 +1,278 @@
+[gd_scene format=3 uid="uid://b6fny218gdvkq"]
+
+[ext_resource type="Script" uid="uid://b7d2i71ga4xil" path="res://ui/top_bar.gd" id="1_b4hla"]
+[ext_resource type="Texture2D" uid="uid://dn3dkmt36doc3" path="res://art/sprout/ui/ALL UI ASSETS on one sheet.png" id="2_uwubg"]
+[ext_resource type="Texture2D" uid="uid://c67otcle8mnai" path="res://art/sprout/ui/Weather_Icons_Big.png" id="3_igf85"]
+[ext_resource type="Texture2D" uid="uid://cnrenmp756gi3" path="res://art/sprout/sprites/Farming Plants items.png" id="4_6k3ea"]
+[ext_resource type="Texture2D" uid="uid://d1pnqkb6mf1kh" path="res://art/sprout/sprites/grass-n-ground-tile-items.png" id="5_p44ov"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pn2jy"]
+atlas = ExtResource("2_uwubg")
+region = Rect2(711, 712, 19, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m75ya"]
+atlas = ExtResource("2_uwubg")
+region = Rect2(775, 712, 19, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p60rm"]
+atlas = ExtResource("3_igf85")
+region = Rect2(199, 295, 34, 34)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pslxh"]
+atlas = ExtResource("2_uwubg")
+region = Rect2(789, 581, 22, 23)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_018m3"]
+atlas = ExtResource("4_6k3ea")
+region = Rect2(16, 128, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5l7i8"]
+atlas = ExtResource("5_p44ov")
+region = Rect2(16, 0, 16, 16)
+
+[node name="TopBar" type="Control" unique_id=1794933869]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+offset_left = -8.0
+offset_right = 8.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("1_b4hla")
+heart_full = SubResource("AtlasTexture_pn2jy")
+heart_empty = SubResource("AtlasTexture_m75ya")
+
+[node name="Strip" type="Panel" parent="." unique_id=1245556227]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 22.0
+mouse_filter = 2
+theme_type_variation = &"RopeStrip"
+
+[node name="Rope" type="Panel" parent="." unique_id=197142486]
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 21.0
+offset_bottom = 24.0
+mouse_filter = 2
+theme_type_variation = &"Rope"
+
+[node name="Stats" type="HBoxContainer" parent="." unique_id=392645950]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_top = 3.0
+offset_right = 416.0
+offset_bottom = 19.0
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Weather" type="TextureRect" parent="Stats" unique_id=1387869359]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_p60rm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DayLabel" type="Label" parent="Stats" unique_id=133900166]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "Day 1"
+
+[node name="Hearts" type="HBoxContainer" parent="Stats" unique_id=1550347350]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="Heart1" type="TextureRect" parent="Stats/Hearts" unique_id=1673302195]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_pn2jy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart2" type="TextureRect" parent="Stats/Hearts" unique_id=257803382]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_pn2jy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart3" type="TextureRect" parent="Stats/Hearts" unique_id=2011730583]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_pn2jy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart4" type="TextureRect" parent="Stats/Hearts" unique_id=1846184637]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_pn2jy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart5" type="TextureRect" parent="Stats/Hearts" unique_id=1268232044]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_pn2jy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart6" type="TextureRect" parent="Stats/Hearts" unique_id=356072162]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_pn2jy")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Coin" type="TextureRect" parent="Stats" unique_id=1966447710]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_pslxh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Money" type="Label" parent="Stats" unique_id=6367594]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "0"
+
+[node name="FeedIcon" type="TextureRect" parent="Stats" unique_id=864046438]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_018m3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Feed" type="Label" parent="Stats" unique_id=1472694657]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "0"
+
+[node name="PenIcon" type="TextureRect" parent="Stats" unique_id=761879838]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_5l7i8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PenSpace" type="Label" parent="Stats" unique_id=1786230784]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "0/0"
+
+[node name="Rep" type="Label" parent="Stats" unique_id=1083558195]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "Rep 0 · T1"
+
+[node name="Tags" type="HBoxContainer" parent="." unique_id=573400082]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -310.0
+offset_top = 27.0
+offset_right = -16.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 2
+
+[node name="Orders" type="Button" parent="Tags" unique_id=1244097131]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"HangingTag"
+text = "Orders"
+
+[node name="String" type="ColorRect" parent="Tags/Orders" unique_id=256617310]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = -3.0
+offset_right = 1.0
+mouse_filter = 2
+color = Color(0.45882353, 0.29803923, 0.3764706, 1)
+
+[node name="Stable" type="Button" parent="Tags" unique_id=1943562915]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"HangingTag"
+text = "Stable"
+
+[node name="String" type="ColorRect" parent="Tags/Stable" unique_id=1934957021]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = -3.0
+offset_right = 1.0
+mouse_filter = 2
+color = Color(0.45882353, 0.29803923, 0.3764706, 1)
+
+[node name="Expedition" type="Button" parent="Tags" unique_id=2026683030]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"HangingTag"
+text = "Expedition"
+
+[node name="String" type="ColorRect" parent="Tags/Expedition" unique_id=1890246592]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = -3.0
+offset_right = 1.0
+mouse_filter = 2
+color = Color(0.45882353, 0.29803923, 0.3764706, 1)
+
+[node name="Market" type="Button" parent="Tags" unique_id=476802779]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"HangingTag"
+text = "Market"
+
+[node name="String" type="ColorRect" parent="Tags/Market" unique_id=1628726299]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = -3.0
+offset_right = 1.0
+mouse_filter = 2
+color = Color(0.45882353, 0.29803923, 0.3764706, 1)
+
+[node name="EndDay" type="Button" parent="Tags" unique_id=1705696124]
+unique_name_in_owner = true
+self_modulate = Color(1, 0.85, 0.8, 1)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"HangingTag"
+text = "End Day"
+
+[node name="String" type="ColorRect" parent="Tags/EndDay" unique_id=487148649]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = -3.0
+offset_right = 1.0
+mouse_filter = 2
+color = Color(0.45882353, 0.29803923, 0.3764706, 1)
