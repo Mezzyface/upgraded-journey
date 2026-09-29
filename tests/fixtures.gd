@@ -68,6 +68,7 @@ static func db() -> Db:
 	d.add(upgrade("extra_pen", 300, 0))
 	d.add(upgrade("extra_ap", 400, 1))
 	d.add(upgrade("gene_scanner", 500, 1))
+	d.add(buildable("pen", 300, 6))
 	return d
 
 
@@ -178,3 +179,23 @@ static func upgrade(id: String, cost: int, tier: int) -> UpgradeDef:
 	u.cost = cost
 	u.min_tier = tier
 	return u
+
+
+static func buildable(id: String, cost: int, capacity: int, footprint := Vector2i(6, 5)) -> BuildableDef:
+	var b := BuildableDef.new()
+	b.id = StringName(id)
+	b.display_name = id.capitalize()
+	b.cost = cost
+	b.capacity = capacity
+	b.footprint = footprint
+	return b
+
+
+## A state that knows `content` and has `pens` fixture pens (6 creatures each) placed side by side, so pen space
+## works like a real game's.
+static func state(content: Db = null, pens := 1) -> GameState:
+	var st := GameState.new()
+	st.content = content if content else db()
+	for i in pens:
+		Build.place_free(st, st.content.buildables[&"pen"], Vector2i(i * 6, 0))
+	return st

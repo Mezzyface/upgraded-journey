@@ -39,7 +39,7 @@ func test_some_species_branch() -> void:
 
 func test_day_loop_content() -> void:
 	var db := Db.load_dir()
-	eq(db.upgrades.size(), 3, "upgrades")
+	eq(db.upgrades.size(), 2, "upgrades")
 	check(db.orders.size() >= 15, "order templates (got %d)" % db.orders.size())
 	var kinds := {}
 	for o: OrderTemplate in db.orders.values():
@@ -74,7 +74,7 @@ func test_day_loop_content() -> void:
 		"the Mine can find Spider Albino")
 	var setup: NewGameSetup = load("res://data/new_game.tres")
 	check(setup != null and setup.species.size() == 3, "new game setup")
-	check(setup.species.size() <= Market.PEN_BASE, "new game fits the starting pens")
+	check(setup.start_pen != null and setup.species.size() <= setup.start_pen.capacity, "new game fits the starting pen")
 	var sold := db.species.values().filter(func(s: Species) -> bool: return s.market_tier >= 0)
 	eq(sold.size(), 5, "five species sold as eggs")
 	for s: Species in sold:

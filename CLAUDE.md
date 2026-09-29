@@ -28,6 +28,11 @@ editor cannot open and change, and nothing may silently overwrite what was chang
 - `ui/gallery.tscn` shows every themed control; keep it updated when adding theme types.
 - `ranch/ranch_tileset.tres` is the ranch TileSet; its terrain bits come from
   `Project > Tools > Sprout Lands: Set up ranch terrains (overwrites terrain bits)`.
+- Buildables (docs/superpowers/specs/2026-09-29-buildable-pens-design.md): one `BuildableDef` `.tres` per kind in
+  `data/buildables/` (price, capacity, footprint, scene); the scene is laid out in the editor from cell (0, 0) —
+  `ranch/pen.tscn` (fences use `ranch/fence_tileset.tres`, creatures live in its `%Creatures` SpawnArea). The Market
+  sells them; `shop/placer.tscn` places them; the farm instances `Game.state.placed` under `%Buildings`. Paint where
+  the player may build on the farm's `%Buildable` layer (visible in the editor, hidden in game except while placing).
 - Page scrollbars: `VSlider` + `PackScrollBar` variation + `ui/pack_scroll_bar.gd` beside a ScrollContainer
   whose own bar is hidden (see README). Do not restyle `VScrollBar` to fake it; its grabber always stretches.
 - `addons/godot_ai`, `addons/godot_omni`: Godot-MCP. Server port 8765 (Docker owns 8000). Start Claude Code

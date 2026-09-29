@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BuildableDef" format=3 uid="uid://cyehrqgygidc4"]
+
+[ext_resource type="PackedScene" uid="uid://bdf0n4kwsrui8" path="res://ranch/pen.tscn" id="1_h6bor"]
+[ext_resource type="Script" uid="uid://g035fidhps1u" path="res://creatures/defs/buildable_def.gd" id="2_6sygn"]
+
+[resource]
+script = ExtResource("2_6sygn")
+id = &"pen"
+display_name = "Pen"
+description = "Room for 6 creatures."
+cost = 300
+capacity = 6
+footprint = Vector2i(6, 5)
+scene = ExtResource("1_h6bor")

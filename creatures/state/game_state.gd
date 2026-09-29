@@ -23,6 +23,9 @@ var upgrades: Array[StringName] = []
 var expeditions: Array[Dictionary] = []  ## sent today, resolved in the evening: {"location": String, "team": Array}
 var busy: Array[int] = []  ## creature ids away on an expedition for the rest of the day
 var cared: Array[int] = []  ## creature ids cared for today
+var placed: Array[Dictionary] = []  ## buildables on the farm, in placing order: {"id": int, "def": StringName, "cell": Vector2i}
+var next_placed_id := 1
+var content: Db  ## the game content, for pen capacities; set by Day.new_game and from_dict, never saved
 
 
 func new_id() -> int:
@@ -30,7 +33,11 @@ func new_id() -> int:
 	return next_id - 1
 
 
+## Every new creature comes through here and moves into the first pen with room (Build); with no content (a bare
+## GameState in tests) it stays at pen -1.
 func add(c: CreatureData) -> void:
+	if c.pen < 0 and content != null:
+		c.pen = Build.first_pen_with_room(self, content)
 	creatures[c.id] = c
 
 
@@ -55,6 +62,9 @@ func to_dict() -> Dictionary:
 		"expeditions": expeditions.duplicate(true),
 		"busy": busy.duplicate(),
 		"cared": cared.duplicate(),
+		"placed": placed.map(func(p: Dictionary) -> Dictionary:
+			return {"id": p["id"], "def": String(p["def"]), "x": p["cell"].x, "y": p["cell"].y}),
+		"next_placed_id": next_placed_id,
 	}
 
 
@@ -67,6 +77,7 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 		push_warning("save: 'creatures' is not a list; save not loaded")
 		return null
 	var g := GameState.new()
+	g.content = db
 	g.day = maxi(_int_field(d, "day", g.day), 1)
 	g.ap = clampi(_int_field(d, "ap", g.ap), 0, Day.BASE_AP + 1)
 	g.money = maxi(_int_field(d, "money", g.money), 0)
@@ -114,6 +125,14 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 				team.append(int(t))
 		if not team.is_empty():
 			g.expeditions.append({"location": e["location"], "team": team})
+	var highest_placed := 0
+	for p in _list(d.get("placed", [])):
+		if p is Dictionary and p.get("def") is String and db.buildables.has(StringName(p["def"])) \
+				and CreatureData._is_num(p.get("id")) and CreatureData._is_num(p.get("x")) \
+				and CreatureData._is_num(p.get("y")):
+			g.placed.append({"id": int(p["id"]), "def": StringName(p["def"]), "cell": Vector2i(int(p["x"]), int(p["y"]))})
+			highest_placed = maxi(highest_placed, int(p["id"]))
+	g.next_placed_id = maxi(_int_field(d, "next_placed_id", g.next_placed_id), highest_placed + 1)
 	g.busy = _known_creatures(d.get("busy", []), g)
 	g.cared = _known_creatures(d.get("cared", []), g)
 	return g

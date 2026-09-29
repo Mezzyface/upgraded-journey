@@ -26,6 +26,7 @@ var pool: Array[Dictionary] = []  ## inherited sparks waiting for inspiration: {
 var inspirations := 0
 var injured_days := 0  ## > 0: can't train, go on expeditions or breed
 var leanings := {}  ## personality id (String) -> count; babies only, settled at adulthood (Leanings)
+var pen := -1  ## placed id of the pen it lives in (GameState.placed); -1 until GameState.add gives it one
 
 
 static func wild(sp: Species, new_id: int, rng: RandomNumberGenerator) -> CreatureData:
@@ -76,6 +77,7 @@ func to_dict() -> Dictionary:
 		"inspirations": inspirations,
 		"injured_days": injured_days,
 		"leanings": leanings.duplicate(),
+		"pen": pen,
 	}
 
 
@@ -138,6 +140,7 @@ static func from_dict(d: Dictionary) -> CreatureData:
 		for k in lean_v:
 			if k is String and _is_num(lean_v[k]):
 				c.leanings[k] = maxi(int(lean_v[k]), 0)
+	c.pen = _num(d.get("pen", -1), -1)
 	return c
 
 

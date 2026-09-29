@@ -1,0 +1,35 @@
+[gd_scene format=4 uid="uid://bdf0n4kwsrui8"]
+
+[ext_resource type="TileSet" uid="uid://hg5i5rdb43kn" path="res://ground_tileset.tres" id="1_jlo6f"]
+[ext_resource type="TileSet" uid="uid://dgb4dwwlv0s" path="res://ranch/fence_tileset.tres" id="2_gnn6n"]
+[ext_resource type="Script" uid="uid://bg12tx378yav2" path="res://shop/spawn_area.gd" id="3_s2l04"]
+[ext_resource type="SpriteFrames" uid="uid://dk13gkbm5wyga" path="res://creatures/frames/slime.tres" id="4_p1jjh"]
+
+[node name="Pen" type="Node2D" unique_id=597300699]
+
+[node name="Floor" type="TileMapLayer" parent="." unique_id=2018316552]
+tile_map_data = PackedByteArray("AAAAAAEADgAAAAEAAAABAAEADgAEAAYAAAACAAEADgAEAAUAAAADAAEADgABAAYAAAAEAAEADgACAAUAAAAFAAEADgACAAEAAAAEAAIADgAAAAYAAAAFAAIADgACAAEAAAADAAIADgAEAAYAAAACAAIADgACAAYAAAABAAIADgAAAAUAAAAAAAIADgAAAAEAAAAAAAQADgAAAAIAAAABAAQADgABAAIAAAACAAQADgABAAIAAAADAAQADgABAAIAAAAEAAQADgABAAIAAAAFAAQADgACAAIAAAAFAAMADgACAAEAAAAEAAMADgADAAUAAAADAAMADgACAAUAAAACAAMADgADAAYAAAABAAMADgADAAYAAAAAAAMADgAAAAEAAAAAAAAADgAAAAAAAAABAAAADgABAAAAAAACAAAADgABAAAAAAADAAAADgABAAAAAAAEAAAADgABAAAAAAAFAAAADgACAAAAAAA=")
+tile_set = ExtResource("1_jlo6f")
+
+[node name="FloorDetail" type="TileMapLayer" parent="." unique_id=1282579568]
+tile_map_data = PackedByteArray("AAAAAAEADAACAAEAAAAAAAQADAAFAAIAAAAFAAQADAAGAAIAAAAFAAEADAAAAAEAAAAAAAIADAACAAEAAAAAAAMADAACAAEAAAAFAAIADAAAAAEAAAAFAAMADAAAAAEAAAABAAQADAABAAAAAAACAAQADAABAAAAAAADAAQADAABAAAAAAAEAAQADAABAAAAAAABAAAADAABAAIAAAACAAAADAABAAIAAAADAAAADAABAAIAAAAEAAAADAABAAIAAAAAAAAADAAFAAEAAAAFAAAADAAGAAEAAAA=")
+tile_set = ExtResource("1_jlo6f")
+
+[node name="Fence" type="TileMapLayer" parent="." unique_id=1400263412]
+tile_map_data = PackedByteArray("AAAAAAEAAgAAAAEAAAAAAAIAAgAAAAEAAAAAAAMAAgAAAAEAAAABAAAAAQAAAAAAAAACAAAAAQABAAAAAAADAAAAAgACAAAAAAAEAAAAAgACAAAAAAAAAAAAAgABAAAAAAAAAAQAAgABAAIAAAABAAQAAgACAAAAAAACAAQAAgACAAAAAAADAAQAAgACAAAAAAAEAAQAAgACAAAAAAAFAAAAAgADAAAAAAAFAAEAAgAAAAEAAAAFAAIAAgAAAAEAAAAFAAMAAgAAAAEAAAAFAAQAAgADAAIAAAA=")
+tile_set = ExtResource("2_gnn6n")
+
+[node name="Creatures" type="Control" parent="." unique_id=1920521297]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 80.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_s2l04")
+preview_frames = ExtResource("4_p1jjh")
+wander_speed = 16.0

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://barrqx0pts5kw"]
 
-[ext_resource type="Script" uid="uid://ci4qqx3hvkg5l" path="res://shop/panels/closable_panel.gd" id="1_lhyux"]
+[ext_resource type="Script" path="res://shop/panels/market_panel.gd" id="1_lhyux"]
 
 [node name="MarketPanel" type="PanelContainer" unique_id=1591691446]
 custom_minimum_size = Vector2(260, 120)
@@ -30,6 +30,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Close"
 
-[node name="Text" type="Label" parent="Margin/Rows" unique_id=1314996245]
+[node name="PensTitle" type="Label" parent="Margin/Rows" unique_id=1158312658]
 layout_mode = 2
-text = "The market opens soon."
+text = "Pens"
+
+[node name="Pens" type="VBoxContainer" parent="Margin/Rows" unique_id=309004270]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4

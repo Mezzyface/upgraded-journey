@@ -1,7 +1,7 @@
 @tool
 class_name UpgradeDef
 extends Resource
-## A shop upgrade, bought once. The rules key its effect by id: extra_pen, extra_ap, gene_scanner.
+## A shop upgrade, bought once. The rules key its effect by id: extra_ap, gene_scanner.
 
 @export var id: StringName
 @export var display_name: String

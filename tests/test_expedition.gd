@@ -3,7 +3,7 @@ extends TestSuite
 
 func test_a_challenge_passes_if_any_member_meets_it() -> void:
 	var db := Fixtures.db()
-	var st := GameState.new()
+	var st := Fixtures.state(db)
 	var dark := Fixtures.adult(st, "spider_albino", 100)  # Darksight, guard D
 	var tough := Fixtures.adult(st, "spider", 300)  # guard C
 	var events := Expedition.resolve(st, db, &"cave", [dark.id, tough.id], Fixtures.rng())
@@ -13,7 +13,7 @@ func test_a_challenge_passes_if_any_member_meets_it() -> void:
 
 func test_failed_challenges_injure_and_nothing_is_found() -> void:
 	var db := Fixtures.db()
-	var st := GameState.new()
+	var st := Fixtures.state(db)
 	var weak := Fixtures.adult(st, "spider", 50)  # no Darksight, guard E: fails both
 	var events := Expedition.resolve(st, db, &"cave", [weak.id], Fixtures.rng())
 	check(events[0].contains("0 of 2"), "none passed")
@@ -28,7 +28,7 @@ func test_loot_is_eggs_or_money_and_albino_is_rare() -> void:
 	var albinos := 0
 	var money_finds := 0
 	for seed_value in 200:
-		var st := GameState.new()
+		var st := Fixtures.state(db)
 		var a := Fixtures.adult(st, "spider_albino", 300)  # passes both challenges: two rolls
 		Expedition.resolve(st, db, &"cave", [a.id], Fixtures.rng(seed_value))
 		for c: CreatureData in st.creatures.values():
@@ -45,7 +45,7 @@ func test_loot_is_eggs_or_money_and_albino_is_rare() -> void:
 
 func test_full_pens_release_found_eggs() -> void:
 	var db := Fixtures.db()
-	var st := GameState.new()
+	var st := Fixtures.state(db)
 	var a := Fixtures.adult(st, "spider_albino", 300)
 	for i in 5:
 		Fixtures.adult(st, "slime")
@@ -60,7 +60,7 @@ func test_full_pens_release_found_eggs() -> void:
 
 func test_members_gain_experience_and_babies_lean_bold() -> void:
 	var db := Fixtures.db()
-	var st := GameState.new()
+	var st := Fixtures.state(db)
 	var baby := Fixtures.adult(st, "spider", 100, 500)
 	baby.stage = "baby"
 	var before := 0
@@ -76,6 +76,6 @@ func test_members_gain_experience_and_babies_lean_bold() -> void:
 
 func test_unknown_location_or_missing_team_does_nothing() -> void:
 	var db := Fixtures.db()
-	var st := GameState.new()
+	var st := Fixtures.state(db)
 	eq(Expedition.resolve(st, db, &"atlantis", [1], Fixtures.rng()).size(), 0, "unknown location")
 	eq(Expedition.resolve(st, db, &"cave", [42], Fixtures.rng()).size(), 0, "no such creatures")

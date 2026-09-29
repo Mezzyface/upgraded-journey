@@ -1,6 +1,8 @@
 extends Control
-## The farm. The map is laid out in the editor; creatures are spawned into %Pens, the hanging %TopBar shows the
-## state and its tags (and %ShopDoor, over the shop building) open popups in %PanelHost, each its own scene.
+## The farm. The map is laid out in the editor; placed buildables (pens) are instanced under %Buildings from
+## Game.state.placed and each pen's %Creatures area shows the creatures living in it. %Buildable marks where the
+## player may build (hidden except while %Placer is placing). The hanging %TopBar shows the state and its tags (and
+## %ShopDoor, over the shop building) open popups in %PanelHost, each its own scene.
 
 const TOAST_SECONDS := 2.5
 const CARD := preload("res://shop/panels/creature_card.tscn")
@@ -69,14 +71,42 @@ func _ready() -> void:
 	%TopBar.market_pressed.connect(open_market)
 	%TopBar.end_day_pressed.connect(end_day)
 	%ShopDoor.pressed.connect(open_orders)
-	%Pens.creature_clicked.connect(open_card)
+	%Buildable.hide()
+	%Placer.finished.connect(_placed)
 	_refresh()
 	_handle_cmdline()
 
 
 func _refresh() -> void:
 	%TopBar.show_state(Game.state, Game.tier())
-	%Pens.sync(Game.owned(), Game.db, _rng)
+	for p in Game.state.placed:
+		var node := %Buildings.get_node_or_null("Placed%d" % p["id"])
+		if node == null:
+			var def: BuildableDef = Game.db.buildables[p["def"]]
+			node = def.scene.instantiate()
+			node.name = "Placed%d" % p["id"]
+			node.position = Vector2(p["cell"] * Placer.TILE)
+			%Buildings.add_child(node)
+			var area := node.get_node_or_null("%Creatures") as SpawnArea
+			if area:
+				area.creature_clicked.connect(open_card)
+		var pen := node.get_node_or_null("%Creatures") as SpawnArea
+		if pen:
+			pen.sync(Game.owned().filter(func(c: CreatureData) -> bool: return c.pen == p["id"]), Game.db, _rng)
+
+
+## The creature area of placed pen `placed_id`, or null.
+func pen_area(placed_id: int) -> SpawnArea:
+	var node := %Buildings.get_node_or_null("Placed%d" % placed_id)
+	return node.get_node_or_null("%Creatures") as SpawnArea if node else null
+
+
+## The cells painted on %Buildable, as a set for Build.can_place.
+func buildable_cells() -> Dictionary:
+	var cells := {}
+	for c in %Buildable.get_used_cells():
+		cells[c] = true
+	return cells
 
 
 func open_card(c: CreatureData) -> void:
@@ -97,7 +127,22 @@ func open_stable() -> void:
 
 
 func open_market() -> void:
-	%PanelHost.open(MARKET.instantiate())
+	var market := MARKET.instantiate()
+	%PanelHost.open(market)
+	market.build_requested.connect(start_building)
+
+
+## Closes any popup and enters placement mode for `def_id`, showing where building is allowed.
+func start_building(def_id: StringName) -> void:
+	%PanelHost.close()
+	%Buildable.show()
+	%Placer.start(def_id, buildable_cells())
+
+
+func _placed(built: bool) -> void:
+	%Buildable.hide()
+	if built:
+		toast("Pen built")
 
 
 func open_expedition() -> void:

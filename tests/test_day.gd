@@ -2,7 +2,7 @@ extends TestSuite
 
 
 func _state() -> GameState:
-	var st := GameState.new()
+	var st := Fixtures.state()
 	st.ap = Day.BASE_AP
 	return st
 
@@ -119,7 +119,7 @@ func test_breed_needs_pen_space_and_ap() -> void:
 	for i in 4:
 		Fixtures.adult(st, "slime")
 	eq(Day.breed(st, db, a, b, Fixtures.rng()), "the pens are full", "6 of 6")
-	st.upgrades.append(&"extra_pen")
+	Build.place_free(st, st.content.buildables[&"pen"], Vector2i(6, 0))  # room for the egg
 	st.ap = 1
 	eq(Day.breed(st, db, a, b, Fixtures.rng()), "not enough action points", "needs 2 AP")
 	st.ap = 5

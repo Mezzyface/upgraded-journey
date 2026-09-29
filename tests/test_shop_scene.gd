@@ -54,9 +54,11 @@ func test_each_tag_and_the_shop_door_open_their_popup() -> void:
 func test_creatures_live_in_the_pen_and_open_their_card() -> void:
 	var shop := _shop()
 	await tree.process_frame
-	var pens: SpawnArea = shop.get_node("%Pens")
+	eq(Game.state.placed.size(), 1, "a new game has its starting pen")
+	var start: Dictionary = Game.state.placed[0]
+	var pens: SpawnArea = shop.pen_area(start["id"])
 	eq(pens.sprites().size(), Game.owned().size(), "one sprite per owned creature")
-	var pen_rect := _pen_rect(shop)
+	var pen_rect := _pen_rect(shop.get_node("%%Buildings/Placed%d" % start["id"]))
 	check(pen_rect.encloses(pens.get_global_rect()), "Pens %s inside the pen %s" % [pens.get_global_rect(), pen_rect])
 	for s in pens.sprites():
 		check(Rect2(Vector2.ZERO, pens.size).has_point(s.position), "creature inside: %s" % s.position)
@@ -66,9 +68,9 @@ func test_creatures_live_in_the_pen_and_open_their_card() -> void:
 	_done(shop)
 
 
-func _pen_rect(shop: Node) -> Rect2:
+func _pen_rect(pen: Node) -> Rect2:
 	var r := Rect2()
-	for layer: TileMapLayer in shop.get_node("Pen").find_children("*", "TileMapLayer", true, false):
+	for layer: TileMapLayer in pen.find_children("*", "TileMapLayer", true, false):
 		var used := layer.get_used_rect()
 		var px := Rect2(layer.to_global(layer.map_to_local(used.position)) - Vector2(8, 8), Vector2(used.size) * 16)
 		r = px if r.size == Vector2.ZERO else r.merge(px)
@@ -93,8 +95,9 @@ func test_the_old_layout_is_gone() -> void:
 	var shop := _shop()
 	for gone in ["Ranch", "Hud", "Counter", "MarketStall", "Door", "Stable"]:
 		check(not shop.has_node(gone), "%s removed" % gone)
-	for kept in ["BaseMap", "ShopBuilding", "Pen"]:
-		check(shop.has_node(kept), "%s from the farm map" % kept)
+	check(not shop.has_node("Pen") and not shop.has_node("Pens"), "the hand-painted pen became a placed pen")
+	for kept in ["BaseMap", "ShopBuilding", "Buildable", "Buildings", "Placer"]:
+		check(shop.has_node(kept), "%s on the farm" % kept)
 	_done(shop)
 
 
@@ -110,4 +113,53 @@ func test_the_bar_only_takes_clicks_on_its_tags() -> void:
 		var sib: Node = children[i]
 		if sib is Control and sib.get_global_rect().intersects(door.get_global_rect()):
 			eq(sib.mouse_filter, Control.MOUSE_FILTER_IGNORE, "%s overlaps the shop door and must ignore the mouse" % sib.name)
+	_done(shop)
+
+
+func test_a_placed_pen_appears_at_its_cell_with_its_own_creatures() -> void:
+	var shop := _shop()
+	await tree.process_frame
+	Game.state.money = 1000
+	var cell := Vector2i(20, 10)
+	eq(Game.place(&"pen", cell, shop.buildable_cells()), "", "placed on painted ground")
+	await tree.process_frame
+	var id: int = Game.state.placed[-1]["id"]
+	var node: Node2D = shop.get_node("%%Buildings/Placed%d" % id)
+	eq(node.position, Vector2(cell * 16), "at cell * 16")
+	eq(shop.pen_area(id).sprites().size(), 0, "empty until a creature moves in")
+	var c := Fixtures.adult(Game.state, "spider")
+	c.pen = id
+	Game.changed.emit()
+	await tree.process_frame
+	eq(shop.pen_area(id).sprites().map(func(s: CreatureSprite) -> CreatureData: return s.creature), [c], "shows its own")
+	check(not shop.pen_area(Game.state.placed[0]["id"]).sprites().any(
+		func(s: CreatureSprite) -> bool: return s.creature == c), "not in the other pen")
+	eq(Game.place(&"pen", cell, shop.buildable_cells()), "overlaps the pen", "can't stack pens")
+	eq(Game.place(&"pen", Vector2i(0, 0), shop.buildable_cells()), "can't build there", "not under the top bar")
+	_done(shop)
+
+
+func test_the_market_starts_placement_and_placing_builds() -> void:
+	var shop := _shop()
+	await tree.process_frame
+	Game.state.money = 1000
+	shop.call("open_market")
+	await tree.process_frame
+	var buy: Button = shop.get_node("%PanelHost").current().get_node("%Pens").get_child(0).get_node("%Buy")
+	check(not buy.disabled, "affordable")
+	buy.pressed.emit()
+	await tree.process_frame
+	eq(shop.get_node("%PanelHost").current(), null, "the Market closed")
+	var placer: Placer = shop.get_node("%Placer")
+	check(placer.visible, "placing")
+	check(shop.get_node("%Buildable").visible, "buildable ground shown")
+	eq(placer.move_to(Vector2(20 * 16 + 48, 10 * 16 + 40)), "", "a green spot")
+	placer.pin(true)
+	var before := Game.state.placed.size()
+	(placer.get_node("%Place") as Button).pressed.emit()
+	await tree.process_frame
+	eq(Game.state.placed.size(), before + 1, "built")
+	eq(Game.state.money, 700, "paid on Place")
+	check(not placer.visible and not shop.get_node("%Buildable").visible, "placement over")
+	eq(shop.get_node("%Toast").text, "Pen built", "toasted")
 	_done(shop)

@@ -5,12 +5,18 @@ extends RefCounted
 const FEED_PRICE := 10
 const SELL_BASE := 10  ## every creature sells for at least this
 const SELL_PER_GRADE := 20  ## sell price = SELL_BASE + this x the sum of the five stat grades
-const PEN_BASE := 6
-const PEN_PER_UPGRADE := 3
 
 
+## The creatures all placed pens hold together (Build, data/buildables/); 0 without content or pens.
 static func pen_capacity(state: GameState) -> int:
-	return PEN_BASE + (PEN_PER_UPGRADE if state.upgrades.has(&"extra_pen") else 0)
+	var total := 0
+	if state.content == null:
+		return total
+	for p in state.placed:
+		var def: BuildableDef = state.content.buildables.get(p["def"])
+		if def:
+			total += def.capacity
+	return total
 
 
 ## Owned and retired creatures (eggs included) take a pen space; delivered or sold ones don't.

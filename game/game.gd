@@ -23,6 +23,7 @@ func start(content: Db = null) -> void:
 		state = Day.new_game(load(NEW_GAME), db, rng)
 	elif state.board.is_empty():
 		OrderBoard.post_offers(state, db, rng)  # saves from before the order board had none
+	Build.migrate(state, db, load(NEW_GAME))  # saves from before pens were placed
 	changed.emit()
 
 
@@ -47,6 +48,10 @@ func retire(c: CreatureData) -> String:
 
 func sell(c: CreatureData) -> String:
 	return _did(Day.sell(state, c))
+
+
+func place(def_id: StringName, cell: Vector2i, buildable: Dictionary) -> String:
+	return _did(Build.place(state, db, def_id, cell, buildable))
 
 
 func accept(template_id: StringName) -> String:

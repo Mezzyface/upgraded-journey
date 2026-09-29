@@ -21,6 +21,9 @@ static func max_ap(state: GameState) -> int:
 
 static func new_game(setup: NewGameSetup, db: Db, rng: RandomNumberGenerator) -> GameState:
 	var state := GameState.new()
+	state.content = db
+	if setup.start_pen:
+		Build.place_free(state, setup.start_pen, setup.start_pen_cell)
 	state.money = setup.money
 	state.inventory["feed"] = setup.feed
 	for sp in setup.species:

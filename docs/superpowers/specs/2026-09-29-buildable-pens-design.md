@@ -12,7 +12,8 @@ through the same definition, placement mode and save format.
 ## Decisions
 
 - Free placement on the 16 px grid, footprint snapped, anywhere the owner has painted as buildable.
-- One pen type for now: 6×5 tiles including the fence, holds 3 creatures, price 300 (editable in its `.tres`).
+- One pen type for now: 6×5 tiles including the fence, holds 6 creatures, price 300 (editable in its `.tres`).
+  (Chosen 2026-09-29 during implementation: at 3, the starting pen was full on day 1 with the 3 starting creatures.)
 - Bought from the Market's new Pens list; payment happens on confirming the spot, not on Buy.
 - A ghost of the pen follows the mouse, green/red by the rules; click, then Place / Cancel. Esc or right-click cancels.
 - Placed pens are permanent (no move or demolish yet).
@@ -40,7 +41,7 @@ through the same definition, placement mode and save format.
 | `footprint` | Vector2i | size in tiles, fence included |
 | `scene` | PackedScene | what the farm and the ghost instantiate |
 
-- `data/buildables/pen.tres`: `id = &"pen"`, "Pen", "Room for 3 creatures.", cost 300, capacity 3, footprint (6, 5),
+- `data/buildables/pen.tres`: `id = &"pen"`, "Pen", "Room for 6 creatures.", cost 300, capacity 6, footprint (6, 5),
   scene `res://ranch/pen.tscn`.
 - `Db` gains `buildables: Dictionary[StringName, BuildableDef]`, loaded from `data/buildables/` by `load_dir()` like
   the other kinds.
@@ -55,7 +56,6 @@ through the same definition, placement mode and save format.
 
 ### Rules — `creatures/rules/build.gd` (`class_name Build`, RefCounted, static, like `Market`)
 
-- `footprint_cells(def, cell) -> Array[Vector2i]`.
 - `can_place(state, db, def_id, cell, buildable: Dictionary) -> String` — `buildable` is a set of Vector2i cells
   (keys) supplied by the farm. Returns `""` or, checked in this order: `"not enough money"`, `"can't build there"`
   (any footprint cell not in `buildable`), `"overlaps the <display_name>"` (any footprint cell inside a placed
@@ -64,17 +64,18 @@ through the same definition, placement mode and save format.
 - `place_free(state, def, cell)` — appends without checks or payment (the starting pen).
 - `pen_used(state, placed_id) -> int` — creatures with `pen == placed_id` and status not GONE.
 - `first_pen_with_room(state, db) -> int` — placed id in `placed` order, or -1.
+- `migrate(state, db, setup)` — the old-save step below.
 
 ### Capacity and assignment
 
-- `Market.pen_capacity(state)` becomes the sum of `capacity` over `placed` (needs `db`: signature gains `db`; callers
-  updated). `PEN_BASE`, `PEN_PER_UPGRADE`, the `extra_pen` check and `data/upgrades/extra_pen.tres` are removed. Old
+- `Market.pen_capacity(state)` becomes the sum of `capacity` over `placed`, read through `state.content` (so its signature
+  and callers are unchanged; 0 when `state.content` is null). `PEN_BASE`, `PEN_PER_UPGRADE`, the `extra_pen` check and `data/upgrades/extra_pen.tres` are removed. Old
   saves listing `extra_pen` lose it silently (`_known_ids` already drops unknown ids).
 - `Market.pen_used(state)` is unchanged (owned + retired, eggs included). Retired creatures keep their pen slot, so a
   pen can look emptier than it counts.
 - `GameState.add(c)` assigns `c.pen = first_pen_with_room` when `c.pen < 0`. It is the only place creatures are added
   (market eggs, expedition finds, breeding, new game), so every new creature gets a pen. `add` needs the capacities,
-  so `GameState` gains `var db: Db` (not saved), set by `Day.new_game` and `GameState.from_dict`. With `db == null`
+  so `GameState` gains `var content: Db` (not saved), set by `Day.new_game` and `GameState.from_dict`. With `content == null`
   (bare `GameState.new()` in tests) `add` leaves `pen` at -1.
 
 ### Starting pen and old saves

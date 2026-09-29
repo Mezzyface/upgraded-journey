@@ -10,6 +10,7 @@ func _game() -> Node:
 	var db := Fixtures.db()
 	var setup := NewGameSetup.new()
 	setup.species.assign([db.species[&"spider"], db.species[&"slime"]])
+	setup.start_pen = db.buildables[&"pen"]  # so loading has nothing to migrate
 	g.start_new(setup, db, 1)
 	return g
 

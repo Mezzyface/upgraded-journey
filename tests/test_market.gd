@@ -2,7 +2,7 @@ extends TestSuite
 
 
 func test_pens_count_owned_retired_and_eggs() -> void:
-	var st := GameState.new()
+	var st := Fixtures.state()
 	for i in 5:
 		Fixtures.adult(st, "spider")
 	var gone := Fixtures.adult(st, "spider")
@@ -11,8 +11,9 @@ func test_pens_count_owned_retired_and_eggs() -> void:
 	check(Market.has_pen_space(st), "5 of 6")
 	Fixtures.adult(st, "slime").stage = "egg"
 	check(not Market.has_pen_space(st), "6 of 6")
-	st.upgrades.append(&"extra_pen")
-	eq(Market.pen_capacity(st), 9, "extra pen")
+	Build.place_free(st, st.content.buildables[&"pen"], Vector2i(6, 0))
+	eq(Market.pen_capacity(st), 12, "a second pen adds its capacity")
+	eq(Market.pen_capacity(GameState.new()), 0, "no content or pens: no room")
 
 
 func test_buy_feed() -> void:
@@ -27,7 +28,7 @@ func test_buy_feed() -> void:
 
 func test_buy_egg_rules() -> void:
 	var db := Fixtures.db()
-	var st := GameState.new()
+	var st := Fixtures.state(db)
 	eq(Market.buy_egg(st, db, &"spider", Fixtures.rng()), "not sold here yet", "spider needs tier 1")
 	eq(Market.buy_egg(st, db, &"spider_large", Fixtures.rng()), "not sold here yet", "never sold")
 	eq(Market.buy_egg(st, db, &"slime", Fixtures.rng()), "", "slime egg")

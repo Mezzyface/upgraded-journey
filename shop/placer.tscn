@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://cfoco68hcdn2r"]
+
+[ext_resource type="Script" path="res://shop/placer.gd" id="1_wip3m"]
+
+[node name="Placer" type="Control" unique_id=674927401]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_wip3m")
+
+[node name="Ghost" type="Node2D" parent="." unique_id=92845893]
+unique_name_in_owner = true
+
+[node name="Reason" type="Label" parent="." unique_id=1484085771]
+unique_name_in_owner = true
+layout_mode = 0
+theme_type_variation = &"OnMapLabel"
+
+[node name="Confirm" type="HBoxContainer" parent="." unique_id=927315989]
+unique_name_in_owner = true
+layout_mode = 0
+theme_override_constants/separation = 6
+
+[node name="Place" type="Button" parent="Confirm" unique_id=1366282535]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"DecoratedButton"
+text = "Place"
+
+[node name="Cancel" type="Button" parent="Confirm" unique_id=1946024607]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"DecoratedButton"
+text = "Cancel"
+
+[node name="Hint" type="Label" parent="." unique_id=1920164673]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+theme_type_variation = &"OnMapLabel"
+text = "Click to place · Esc to cancel"
+horizontal_alignment = 1

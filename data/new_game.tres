@@ -5,7 +5,9 @@
 [ext_resource type="Resource" uid="uid://w44dvcfebsir" path="res://data/species/spider.tres" id="3_gvxcg"]
 [ext_resource type="Resource" uid="uid://b5mu1di3dheu7" path="res://data/species/slime.tres" id="4_2ouus"]
 [ext_resource type="Resource" uid="uid://bsb6kbljayfjh" path="res://data/species/green_golem.tres" id="5_qk35w"]
+[ext_resource type="Resource" uid="uid://cyehrqgygidc4" path="res://data/buildables/pen.tres" id="6_1mavb"]
 
 [resource]
 script = ExtResource("1_gtyhn")
 species = Array[ExtResource("2_1mavb")]([ExtResource("3_gvxcg"), ExtResource("4_2ouus"), ExtResource("5_qk35w")])
+start_pen = ExtResource("6_1mavb")

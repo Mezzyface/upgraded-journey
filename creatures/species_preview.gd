@@ -29,7 +29,7 @@ func _ready() -> void:
 	var shop := SHOP.instantiate()
 	add_child(shop)
 	var host: PanelHost = shop.get_node("%PanelHost")
-	var pen_right := (shop.get_node("%Pens") as Control).get_global_rect().end.x + CreatureAnim.TILE  # past the right fence
+	var pen_right: float = shop.pen_area(c.pen).get_global_rect().end.x + CreatureAnim.TILE  # past the right fence
 	host.position.x = pen_right  # the card centres in the space right of the pen
 	host.size.x = get_viewport_rect().size.x - pen_right
 	shop.open_card(c)

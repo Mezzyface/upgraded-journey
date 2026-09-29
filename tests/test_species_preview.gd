@@ -8,7 +8,7 @@ func test_preview_shows_one_creature_and_its_card_beside_the_pen() -> void:
 	tree.root.add_child(p)
 	await tree.process_frame
 	var shop := p.get_child(0)
-	var pens: SpawnArea = shop.get_node("%Pens")
+	var pens: SpawnArea = shop.pen_area(Game.state.placed[0]["id"])
 	eq(pens.sprites().size(), 1, "just the previewed creature")
 	eq(pens.sprites()[0].creature.species, &"dog", "of that species")
 	await tree.process_frame  # the card widens after its first layout pass

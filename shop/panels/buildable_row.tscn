@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://b56n1hcsmv4da"]
+
+[node name="BuildableRow" type="HBoxContainer" unique_id=1402911902]
+theme_override_constants/separation = 8
+
+[node name="Name" type="Label" parent="." unique_id=225177830]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Pen"
+vertical_alignment = 1
+
+[node name="Holds" type="Label" parent="." unique_id=710861935]
+unique_name_in_owner = true
+layout_mode = 2
+text = "holds 6"
+vertical_alignment = 1
+
+[node name="Price" type="Label" parent="." unique_id=93827044]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "300"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Buy" type="Button" parent="." unique_id=803404661]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"DecoratedButton"
+text = "Buy"
