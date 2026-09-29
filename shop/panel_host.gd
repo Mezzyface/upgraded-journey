@@ -27,11 +27,17 @@ func _draw() -> void:
 func open(panel: Control) -> void:
 	close()
 	add_child(panel)
-	panel.size = panel.get_combined_minimum_size()
-	panel.position = ((size - panel.size) / 2.0).max(Vector2.ZERO)
+	_fit(panel)
+	panel.minimum_size_changed.connect(_fit.bind(panel))  # wrapped text settles after the first layout pass
 	mouse_filter = Control.MOUSE_FILTER_STOP  # the scene behind doesn't take clicks while a panel is open
 	backdrop = true
 	queue_redraw()
+
+
+## Shrinks (or grows) the panel to its minimum size and centres it.
+func _fit(panel: Control) -> void:
+	panel.reset_size()
+	panel.position = ((size - panel.size) / 2.0).max(Vector2.ZERO)
 
 
 func close() -> void:

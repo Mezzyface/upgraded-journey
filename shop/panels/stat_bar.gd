@@ -18,7 +18,7 @@ var cap := 0:
 
 
 func _init() -> void:
-	custom_minimum_size = Vector2(220, 12)
+	custom_minimum_size = Vector2(64, 8)  # fills the card's width; this is only the floor
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 

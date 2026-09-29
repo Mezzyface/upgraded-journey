@@ -52,6 +52,7 @@ func _act(action: Callable) -> void:
 	_pending_retire = false
 	var reason: String = action.call()
 	%Message.text = reason.left(1).to_upper() + reason.substr(1)
+	%Message.visible = reason != ""  # an empty label would still take a line
 	_update_action_buttons()
 
 
