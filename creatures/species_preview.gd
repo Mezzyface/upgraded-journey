@@ -29,10 +29,15 @@ func _ready() -> void:
 	var shop := SHOP.instantiate()
 	add_child(shop)
 	var host: PanelHost = shop.get_node("%PanelHost")
-	var pen_right: float = shop.pen_area(c.pen).get_global_rect().end.x + CreatureAnim.TILE  # past the right fence
-	host.position.x = pen_right  # the card centres in the space right of the pen
-	host.size.x = get_viewport_rect().size.x - pen_right
 	shop.open_card(c)
+	var width := get_viewport_rect().size.x
+	var pen_right: float = shop.pen_area(c.pen).get_global_rect().end.x + CreatureAnim.TILE  # past the right fence
+	var shift := minf(0.0, width - host.current().get_combined_minimum_size().x - pen_right)
+	shop.position.x = shift  # slide the farm left until the card fits beside the pen
+	RenderingServer.set_default_clear_color(Color(0.55, 0.72, 0.35))  # grass where the slid farm no longer reaches
+	shop.get_node("%TopBar").hide()  # the top bar isn't what's being previewed
+	host.position.x = pen_right  # the card centres in the space right of the pen
+	host.size.x = width - shift - pen_right
 	host.backdrop = false  # the pen stays bright
 	host.queue_redraw()
 

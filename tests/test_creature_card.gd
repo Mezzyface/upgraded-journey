@@ -25,7 +25,13 @@ func test_card_shows_the_creature() -> void:
 	var card: Control = parts[1]
 	var c: CreatureData = parts[2]
 	check(card.get_node("%Name").text.contains("#%d" % c.id), "name and id")
-	eq(card.get_node("%Stats").get_child_count(), 15, "5 rows x (label, bar, grade)")
+	eq(card.get_node("%Stats").get_child_count(), 5, "five stat boxes")
+	var power: StatBox = card.get_node("%Stats/Power")
+	eq(power.get_node("%Grade").text, Stats.grade_name(c.stats["power"]), "grade letter")
+	eq(power.get_node("%Value").text, str(c.stats["power"]), "value")
+	eq(card.get_node("%RankText").text, Stats.rank_name(c.stats), "rank badge")
+	eq(card.get_node("%Score").text.replace(",", ""), str(Stats.score(c.stats)), "score")
+	check(card.get_node("%Epithet").text.begins_with("["), "personality as the epithet")
 	check(card.get_node("%Sell").text.contains(str(Game.sell_price(c))), "sell price on the button")
 	parts[0].queue_free()
 
@@ -92,4 +98,21 @@ func test_another_action_disarms_the_sell_button() -> void:
 	card.get_node("%Play").pressed.emit()
 	check(not card.get_node("%Sell").text.begins_with("Sure?"), "Play in between resets Sell")
 	eq(c.status, CreatureData.Status.OWNED, "not sold")
+	parts[0].queue_free()
+
+
+func test_tabs_hold_traits_and_moves_sparks_and_family() -> void:
+	var parts := _card()
+	await tree.process_frame
+	var card: Control = parts[1]
+	var c: CreatureData = parts[2]
+	var tabs: TabContainer = card.get_node("%Tabs")
+	eq(tabs.get_tab_count(), 3, "three tabs")
+	eq(card.get_node("%Chips").get_child_count(), c.all_traits(Game.db).size() + c.moves.size(), "a chip per trait and move")
+	eq(card.get_node("%Sparks").get_child(0).text, "No sparks yet", "a wild creature has no sparks")
+	c.pool.append({"kind": "stat", "id": "power", "stars": 2, "weight": 1})
+	card.show_creature(c)
+	await tree.process_frame
+	eq((card.get_node("%Sparks").get_child(0).get_child(0) as Label).text, "Power ** (inherited)", "inherited spark")
+	check(card.get_node("%Family").text != "" and card.get_node("%Age").text.begins_with("Age"), "family and age")
 	parts[0].queue_free()

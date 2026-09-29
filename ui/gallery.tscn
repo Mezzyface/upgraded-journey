@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://qgbqp5i6ebcd" path="res://art/sprout/ui/Sprite sheet for Basic Pack.png" id="2_3xbav"]
 [ext_resource type="Texture2D" uid="uid://d3dtepjvjtoc2" path="res://art/sprout/ui/backdrops_a1.png" id="3_s8shc"]
+[ext_resource type="PackedScene" uid="uid://dxloup12ko71b" path="res://shop/panels/stat_box.tscn" id="4_s8shc"]
 [ext_resource type="Script" uid="uid://dvua4rmjstjat" path="res://ui/pack_scroll_bar.gd" id="8_kq1tw"]
 [ext_resource type="Script" uid="uid://byxrgwb7e07e5" path="res://ui/gallery.gd" id="script"]
 
@@ -395,6 +396,52 @@ offset_bottom = 27.0
 theme_type_variation = &"HangingTag"
 text = "Market"
 
+[node name="H6" type="Label" parent="Scroll/Margin/Rows" unique_id=738146398]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Creature card"
+
+[node name="Card" type="HBoxContainer" parent="Scroll/Margin/Rows" unique_id=1408593016]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleStrip" type="PanelContainer" parent="Scroll/Margin/Rows/Card" unique_id=1728207385]
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"TitleStrip"
+
+[node name="Text" type="Label" parent="Scroll/Margin/Rows/Card/TitleStrip" unique_id=1706496225]
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "Creature Details"
+
+[node name="PortraitFrame" type="PanelContainer" parent="Scroll/Margin/Rows/Card" unique_id=303868529]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"PortraitFrame"
+
+[node name="RankBadge" type="PanelContainer" parent="Scroll/Margin/Rows/Card" unique_id=1505954427]
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"RankBadge"
+
+[node name="Text" type="Label" parent="Scroll/Margin/Rows/Card/RankBadge" unique_id=1859168526]
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "B+"
+
+[node name="GradeLabel" type="Label" parent="Scroll/Margin/Rows/Card" unique_id=931662366]
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"GradeLabel"
+text = "A"
+
+[node name="StatBox" parent="Scroll/Margin/Rows/Card" unique_id=837065558 instance=ExtResource("4_s8shc")]
+custom_minimum_size = Vector2(76, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
 [node name="ScrollBar" type="VSlider" parent="." unique_id=30111981]
 layout_mode = 0
 anchor_left = 1.0
@@ -404,6 +451,6 @@ offset_left = -14.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_type_variation = &"PackScrollBar"
-max_value = 509.0
-value = 509.0
+max_value = 617.0
+value = 617.0
 script = ExtResource("8_kq1tw")

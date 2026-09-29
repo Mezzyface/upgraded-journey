@@ -346,6 +346,22 @@ texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 region_rect = Rect2(107, 107, 26, 26)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qorvh"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.984, 0.953, 0.875, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.549, 0.451, 0.412, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xbpyb"]
 texture = ExtResource("1_35fd2")
 texture_margin_left = 3.0
@@ -363,6 +379,22 @@ texture_margin_right = 2.0
 texture_margin_bottom = 2.0
 region_rect = Rect2(402, 73, 28, 14)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1wmqj"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+bg_color = Color(0.878, 0.439, 0.498, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.984, 0.953, 0.875, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cf1iw"]
 bg_color = Color(0.54901963, 0.4509804, 0.4117647, 1)
 border_width_top = 1
@@ -374,6 +406,32 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 region_rect = Rect2(56, 18, 8, 12)
 modulate_color = Color(1, 1, 1, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_818v2"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 3.0
+bg_color = Color(0.984, 0.953, 0.875, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.549, 0.451, 0.412, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8h0v"]
+content_margin_left = 2.0
+content_margin_top = 0.0
+content_margin_right = 2.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a7ncx"]
 texture = ExtResource("1_35fd2")
@@ -402,6 +460,16 @@ texture_margin_left = 6.0
 texture_margin_top = 9.0
 texture_margin_right = 6.0
 region_rect = Rect2(375, 69, 18, 14)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0jiqr"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.549, 0.722, 0.349, 1)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bdq70"]
 content_margin_left = 4.0
@@ -504,6 +572,11 @@ DecoratedButton/styles/normal = SubResource("StyleBoxTexture_v2mq5")
 DecoratedButton/styles/pressed = SubResource("StyleBoxTexture_818v2")
 FlatPanel/base_type = &"PanelContainer"
 FlatPanel/styles/panel = SubResource("StyleBoxTexture_s8h0v")
+GradeLabel/base_type = &"Label"
+GradeLabel/colors/font_color = Color(0.984, 0.953, 0.875, 1)
+GradeLabel/colors/font_outline_color = Color(0.392, 0.333, 0.322, 1)
+GradeLabel/constants/outline_size = 4
+GradeLabel/font_sizes/font_size = 28
 HScrollBar/styles/grabber = SubResource("StyleBoxTexture_6gpgw")
 HScrollBar/styles/grabber_highlight = SubResource("StyleBoxTexture_22jjy")
 HScrollBar/styles/grabber_pressed = SubResource("StyleBoxTexture_m2s22")
@@ -549,17 +622,27 @@ Panel/styles/panel = SubResource("StyleBoxTexture_hdkho")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_s8h0v")
 PopupDialog/styles/panel = SubResource("StyleBoxTexture_w4jy1")
 PopupPanel/styles/panel = SubResource("StyleBoxTexture_w4jy1")
+PortraitFrame/base_type = &"PanelContainer"
+PortraitFrame/styles/panel = SubResource("StyleBoxFlat_qorvh")
 ProgressBar/styles/background = SubResource("StyleBoxTexture_xbpyb")
 ProgressBar/styles/fill = SubResource("StyleBoxTexture_avs0p")
+RankBadge/base_type = &"PanelContainer"
+RankBadge/styles/panel = SubResource("StyleBoxFlat_1wmqj")
 Rope/base_type = &"Panel"
 Rope/styles/panel = SubResource("StyleBoxFlat_cf1iw")
 RopeStrip/base_type = &"Panel"
 RopeStrip/styles/panel = SubResource("StyleBoxTexture_cl4q8")
+StatBox/base_type = &"PanelContainer"
+StatBox/styles/panel = SubResource("StyleBoxFlat_818v2")
+StatHeader/base_type = &"PanelContainer"
+StatHeader/styles/panel = SubResource("StyleBoxFlat_s8h0v")
 TabContainer/styles/panel = SubResource("StyleBoxTexture_hdkho")
 TabContainer/styles/tab_disabled = SubResource("StyleBoxTexture_a7ncx")
 TabContainer/styles/tab_hovered = SubResource("StyleBoxTexture_pkuo0")
 TabContainer/styles/tab_selected = SubResource("StyleBoxTexture_vgud8")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxTexture_qdddf")
+TitleStrip/base_type = &"PanelContainer"
+TitleStrip/styles/panel = SubResource("StyleBoxFlat_0jiqr")
 TooltipLabel/base_type = &"Label"
 TooltipLabel/colors/font_color = Color(0.39215687, 0.33333334, 0.32156864, 1)
 TooltipPanel/base_type = &"PanelContainer"

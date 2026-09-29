@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://by3lcx24paa4p"]
 
 [ext_resource type="Script" uid="uid://dcakjcjavqa27" path="res://shop/panels/creature_card.gd" id="1_wkiug"]
+[ext_resource type="PackedScene" uid="uid://dxloup12ko71b" path="res://shop/panels/stat_box.tscn" id="2_3xiop"]
 
 [node name="CreatureCard" type="PanelContainer" unique_id=13860526]
-custom_minimum_size = Vector2(260, 0)
+custom_minimum_size = Vector2(420, 0)
 script = ExtResource("1_wkiug")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=708651217]
@@ -13,94 +14,211 @@ theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 6
 
-[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=93674868]
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=586585473]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="Header" type="HBoxContainer" parent="Margin/Rows" unique_id=870248298]
+[node name="Title" type="PanelContainer" parent="Margin/Rows" unique_id=1078083181]
+layout_mode = 2
+theme_type_variation = &"TitleStrip"
+
+[node name="TitleText" type="Label" parent="Margin/Rows/Title" unique_id=1288842053]
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "Creature Details"
+horizontal_alignment = 1
+
+[node name="Header" type="HBoxContainer" parent="Margin/Rows" unique_id=534289287]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Portrait" type="TextureRect" parent="Margin/Rows/Header" unique_id=1733751116]
+[node name="PortraitStack" type="Control" parent="Margin/Rows/Header" unique_id=843382105]
+custom_minimum_size = Vector2(60, 48)
+layout_mode = 2
+
+[node name="PortraitFrame" type="PanelContainer" parent="Margin/Rows/Header/PortraitStack" unique_id=774306452]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
+theme_type_variation = &"PortraitFrame"
+
+[node name="Portrait" type="TextureRect" parent="Margin/Rows/Header/PortraitStack/PortraitFrame" unique_id=1530630172]
 unique_name_in_owner = true
 texture_filter = 1
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Titles" type="VBoxContainer" parent="Margin/Rows/Header" unique_id=1072398217]
+[node name="Rank" type="PanelContainer" parent="Margin/Rows/Header/PortraitStack" unique_id=390611790]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 30.0
+offset_right = 60.0
+offset_bottom = 48.0
+theme_type_variation = &"RankBadge"
+
+[node name="RankText" type="Label" parent="Margin/Rows/Header/PortraitStack/Rank" unique_id=430625041]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"OnMapLabel"
+text = "B+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Titles" type="VBoxContainer" parent="Margin/Rows/Header" unique_id=421315717]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
+theme_override_constants/separation = 0
+alignment = 1
 
-[node name="Name" type="Label" parent="Margin/Rows/Header/Titles" unique_id=1794473586]
+[node name="Epithet" type="Label" parent="Margin/Rows/Header/Titles" unique_id=1954051089]
+unique_name_in_owner = true
+layout_mode = 2
+text = "[Bold]"
+
+[node name="Name" type="Label" parent="Margin/Rows/Header/Titles" unique_id=2050337966]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HeaderLabel"
+text = "Red Golem #4"
 
-[node name="Close" type="Button" parent="Margin/Rows/Header" unique_id=1306198707]
+[node name="ScoreBox" type="VBoxContainer" parent="Margin/Rows/Header" unique_id=648833632]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Score" type="Label" parent="Margin/Rows/Header/ScoreBox" unique_id=614439293]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 0
-theme_type_variation = &"DecoratedButton"
-text = "Close"
+text = "870"
+horizontal_alignment = 2
 
-[node name="Info" type="Label" parent="Margin/Rows" unique_id=164799992]
+[node name="ScoreCaption" type="Label" parent="Margin/Rows/Header/ScoreBox" unique_id=1451988591]
+layout_mode = 2
+text = "score"
+horizontal_alignment = 2
+
+[node name="Info" type="Label" parent="Margin/Rows" unique_id=42896333]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Adult · Earth · Mineral · Mood 50"
+autowrap_mode = 3
+
+[node name="Stats" type="HBoxContainer" parent="Margin/Rows" unique_id=1780306139]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Power" parent="Margin/Rows/Stats" unique_id=837065558 instance=ExtResource("2_3xiop")]
+layout_mode = 2
+
+[node name="Guard" parent="Margin/Rows/Stats" unique_id=1747959672 instance=ExtResource("2_3xiop")]
+layout_mode = 2
+stat = "guard"
+header_color = Color(0.8392157, 0.41960785, 0.4, 1)
+
+[node name="Speed" parent="Margin/Rows/Stats" unique_id=194380710 instance=ExtResource("2_3xiop")]
+layout_mode = 2
+stat = "speed"
+header_color = Color(0.4, 0.6509804, 0.9490196, 1)
+
+[node name="Wits" parent="Margin/Rows/Stats" unique_id=655030209 instance=ExtResource("2_3xiop")]
+layout_mode = 2
+stat = "wits"
+header_color = Color(0.4509804, 0.7490196, 0.4, 1)
+
+[node name="Heart" parent="Margin/Rows/Stats" unique_id=39025465 instance=ExtResource("2_3xiop")]
+layout_mode = 2
+stat = "heart"
+header_color = Color(0.92941177, 0.5019608, 0.6509804, 1)
+
+[node name="Tabs" type="TabContainer" parent="Margin/Rows" unique_id=1217350387]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+current_tab = 0
+
+[node name="Traits & Moves" type="GridContainer" parent="Margin/Rows/Tabs" unique_id=294278534]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Chips" type="GridContainer" parent="Margin/Rows/Tabs/Traits & Moves" unique_id=1818884703]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Sparks" type="GridContainer" parent="Margin/Rows/Tabs" unique_id=1500820692]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+columns = 2
+metadata/_tab_index = 1
+
+[node name="Family & Age" type="VBoxContainer" parent="Margin/Rows/Tabs" unique_id=423593817]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+metadata/_tab_index = 2
+
+[node name="Family" type="Label" parent="Margin/Rows/Tabs/Family & Age" unique_id=1626871043]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 
-[node name="Stats" type="GridContainer" parent="Margin/Rows" unique_id=580956899]
+[node name="Age" type="Label" parent="Margin/Rows/Tabs/Family & Age" unique_id=1207357493]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 3
+autowrap_mode = 3
 
-[node name="Chips" type="HFlowContainer" parent="Margin/Rows" unique_id=1925509985]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Family" type="Label" parent="Margin/Rows" unique_id=1010836789]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Message" type="Label" parent="Margin/Rows" unique_id=1469424086]
+[node name="Message" type="Label" parent="Margin/Rows" unique_id=509511004]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+autowrap_mode = 3
 
-[node name="Actions" type="HFlowContainer" parent="Margin/Rows" unique_id=1028721342]
+[node name="Actions" type="HBoxContainer" parent="Margin/Rows" unique_id=1878846050]
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 4
+theme_override_constants/separation = 4
 
-[node name="Train" type="MenuButton" parent="Margin/Rows/Actions" unique_id=487440685]
+[node name="Train" type="MenuButton" parent="Margin/Rows/Actions" unique_id=449078351]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"DecoratedButton"
 text = "Train"
 flat = false
 
-[node name="Feed" type="Button" parent="Margin/Rows/Actions" unique_id=1634337993]
+[node name="Feed" type="Button" parent="Margin/Rows/Actions" unique_id=604391442]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"DecoratedButton"
 text = "Feed"
 
-[node name="Play" type="Button" parent="Margin/Rows/Actions" unique_id=699061693]
+[node name="Play" type="Button" parent="Margin/Rows/Actions" unique_id=1435906308]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"DecoratedButton"
 text = "Play"
 
-[node name="Retire" type="Button" parent="Margin/Rows/Actions" unique_id=2124229324]
+[node name="Retire" type="Button" parent="Margin/Rows/Actions" unique_id=937925613]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"DecoratedButton"
 text = "Retire"
 
-[node name="Sell" type="Button" parent="Margin/Rows/Actions" unique_id=1915029948]
+[node name="Sell" type="Button" parent="Margin/Rows/Actions" unique_id=744849157]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"DecoratedButton"
 text = "Sell"
+
+[node name="Spacer" type="Control" parent="Margin/Rows/Actions" unique_id=2029329655]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Close" type="Button" parent="Margin/Rows/Actions" unique_id=96572072]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Close"
