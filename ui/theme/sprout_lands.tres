@@ -1,6 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://cc5v0hpxubmkq"]
 
 [ext_resource type="Texture2D" uid="uid://qgbqp5i6ebcd" path="res://art/sprout/ui/Sprite sheet for Basic Pack.png" id="1_35fd2"]
+[ext_resource type="Texture2D" uid="uid://be0mkpn2a0uyd" path="res://art/sprout/tiles/Wooden_House_Walls_Tilset.png" id="2_qorvh"]
 [ext_resource type="FontFile" uid="uid://cewnhafgcaoy3" path="res://art/sprout/fonts/pixelFont-7-8x14-sproutLands.ttf" id="2_v2mq5"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w4jy1"]
@@ -216,6 +217,55 @@ expand_margin_top = 3.0
 expand_margin_bottom = 3.0
 region_rect = Rect2(277, 166, 38, 4)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8dgix"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+texture = ExtResource("1_35fd2")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(163, 178, 90, 27)
+modulate_color = Color(1, 1, 1, 0.5)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_88ewa"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+texture = ExtResource("1_35fd2")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(163, 178, 90, 27)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v6lao"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+texture = ExtResource("1_35fd2")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(163, 178, 90, 27)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cgl2k"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+texture = ExtResource("1_35fd2")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(259, 180, 90, 25)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0jiqr"]
 content_margin_left = 6.0
 content_margin_top = 6.0
@@ -312,6 +362,18 @@ texture_margin_top = 4.0
 texture_margin_right = 2.0
 texture_margin_bottom = 2.0
 region_rect = Rect2(402, 73, 28, 14)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cf1iw"]
+bg_color = Color(0.54901963, 0.4509804, 0.4117647, 1)
+border_width_top = 1
+border_color = Color(0.76862746, 0.6039216, 0.42352942, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cl4q8"]
+texture = ExtResource("2_qorvh")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(56, 18, 8, 12)
+modulate_color = Color(1, 1, 1, 0.7)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a7ncx"]
 texture = ExtResource("1_35fd2")
@@ -453,6 +515,11 @@ HSlider/icons/tick = SubResource("AtlasTexture_i5hmu")
 HSlider/styles/grabber_area = SubResource("StyleBoxTexture_y4yfd")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxTexture_4r8ma")
 HSlider/styles/slider = SubResource("StyleBoxTexture_w6s65")
+HangingTag/base_type = &"Button"
+HangingTag/styles/disabled = SubResource("StyleBoxTexture_8dgix")
+HangingTag/styles/hover = SubResource("StyleBoxTexture_88ewa")
+HangingTag/styles/normal = SubResource("StyleBoxTexture_v6lao")
+HangingTag/styles/pressed = SubResource("StyleBoxTexture_cgl2k")
 HeaderLabel/base_type = &"Label"
 HeaderLabel/colors/font_color = Color(0.39215687, 0.33333334, 0.32156864, 1)
 HeaderLabel/font_sizes/font_size = 28
@@ -484,6 +551,10 @@ PopupDialog/styles/panel = SubResource("StyleBoxTexture_w4jy1")
 PopupPanel/styles/panel = SubResource("StyleBoxTexture_w4jy1")
 ProgressBar/styles/background = SubResource("StyleBoxTexture_xbpyb")
 ProgressBar/styles/fill = SubResource("StyleBoxTexture_avs0p")
+Rope/base_type = &"Panel"
+Rope/styles/panel = SubResource("StyleBoxFlat_cf1iw")
+RopeStrip/base_type = &"Panel"
+RopeStrip/styles/panel = SubResource("StyleBoxTexture_cl4q8")
 TabContainer/styles/panel = SubResource("StyleBoxTexture_hdkho")
 TabContainer/styles/tab_disabled = SubResource("StyleBoxTexture_a7ncx")
 TabContainer/styles/tab_hovered = SubResource("StyleBoxTexture_pkuo0")

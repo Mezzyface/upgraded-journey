@@ -34,6 +34,7 @@ const VARIATIONS := {
 	"FlatPanel": &"PanelContainer", "BarPanel": &"PanelContainer", "InsetPanel": &"PanelContainer",
 	"InventorySlot": &"PanelContainer", "InventorySlotSelected": &"PanelContainer", "NamePlate": &"PanelContainer",
 	"PackScrollBar": &"VSlider", "TooltipLabel": &"Label", "TooltipPanel": &"PanelContainer",
+	"RopeStrip": &"Panel", "Rope": &"Panel", "HangingTag": &"Button",
 }
 
 
@@ -85,3 +86,13 @@ func _theme_resource_paths(theme: Theme) -> PackedStringArray:
 		for n in theme.get_font_list(type):
 			add.call(theme.get_font(n, type))
 	return out
+
+
+func test_top_bar_variations_have_their_styles() -> void:
+	var theme: Theme = load(THEME)
+	var strip := theme.get_stylebox("panel", "RopeStrip") as StyleBoxTexture
+	check(strip != null and strip.texture.resource_path == "res://art/sprout/tiles/Wooden_House_Walls_Tilset.png", "RopeStrip tiles the plank sheet")
+	check(strip != null and strip.axis_stretch_horizontal == StyleBoxTexture.AXIS_STRETCH_MODE_TILE, "RopeStrip tiles horizontally")
+	check(theme.get_stylebox("panel", "Rope") is StyleBoxFlat, "Rope is a flat brown line")
+	for s in ["normal", "hover", "pressed"]:
+		check(theme.get_stylebox(s, "HangingTag") is StyleBoxTexture, "HangingTag %s" % s)

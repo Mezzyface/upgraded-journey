@@ -364,6 +364,37 @@ value = 70.0
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
+[node name="H9" type="Label" parent="Scroll/Margin/Rows" unique_id=1960312822]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Top bar"
+
+[node name="TopBarSample" type="Control" parent="Scroll/Margin/Rows" unique_id=1570569919]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="Strip" type="Panel" parent="Scroll/Margin/Rows/TopBarSample" unique_id=497757202]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 22.0
+theme_type_variation = &"RopeStrip"
+
+[node name="Rope" type="Panel" parent="Scroll/Margin/Rows/TopBarSample" unique_id=1654695602]
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 21.0
+offset_bottom = 24.0
+theme_type_variation = &"Rope"
+
+[node name="Tag" type="Button" parent="Scroll/Margin/Rows/TopBarSample" unique_id=835352672]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 27.0
+offset_right = 16.0
+offset_bottom = 27.0
+theme_type_variation = &"HangingTag"
+text = "Market"
+
 [node name="ScrollBar" type="VSlider" parent="." unique_id=30111981]
 layout_mode = 0
 anchor_left = 1.0
@@ -373,6 +404,6 @@ offset_left = -14.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_type_variation = &"PackScrollBar"
-max_value = 405.0
-value = 405.0
+max_value = 509.0
+value = 509.0
 script = ExtResource("8_kq1tw")
