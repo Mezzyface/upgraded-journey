@@ -22,6 +22,8 @@ extends Resource
 ## Checked in order at the end of each day; the first satisfied branch wins.
 @export var evolutions: Array[EvolutionDef] = []
 @export var sprite_frames: SpriteFrames
+## Size in the pen, in 16 px ranch tiles: the longest side of the idle frame's body is scaled to this many tiles.
+@export_range(0.25, 4.0, 0.05) var size_tiles := 1.0
 @export_group("Market")
 ## Price of an egg at the market; market_tier is the reputation tier that unlocks it (-1 = never sold).
 @export var market_price: int = 0

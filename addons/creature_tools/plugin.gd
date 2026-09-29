@@ -2,19 +2,23 @@
 extends EditorPlugin
 ## Project > Tools > "Creatures: Import monster pack…": pick a pack folder; each variant is copied into
 ## creatures/pack/ and gets a SpriteFrames and a starter Species. Create-only, never overwrites.
+## Also adds the Inspector's "Preview in pen" button on a Species (species_preview_button.gd).
 
 const Importer := preload("res://addons/creature_tools/pack_importer.gd")
 const MENU := "Creatures: Import monster pack…"
 
 var _dialog: EditorFileDialog
+var _preview_button := preload("res://addons/creature_tools/species_preview_button.gd").new()
 
 
 func _enter_tree() -> void:
 	add_tool_menu_item(MENU, _open)
+	add_inspector_plugin(_preview_button)
 
 
 func _exit_tree() -> void:
 	remove_tool_menu_item(MENU)
+	remove_inspector_plugin(_preview_button)
 	if _dialog:
 		_dialog.queue_free()
 

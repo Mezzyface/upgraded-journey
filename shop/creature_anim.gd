@@ -10,6 +10,7 @@ const FALLBACKS := {
 }
 const PORTRAIT_CELL := 64  ## the centre of the 128 px cell, where the creature stands
 const DEFAULT_BODY := Rect2(-10, -10, 20, 20)  ## the old fixed hit box, used when there's nothing to measure
+const TILE := 16.0  ## ranch tile size in px; creatures are sized in tiles (Species.size_tiles)
 
 
 static func pick(frames: SpriteFrames, wanted: String, facing: String) -> StringName:
@@ -26,6 +27,16 @@ static func pick(frames: SpriteFrames, wanted: String, facing: String) -> String
 		if frames.get_frame_count(name) > 0:
 			return StringName(name)
 	return &""
+
+
+## The scale that makes the body `tiles` ranch tiles across its longest side, measured over every idle facing
+## (a dog is longer from the side than from the front).
+static func pen_scale(frames: SpriteFrames, tiles: float) -> float:
+	var longest := 0.0
+	for facing in ["down", "up", "left", "right"]:
+		var body := body_rect(frames, facing).size
+		longest = maxf(longest, maxf(body.x, body.y))
+	return tiles * TILE / longest
 
 
 static func portrait(frames: SpriteFrames) -> Texture2D:
@@ -45,8 +56,8 @@ static func portrait(frames: SpriteFrames) -> Texture2D:
 ## The idle frame's opaque used rect, in cell-local coordinates relative to the cell centre (where the creature's
 ## Node2D origin sits) — used to size and place a creature's click target on its actual body instead of a fixed
 ## box. Falls back to `DEFAULT_BODY` when there is no frame or image to measure, or the frame is fully transparent.
-static func body_rect(frames: SpriteFrames) -> Rect2:
-	var anim := pick(frames, "idle", "down")
+static func body_rect(frames: SpriteFrames, facing := "down") -> Rect2:
+	var anim := pick(frames, "idle", facing)
 	if anim == &"":
 		return DEFAULT_BODY
 	var tex := frames.get_frame_texture(anim, 0)

@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://seiowfm2sx4h" path="res://shop/creature_sprite.gd" id="1_vpxwt"]
 [ext_resource type="Texture2D" uid="uid://dw2j6gynkncv2" path="res://creatures/egg.tres" id="2_30t7f"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_feet"]
+resource_local_to_scene = true
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_30t7f"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ekj1c"]
@@ -13,8 +16,13 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kaxfk"]
 
-[node name="CreatureSprite" type="Node2D" unique_id=331166886]
+[node name="CreatureSprite" type="CharacterBody2D" unique_id=331166886]
+collision_layer = 2
 script = ExtResource("1_vpxwt")
+
+[node name="Feet" type="CollisionShape2D" parent="." unique_id=1447203391]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_feet")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=2058387422]
 unique_name_in_owner = true

@@ -1,9 +1,9 @@
 @tool
 class_name SpawnArea
 extends Control
-## Where creatures appear and wander. In the editor it draws its outline and `preview_count` ghost creatures from
-## `preview_frames` at `sprite_scale`, so size, scale and spacing are tuned right here; at runtime sync() spawns one
-## CreatureSprite per creature inside this rect.
+## Where creatures appear and pick spots to walk to (the pen's fence tiles are what stop them). In the editor it draws
+## its outline and `preview_count` ghost creatures from `preview_frames` at one tile (Species.size_tiles = 1), so
+## size and spacing are tuned right here; at runtime sync() spawns one CreatureSprite per creature inside this rect.
 
 signal creature_clicked(c: CreatureData)
 
@@ -18,10 +18,6 @@ const GHOST := Color(1, 1, 1, 0.45)
 @export_range(0, 12) var preview_count := 4:
 	set(v):
 		preview_count = v
-		queue_redraw()
-@export_range(0.5, 8.0, 0.1) var sprite_scale := 2.5:
-	set(v):
-		sprite_scale = v
 		queue_redraw()
 @export_range(0.2, 1.0, 0.05) var baby_scale := 0.7
 @export_range(1, 40) var max_shown := 12
@@ -69,7 +65,7 @@ func _draw() -> void:
 	if anim == &"":
 		return
 	var tex := preview_frames.get_frame_texture(anim, 0)
-	var cell := tex.get_size() * sprite_scale
+	var cell := tex.get_size() * CreatureAnim.pen_scale(preview_frames, 1.0)
 	for i in preview_count:
 		var centre := Vector2(size.x * (i + 1) / (preview_count + 1), size.y * 0.5)
 		draw_texture_rect(tex, Rect2(centre - cell / 2.0, cell), false, GHOST)
@@ -99,7 +95,7 @@ func sync(creatures: Array, db: Db, rng: RandomNumberGenerator) -> void:
 		var s: CreatureSprite = CREATURE_SPRITE.instantiate()
 		add_child(s)
 		var sp: Species = db.species.get(c.species)
-		s.setup(c, sp.sprite_frames if sp else null, self, rng)
+		s.setup(c, sp.sprite_frames if sp else null, self, rng, sp.size_tiles if sp else 1.0)
 		s.clicked.connect(func(clicked: CreatureData) -> void: creature_clicked.emit(clicked))
 	for s in sprites():
 		s.refresh()

@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://c46wmw3v1mfau"]
+
+[ext_resource type="Script" uid="uid://c2h6jp7anb452" path="res://creatures/species_preview.gd" id="1_1gpry"]
+[ext_resource type="Resource" uid="uid://c4yee2iga10g5" path="res://data/species/red_golem.tres" id="2_1gpry"]
+
+[node name="SpeciesPreview" type="Control" unique_id=363018235]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1gpry")
+species = ExtResource("2_1gpry")

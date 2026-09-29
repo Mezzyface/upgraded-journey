@@ -42,3 +42,4 @@ potential_heart = 350
 natural_traits = Array[ExtResource("3_5r7bi")]([ExtResource("7_ixhk2"), ExtResource("8_321yc")])
 moves = Array[ExtResource("2_bcxrg")]([SubResource("Resource_hkdlk"), SubResource("Resource_3g8e8"), SubResource("Resource_eg2j3")])
 sprite_frames = ExtResource("5_3pmpc")
+size_tiles = 2.0

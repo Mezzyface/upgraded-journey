@@ -46,7 +46,7 @@ func test_wandering_stays_inside() -> void:
 	a.sync(_creatures(1), Fixtures.db(), Fixtures.rng())
 	var s: CreatureSprite = a.sprites()[0]
 	for i in 300:
-		s._process(0.1)
+		s._physics_process(0.1)
 		check(Rect2(Vector2.ZERO, a.size).grow(0.5).has_point(s.position), "inside after step %d" % i)
 	a.queue_free()
 
@@ -59,7 +59,7 @@ func test_babies_are_smaller_and_eggs_hide_the_sprite() -> void:
 	cs[1].stage = "egg"
 	a.sync(cs, Fixtures.db(), Fixtures.rng())
 	var baby: CreatureSprite = a.sprites()[0]
-	eq(baby.scale, Vector2.ONE * a.sprite_scale * a.baby_scale, "baby scale")
+	eq(baby.scale, Vector2.ONE * a.baby_scale, "baby scale (no frames in the fixtures: the 16 px egg at 1 tile)")
 	check(not a.sprites()[1].get_node("Sprite").visible, "eggs don't animate")
 	check(a.sprites()[1].get_node("Egg").visible, "eggs show the egg sprite")
 	a.queue_free()
@@ -114,6 +114,41 @@ func test_refresh_does_not_interrupt_a_walking_creature() -> void:
 	eq(sprite.animation, &"move_right", "walking")
 	s.refresh()
 	eq(sprite.animation, &"move_right", "refresh left the walk animation alone")
+	a.queue_free()
+
+
+func test_size_tiles_scales_the_body_to_that_many_tiles() -> void:
+	var a := _area()
+	await tree.process_frame
+	var s: CreatureSprite = CREATURE_SPRITE.instantiate()
+	a.add_child(s)
+	s.setup(_creatures(1)[0], _fake_frames(), a, Fixtures.rng(), 2.0)
+	# a blank frame measures as DEFAULT_BODY (20 px), so 2 tiles = 32 px
+	eq(s.scale, Vector2.ONE * 32.0 / 20.0, "2 tiles")
+	a.queue_free()
+
+
+func test_a_fence_stops_a_walker() -> void:
+	var a := _area()
+	await tree.process_frame
+	a.sync(_creatures(1), Fixtures.db(), Fixtures.rng())
+	var s: CreatureSprite = a.sprites()[0]
+	s.place(Vector2(40, 100))
+	var fence := StaticBody2D.new()  # layer 1, like the fence tiles
+	var shape := CollisionShape2D.new()
+	shape.shape = RectangleShape2D.new()
+	shape.shape.size = Vector2(16, 400)
+	fence.add_child(shape)
+	fence.position = a.global_position + Vector2(200, 100)
+	tree.root.add_child(fence)
+	await tree.physics_frame
+	await tree.physics_frame
+	s._wait = 0.0
+	s._target = Vector2(380, 100)
+	for i in 300:
+		s._physics_process(0.1)
+		check(s.position.x < 192.0, "stayed on its side of the fence at step %d: %s" % [i, s.position])
+	fence.queue_free()
 	a.queue_free()
 
 

@@ -56,7 +56,6 @@ func test_creatures_live_in_the_pen_and_open_their_card() -> void:
 	await tree.process_frame
 	var pens: SpawnArea = shop.get_node("%Pens")
 	eq(pens.sprites().size(), Game.owned().size(), "one sprite per owned creature")
-	eq(pens.sprite_scale, 1.4, "sprite_scale")
 	var pen_rect := _pen_rect(shop)
 	check(pen_rect.encloses(pens.get_global_rect()), "Pens %s inside the pen %s" % [pens.get_global_rect(), pen_rect])
 	for s in pens.sprites():
