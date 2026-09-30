@@ -16,8 +16,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
 text = "holds 6"
-text_overrun_behavior = 3
 vertical_alignment = 1
+text_overrun_behavior = 3
 
 [node name="Price" type="Label" parent="." unique_id=93827044]
 unique_name_in_owner = true

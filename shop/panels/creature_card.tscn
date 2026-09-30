@@ -169,8 +169,10 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
 [node name="Bar" type="VSlider" parent="Margin/Rows/Tabs/Sparks" unique_id=252598849]
+visible = false
 layout_mode = 2
 theme_type_variation = &"PackScrollBar"
+max_value = 0.0
 script = ExtResource("3_maiqb")
 
 [node name="Family" type="HBoxContainer" parent="Margin/Rows/Tabs" unique_id=2128936616]
@@ -192,8 +194,10 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
 [node name="Bar" type="VSlider" parent="Margin/Rows/Tabs/Family" unique_id=1974894661]
+visible = false
 layout_mode = 2
 theme_type_variation = &"PackScrollBar"
+max_value = 0.0
 script = ExtResource("3_maiqb")
 
 [node name="Message" type="Label" parent="Margin/Rows" unique_id=509511004]

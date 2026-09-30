@@ -80,6 +80,8 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Bar" type="VSlider" parent="Margin/Rows/Page" unique_id=2093082487]
+visible = false
 layout_mode = 2
 theme_type_variation = &"PackScrollBar"
+max_value = 0.0
 script = ExtResource("2_1yj7x")

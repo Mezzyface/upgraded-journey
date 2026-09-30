@@ -12,9 +12,9 @@ custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"DecoratedButton"
+theme_override_constants/icon_max_width = 24
 text = "Spider #1"
 alignment = 0
-theme_override_constants/icon_max_width = 24
 
 [node name="Note" type="Label" parent="." unique_id=1520847403]
 unique_name_in_owner = true
