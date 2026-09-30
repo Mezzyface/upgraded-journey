@@ -163,6 +163,7 @@ grow_vertical = 2
 
 [node name="Toast" type="Label" parent="." unique_id=138493415]
 unique_name_in_owner = true
+z_index = 10
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0

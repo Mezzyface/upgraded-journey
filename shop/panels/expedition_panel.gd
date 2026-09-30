@@ -2,16 +2,18 @@ class_name ExpeditionPanel
 extends PanelContainer
 ## Send an expedition (docs/superpowers/specs/2026-09-29-expeditions-design.md). Left: pick a location in %Places
 ## (with a team, each button shows how many challenges it passes there, "Mine 1/2"), its challenges in %Needs
-## (met/missing for the team), what can be found in %Finds, Send or %Reason, and today's expeditions in %Out.
-## Right: three team slots and a CreatureRow per owned creature (eggs left out); one that can't go is disabled and
+## (a line each, coloured met_color/missing_color for the team), what can be found in %Finds, Send or %Reason, and today's expeditions in %Out.
+## Right: three team slots (portrait and "#id"; the name on hover) and a CreatureRow per owned creature (eggs left out); one that can't go is disabled and
 ## says why, and its mark is how many challenges it meets alone. Refreshes on Game.changed.
 
 signal creature_chosen(c: CreatureData)
 signal sent(location: Location)
 
 const ROW := preload("res://shop/panels/creature_row.tscn")
-const NEED := preload("res://shop/panels/order_need.tscn")
-const EMPTY_SLOT := "Pick a creature"
+const EMPTY_SLOT := "+"
+
+@export var met_color := Color("67835c")  ## a challenge the team passes (OrderNeed's colours)
+@export var missing_color := Color("a35b70")
 
 var place: StringName
 var team: Array[CreatureData] = [null, null, null]
@@ -28,7 +30,7 @@ func _ready() -> void:
 	%Send.text = "Send (%d AP)" % Day.COST_EXPEDITION
 	%Send.pressed.connect(_send)
 	var ids: Array = Game.db.locations.keys()
-	ids.sort()
+	ids.sort_custom(func(a: StringName, b: StringName) -> bool: return String(a) < String(b))  # StringName sorts by pointer
 	for id: StringName in ids:
 		var b := Button.new()
 		b.name = String(id)
@@ -80,15 +82,19 @@ func refresh() -> void:
 		for g in loc.challenges:
 			if g == null:
 				continue
-			var line: OrderNeed = NEED.instantiate()
+			var line := Label.new()
+			line.text = "• " + g.describe()
+			line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			if not picked.is_empty():
+				var met := picked.any(func(c: CreatureData) -> bool: return Game.group_met(c, g))
+				line.add_theme_color_override("font_color", met_color if met else missing_color)
 			%Needs.add_child(line)
-			var met: Variant = null if picked.is_empty() else picked.any(func(c: CreatureData) -> bool: return Game.group_met(c, g))
-			line.show_need(g.describe(), false, met)
 	%Finds.text = _finds(loc) if loc else ""
 	for i in team.size():
 		var c := team[i]
 		var sp: Species = Game.species_of(c) if c else null
-		_slot(i).text = Game.who(c) if c else EMPTY_SLOT
+		_slot(i).text = "#%d" % c.id if c else EMPTY_SLOT  # three slots are narrow: portrait and number
+		_slot(i).tooltip_text = Game.who(c) if c else ""
 		_slot(i).icon = CreatureAnim.portrait(sp.sprite_frames) if sp else null
 	var reason := Game.expedition_reason(place, picked) if not picked.is_empty() else ""
 	%Send.disabled = picked.is_empty() or reason != ""

@@ -180,3 +180,12 @@ func test_a_creature_on_an_expedition_leaves_its_pen_until_evening() -> void:
 	await tree.process_frame
 	check(shown.call().has(c.id), "back after the evening")
 	_done(shop)
+
+
+func test_the_toast_shows_above_popups() -> void:
+	await tree.process_frame
+	var shop := _shop()
+	await tree.process_frame
+	var toast: Control = shop.get_node("%Toast")
+	check(toast.z_index > shop.get_node("%PanelHost").z_index, "toast z %d above the popups" % toast.z_index)
+	_done(shop)
