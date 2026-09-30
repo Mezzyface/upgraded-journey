@@ -13,6 +13,8 @@ const EGG_TEXTURE := preload("res://creatures/egg.tres")
 @export var personality_tint := Color(1, 0.8, 0.9)
 @export var hidden_tint := Color(0.82, 0.82, 0.82)
 
+@export var good_color := Color("67835c")  ## "Heart +50" after a successful action
+
 const NO_SPARKS := "No sparks yet — retire it to lock its sparks"
 const WILD := "Wild — no recorded parents"
 
@@ -22,15 +24,16 @@ var _pending_retire := false
 
 
 func _ready() -> void:
-	%Feed.pressed.connect(_act.bind(func() -> String: return Game.care(creature, "feed")))
-	%Play.pressed.connect(_act.bind(func() -> String: return Game.care(creature, "play")))
+	%Feed.pressed.connect(_act.bind(func() -> String: return Game.care(creature, "feed"), "mood"))
+	%Play.pressed.connect(_act.bind(func() -> String: return Game.care(creature, "play"), "mood"))
 	%Retire.pressed.connect(_press_retire)
 	%Sell.pressed.connect(_press_sell)
 	%Close.pressed.connect(_close)
 	var menu: PopupMenu = %Train.get_popup()
 	for s in Stats.NAMES:
 		menu.add_item(s.capitalize())
-	menu.id_pressed.connect(func(i: int) -> void: _act(func() -> String: return Game.train(creature, Stats.NAMES[i])))
+	menu.id_pressed.connect(func(i: int) -> void:
+		_act(func() -> String: return Game.train(creature, Stats.NAMES[i]), Stats.NAMES[i]))
 	Game.changed.connect(_refresh)
 
 
@@ -59,13 +62,27 @@ func _press_retire() -> void:
 	_act(func() -> String: return Game.retire(creature))
 
 
-func _act(action: Callable) -> void:
+## Runs `action` (it returns "" or why it was refused). A refusal shows its reason; a success that changed `watch`
+## ("mood" or a stat) shows by how much ("Heart +50") in good_color.
+func _act(action: Callable, watch := "") -> void:
 	_pending_sell = false
 	_pending_retire = false
+	var before := _watched(watch)
 	var reason: String = action.call()
-	%Message.text = reason.left(1).to_upper() + reason.substr(1)
-	%Message.visible = reason != ""  # an empty label would still take a line
+	if reason == "" and watch != "" and creature:
+		%Message.text = "%s %+d" % [watch.capitalize(), _watched(watch) - before]
+		%Message.add_theme_color_override("font_color", good_color)
+	else:
+		%Message.text = reason.left(1).to_upper() + reason.substr(1)
+		%Message.remove_theme_color_override("font_color")
+	%Message.visible = %Message.text != ""  # an empty label would still take a line
 	_update_action_buttons()
+
+
+func _watched(watch: String) -> int:
+	if watch == "" or creature == null:
+		return 0
+	return creature.mood if watch == "mood" else int(creature.stats[watch])
 
 
 func _update_action_buttons() -> void:

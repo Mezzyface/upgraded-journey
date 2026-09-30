@@ -51,7 +51,7 @@ func test_actions_go_through_game_and_refusals_show_a_reason() -> void:
 	var mood := c.mood
 	card.get_node("%Play").pressed.emit()
 	eq(c.mood, mood + Day.PLAY_MOOD, "played")
-	eq(card.get_node("%Message").text, "", "no message on success")
+	eq(card.get_node("%Message").text, "Mood %+d" % Day.PLAY_MOOD, "a success says what changed")
 	Game.state.ap = 0
 	card.get_node("%Feed").pressed.emit()
 	eq(card.get_node("%Message").text, "Not enough action points", "reason shown")
@@ -205,3 +205,18 @@ func test_family_tab_shows_both_lines_without_scrolling() -> void:
 	check(scroll.size.y >= rows.get_combined_minimum_size().y, "tab %.0f px tall for %.0f px of family" % [scroll.size.y, rows.get_combined_minimum_size().y])
 	parts[0].queue_free()
 	DirAccess.remove_absolute(SAVE)
+
+
+func test_training_says_what_it_raised() -> void:
+	var parts := _card()
+	await tree.process_frame
+	var card: Control = parts[1]
+	var c: CreatureData = parts[2]
+	var before := int(c.stats["heart"])
+	card.get_node("%Train").get_popup().id_pressed.emit(Stats.NAMES.find("heart"))
+	eq(card.get_node("%Message").text, "Heart %+d" % (int(c.stats["heart"]) - before), "Heart +N")
+	check(card.get_node("%Message").visible, "shown")
+	Game.state.ap = 0
+	card.get_node("%Feed").pressed.emit()
+	eq(card.get_node("%Message").text, "Not enough action points", "a refusal still says why")
+	parts[0].queue_free()
