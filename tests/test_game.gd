@@ -60,10 +60,13 @@ func test_start_without_a_save_begins_a_new_game() -> void:
 	_cleanup(g)
 
 
-func test_a_loaded_save_without_offers_gets_them() -> void:
+func test_a_save_from_before_the_board_gets_offers() -> void:
 	var g := _game()
-	g.state.board.clear()
-	g.state.save(SAVE)
+	var d := g.state.to_dict()
+	d.erase("board")  # the format before the order board existed
+	var f := FileAccess.open(SAVE, FileAccess.WRITE)
+	f.store_string(JSON.stringify(d))
+	f.close()
 	var g2: Node = GameScript.new()
 	g2.save_path = SAVE
 	g2.start(Fixtures.db())
@@ -255,3 +258,42 @@ func test_a_failed_save_warns_but_the_action_stands() -> void:
 
 func test_the_runner_never_uses_the_players_save() -> void:
 	check(Game.save_path != GameState.SAVE_PATH, "tests default to %s" % Game.save_path)
+
+
+func test_continue_keeps_an_emptied_board() -> void:
+	var g := _game()
+	g.state.board.assign([g.state.board[0]])  # one offer left today
+	eq(g.accept(g.state.board[0]), "", "accepted: the board is empty and saved")
+	check(g.state.board.is_empty(), "empty")
+	var left: Array = g.state.board.duplicate()
+	var g2: Node = GameScript.new()
+	g2.save_path = SAVE
+	g2.start(Fixtures.db())
+	eq(g2.state.board, left, "no fresh offers on the same day after a reload")
+	g2.free()
+	_cleanup(g)
+
+
+func test_an_unreadable_save_is_kept_aside_not_overwritten() -> void:
+	var g := _game()
+	var f := FileAccess.open(SAVE, FileAccess.WRITE)
+	f.store_string("{ not json")
+	f.close()
+	check(g.has_save() and not g.can_continue(), "a file, but not a loadable one")
+	g.start(Fixtures.db())
+	eq(g.state.day, 1, "a fresh game")
+	check(FileAccess.file_exists(SAVE + ".bad"), "the unreadable save was moved aside")
+	eq(FileAccess.get_file_as_string(SAVE + ".bad"), "{ not json", "untouched")
+	DirAccess.remove_absolute(SAVE + ".bad")
+	_cleanup(g)
+
+
+func test_new_game_keeps_a_backup_of_the_old_ranch() -> void:
+	var g := _game()
+	g.end_day()
+	var old := FileAccess.get_file_as_string(SAVE)
+	g.new_game(Fixtures.db())
+	eq(FileAccess.get_file_as_string(SAVE + ".bak"), old, "the old ranch is kept as .bak")
+	eq(g.state.day, 1, "fresh")
+	DirAccess.remove_absolute(SAVE + ".bak")
+	_cleanup(g)

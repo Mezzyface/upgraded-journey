@@ -15,6 +15,9 @@ func _init() -> void:
 
 func _ready() -> void:
 	%Continue.visible = Game.has_save()
+	if Game.has_save() and not Game.can_continue():
+		%Continue.disabled = true  # Continue would start over; the unreadable save is kept aside as .bad
+		%Continue.text = "Save can't be read"
 	%Continue.pressed.connect(_continue)
 	%NewGame.pressed.connect(_new_game)
 	%Quit.pressed.connect(func() -> void: get_tree().quit())

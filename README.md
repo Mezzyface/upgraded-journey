@@ -98,6 +98,6 @@ editor tool, never a script that silently overwrites editor-editable files.
 
 ## Playing
 
-`shop/shop.tscn` is the main scene. The `Game` autoload (`game/game.gd`) is the only path from the UI to the rules.
+`ui/title.tscn` is the main scene (Continue / New game / Quit); it opens the farm, `shop/shop.tscn`. The `Game` autoload (`game/game.gd`) is the only path from the UI to the rules.
 Pens and the stable are `SpawnArea` nodes and panels open in the `PanelHost` node: move or resize them in the editor
-(they draw placeholders there). Screenshots: `godot --path . -- --save=user://shot_save.json --open=card --screenshot=out.png`.
+(they draw placeholders there). Screenshots open the farm directly: `godot --path . res://shop/shop.tscn -- --save=user://shot_save.json --open=card --screenshot=out.png`.

@@ -62,3 +62,19 @@ func test_new_game_over_a_save_needs_two_presses() -> void:
 
 func test_the_title_is_the_main_scene() -> void:
 	eq(ProjectSettings.get_setting("application/run/main_scene"), "res://ui/title.tscn", "main scene")
+
+
+func test_an_unreadable_save_disables_continue() -> void:
+	var parts: Array = await _title(false)
+	parts[0].queue_free()
+	var f := FileAccess.open(SAVE, FileAccess.WRITE)
+	f.store_string("garbage")
+	f.close()
+	var title: TitleScreen = load("res://ui/title.tscn").instantiate()
+	title.go_to_farm = func() -> void: pass
+	tree.root.add_child(title)
+	await tree.process_frame
+	check(title.get_node("%Continue").visible and title.get_node("%Continue").disabled, "shown but disabled")
+	eq(title.get_node("%Continue").text, "Save can't be read", "says why")
+	_done(title)
+	DirAccess.remove_absolute(SAVE + ".bad")

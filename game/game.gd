@@ -1,7 +1,8 @@
 extends Node
 ## The one path from the UI to the rules (autoload "Game"). Holds the content, the game state and the RNG. Every
 ## action returns "" or the reason it was refused and emits `changed` only when it did something. Saves after every
-## action and each evening. start() is called by the shop scene, not _ready, so tests and tools never touch the player's save.
+## action and each evening. start() is called by the title screen (or the farm when opened directly), not _ready,
+## so tests and tools never touch the player's save.
 
 signal changed
 
@@ -23,9 +24,11 @@ func start(content: Db = null) -> void:
 	rng.randomize()
 	state = GameState.load_file(db, save_path)
 	if state == null:
+		if has_save():
+			_keep_aside(".bad")  # unreadable (corrupt or from a newer build): kept, never overwritten
 		state = Day.new_game(load(NEW_GAME), db, rng)
-	elif state.board.is_empty():
-		OrderBoard.post_offers(state, db, rng)  # saves from before the order board had none
+	elif state.predates_board:
+		OrderBoard.post_offers(state, db, rng)  # saves from before the order board (an emptied board stays empty)
 	Build.migrate(state, db, load(NEW_GAME))  # saves from before pens were placed
 	_new_day()
 	changed.emit()
@@ -302,12 +305,30 @@ func has_save() -> bool:
 	return FileAccess.file_exists(save_path)
 
 
-## Starts over: deletes the save, begins a fresh game from NEW_GAME and saves it.
+## A save exists and loads (the title's Continue).
+func can_continue() -> bool:
+	return has_save() and GameState.load_file(db if db else Db.load_dir(), save_path) != null
+
+
+## Starts over: the old save is kept as <save>.bak (a double-click on New game is recoverable), then a fresh game
+## from NEW_GAME begins and is saved.
 func new_game(content: Db = null) -> void:
-	DirAccess.remove_absolute(save_path)
-	state = null
-	start(content)
+	if has_save():
+		_keep_aside(".bak")
+	db = content if content else Db.load_dir()
+	rng.randomize()
+	state = Day.new_game(load(NEW_GAME), db, rng)
+	_new_day()
 	_save()
+	changed.emit()
+
+
+## Moves the save file to save_path + suffix (replacing an older one there).
+func _keep_aside(suffix: String) -> void:
+	DirAccess.remove_absolute(save_path + suffix)
+	var err := DirAccess.rename_absolute(save_path, save_path + suffix)
+	if err != OK:
+		push_warning("Game: couldn't move %s aside (%s)" % [save_path, error_string(err)])
 
 
 ## Saves now; a failure is warned about, never fatal (end_day reports its own).

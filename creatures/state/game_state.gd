@@ -16,6 +16,7 @@ var creatures: Dictionary[int, CreatureData] = {}  ## every creature ever owned;
 var orphans: Array[Dictionary] = []  ## raw records that failed to load (unknown species, malformed); kept
 ## as-is and written back out on save so a later content fix or re-import can bring them back
 var board: Array[StringName] = []  ## template ids offered this morning
+var predates_board := false  ## not saved: the loaded save had no "board" (older format), so Game.start posts offers
 var orders: Array[Dictionary] = []  ## accepted: {"template": String, "deadline_day": int}
 var recent_templates: Array[StringName] = []  ## last offered, newest last (OrderBoard.RECENT_LIMIT)
 var inventory := {}  ## item id (String) -> count; only "feed" for now
@@ -104,6 +105,7 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 		highest_id = maxi(highest_id, c.id)
 	g.next_id = maxi(g.next_id, highest_id + 1)  # never reuse an id, even if the saved next_id fell behind
 	g.board = _known_ids(d.get("board", []), db.orders)
+	g.predates_board = not d.has("board")
 	g.recent_templates = _known_ids(d.get("recent_templates", []), db.orders, false)  # legitimately repeats: the
 	## same template can be re-offered on non-consecutive mornings while still inside the last RECENT_LIMIT
 	g.upgrades = _known_ids(d.get("upgrades", []), db.upgrades)
