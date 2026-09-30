@@ -201,3 +201,21 @@ func test_the_farm_shows_the_tutorial_and_opening_orders_advances_it() -> void:
 	shop.call("open_orders")
 	eq(Game.state.tutorial_step, 1, "opening Orders counts")
 	_done(shop)
+
+
+func test_the_tutorial_hint_never_covers_a_popups_buttons() -> void:
+	await tree.process_frame
+	var shop := _shop()
+	await tree.process_frame
+	var hint: Control = shop.get_node("%TutorialHint")
+	for open in [func(): shop.call("open_card", Game.owned()[0]), Callable(shop, "open_orders"),
+			Callable(shop, "open_stable"), Callable(shop, "open_market"), Callable(shop, "open_expedition")]:
+		open.call()
+		await tree.process_frame
+		await tree.process_frame
+		var panel: Control = shop.get_node("%PanelHost").current()
+		for b: BaseButton in panel.find_children("*", "BaseButton", true, false):
+			if b.is_visible_in_tree():
+				check(not hint.get_global_rect().intersects(b.get_global_rect()),
+					"%s: hint %s covers %s %s" % [panel.name, hint.get_global_rect(), b.name, b.get_global_rect()])
+	_done(shop)

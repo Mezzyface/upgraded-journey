@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://brqqt0m13xdj2" path="res://ui/tutorial_hint.gd" id="1_n70xp"]
 
 [node name="TutorialHint" type="PanelContainer" unique_id=1253107716]
-custom_minimum_size = Vector2(230, 0)
+custom_minimum_size = Vector2(96, 0)
 mouse_filter = 2
 theme_type_variation = &"TooltipPanel"
 script = ExtResource("1_n70xp")
@@ -35,7 +35,7 @@ text = "1/10"
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
-text = "Skip tutorial"
+text = "Skip"
 
 [node name="Text" type="Label" parent="Margin/Rows" unique_id=179232325]
 unique_name_in_owner = true

@@ -2,7 +2,8 @@ class_name TutorialHint
 extends PanelContainer
 ## The tutorial's corner box on the farm (Tutorial): the current step's text and "n/10", finished by doing it —
 ## Game.acted for actions, saw() from shop.gd for opening a popup. Skip ends it; after the last step it says goodbye
-## and Skip becomes Close. Only Skip takes clicks, so the farm under the box stays usable.
+## and Skip becomes Close. Only Skip takes clicks, so the farm under the box stays usable. It is a narrow column
+## on the left edge (shop.tscn) because that is the one strip no popup puts buttons in.
 
 var _was_active := false  ## the goodbye shows only to a player who just finished, not to old saves
 
@@ -33,7 +34,7 @@ func refresh() -> void:
 		_was_active = true
 		%Text.text = Tutorial.STEPS[step]["text"]
 		%Step.text = "%d/%d" % [step + 1, Tutorial.STEPS.size()]
-		%Skip.text = "Skip tutorial"
+		%Skip.text = "Skip"
 	elif finished:
 		%Text.text = Tutorial.DONE_TEXT
 		%Step.text = ""
