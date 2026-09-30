@@ -26,6 +26,7 @@ var busy: Array[int] = []  ## creature ids away on an expedition for the rest of
 var cared: Array[int] = []  ## creature ids cared for today
 var placed: Array[Dictionary] = []  ## buildables on the farm, in placing order: {"id": int, "def": StringName, "cell": Vector2i}
 var next_placed_id := 1
+var tutorial_step := Tutorial.STEPS.size()  ## Tutorial: 0.. active, STEPS.size() finished, -1 skipped; older saves load as finished
 var content: Db  ## the game content, for pen capacities; set by Day.new_game and from_dict, never saved
 
 
@@ -66,6 +67,7 @@ func to_dict() -> Dictionary:
 		"placed": placed.map(func(p: Dictionary) -> Dictionary:
 			return {"id": p["id"], "def": String(p["def"]), "x": p["cell"].x, "y": p["cell"].y}),
 		"next_placed_id": next_placed_id,
+		"tutorial_step": tutorial_step,
 	}
 
 
@@ -135,6 +137,7 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 			g.placed.append({"id": int(p["id"]), "def": StringName(p["def"]), "cell": Vector2i(int(p["x"]), int(p["y"]))})
 			highest_placed = maxi(highest_placed, int(p["id"]))
 	g.next_placed_id = maxi(_int_field(d, "next_placed_id", g.next_placed_id), highest_placed + 1)
+	g.tutorial_step = clampi(_int_field(d, "tutorial_step", Tutorial.STEPS.size()), Tutorial.SKIPPED, Tutorial.STEPS.size())
 	g.busy = _known_creatures(d.get("busy", []), g)
 	g.cared = _known_creatures(d.get("cared", []), g)
 	return g

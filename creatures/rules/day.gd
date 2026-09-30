@@ -33,6 +33,7 @@ static func new_game(setup: NewGameSetup, db: Db, rng: RandomNumberGenerator) ->
 		c.personality = Leanings.random_personality(db, rng)
 		state.add(c)
 	state.ap = max_ap(state)
+	state.tutorial_step = 0  # a new ranch starts the tutorial
 	OrderBoard.post_offers(state, db, rng)
 	return state
 

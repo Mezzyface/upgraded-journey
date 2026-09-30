@@ -296,4 +296,22 @@ func test_new_game_keeps_a_backup_of_the_old_ranch() -> void:
 	eq(FileAccess.get_file_as_string(SAVE + ".bak"), old, "the old ranch is kept as .bak")
 	eq(g.state.day, 1, "fresh")
 	DirAccess.remove_absolute(SAVE + ".bak")
+
+
+func test_acted_reports_each_successful_action() -> void:
+	var g := _game()
+	var said: Array = []
+	g.acted.connect(func(what: StringName) -> void: said.append(what))
+	var c: CreatureData = g.owned()[0]
+	g.train(c, "power")
+	g.care(g.owned()[1], "play")
+	g.buy_feed(1)
+	g.accept(g.state.board[0])
+	g.send_expedition(&"cave", [g.owned()[1]])
+	g.state.ap = 0
+	g.care(c, "feed")  # refused: no AP
+	g.end_day()
+	eq(said, [&"train", &"care", &"buy", &"accept", &"expedition", &"end_day"], "in order, refusals left out")
+	g.set_tutorial_step(3)
+	eq(GameState.load_file(g.db, SAVE).tutorial_step, 3, "the step is saved")
 	_cleanup(g)

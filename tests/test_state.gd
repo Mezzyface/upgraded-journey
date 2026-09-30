@@ -303,3 +303,15 @@ func test_v2_fields_with_unknown_ids_or_bad_types_are_dropped() -> void:
 	eq(g.busy, [2], "busy keeps known creatures")
 	eq(g.creatures[2].leanings, {"cheerful": 2}, "leanings keep numbers")
 	eq(g.creatures[2].injured_days, 0, "injured clamped")
+
+
+func test_tutorial_step_is_saved_and_old_saves_skip_it() -> void:
+	var db := Fixtures.db()
+	var st := Fixtures.state(db)
+	st.tutorial_step = 4
+	eq(GameState.from_dict(st.to_dict(), db).tutorial_step, 4, "round trip")
+	var old := st.to_dict()
+	old.erase("tutorial_step")
+	eq(GameState.from_dict(old, db).tutorial_step, Tutorial.STEPS.size(), "a save from before the tutorial: finished")
+	var fresh := Day.new_game(load("res://data/new_game.tres"), db, Fixtures.rng())
+	eq(fresh.tutorial_step, 0, "a new game starts it")

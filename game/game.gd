@@ -5,6 +5,7 @@ extends Node
 ## so tests and tools never touch the player's save.
 
 signal changed
+signal acted(what: StringName)  ## after every successful action, for the tutorial
 
 const NEW_GAME := "res://data/new_game.tres"
 const TRAINING_LOCATION := &"mine"  ## where the creature card trains (2b-2 adds a location choice)
@@ -43,28 +44,28 @@ func start_new(setup: NewGameSetup, content: Db, seed_value: int) -> void:
 
 
 func train(c: CreatureData, stat: String) -> String:
-	return _did(Day.train(state, db, c, stat, db.locations.get(TRAINING_LOCATION), rng))
+	return _did(Day.train(state, db, c, stat, db.locations.get(TRAINING_LOCATION), rng), "", &"train")
 
 
 func care(c: CreatureData, kind: String) -> String:
-	return _did(Day.care(state, c, kind))
+	return _did(Day.care(state, c, kind), "", &"care")
 
 
 func retire(c: CreatureData) -> String:
 	var who := who(c)
-	return _did(Day.retire(state, db, c, rng), "Retired %s to the stable" % who)
+	return _did(Day.retire(state, db, c, rng), "Retired %s to the stable" % who, &"retire")
 
 
 func sell(c: CreatureData) -> String:
 	var who := who(c)
 	var money := state.money
 	var reason := Day.sell(state, c)
-	return _did(reason, "Sold %s (%+d gold)" % [who, state.money - money])
+	return _did(reason, "Sold %s (%+d gold)" % [who, state.money - money], &"sell")
 
 
 func breed(a: CreatureData, b: CreatureData) -> String:
 	var line := "Bred %s and %s — an egg" % [who(a), who(b)]
-	return _did(Day.breed(state, db, a, b, rng), line)
+	return _did(Day.breed(state, db, a, b, rng), line, &"breed")
 
 
 func breed_reason(a: CreatureData, b: CreatureData) -> String:
@@ -79,7 +80,7 @@ func send_expedition(location_id: StringName, team: Array) -> String:
 	var loc: Location = db.locations.get(location_id)
 	var names := PackedStringArray(team.map(func(c: CreatureData) -> String: return who(c)))
 	var line := "Sent %s to the %s" % [_and_list(names), loc.display_name if loc else String(location_id)]
-	return _did(Day.send_expedition(state, db, location_id, team), line)
+	return _did(Day.send_expedition(state, db, location_id, team), line, &"expedition")
 
 
 func expedition_reason(location_id: StringName, team: Array) -> String:
@@ -113,21 +114,21 @@ func expeditions_today() -> Array[Dictionary]:
 func buy_feed(count: int) -> String:
 	var money := state.money
 	var reason := Market.buy_feed(state, count)
-	return _did(reason, "Bought %d feed (%+d gold)" % [count, state.money - money])
+	return _did(reason, "Bought %d feed (%+d gold)" % [count, state.money - money], &"buy")
 
 
 func buy_egg(species_id: StringName) -> String:
 	var money := state.money
 	var sp: Species = db.species.get(species_id)
 	var reason := Market.buy_egg(state, db, species_id, rng)
-	return _did(reason, "Bought a %s egg (%+d gold)" % [sp.display_name if sp else String(species_id), state.money - money])
+	return _did(reason, "Bought a %s egg (%+d gold)" % [sp.display_name if sp else String(species_id), state.money - money], &"buy")
 
 
 func buy_upgrade(upgrade_id: StringName) -> String:
 	var money := state.money
 	var u: UpgradeDef = db.upgrades.get(upgrade_id)
 	var reason := Market.buy_upgrade(state, db, upgrade_id)
-	return _did(reason, "Bought %s (%+d gold)" % [u.display_name if u else String(upgrade_id), state.money - money])
+	return _did(reason, "Bought %s (%+d gold)" % [u.display_name if u else String(upgrade_id), state.money - money], &"buy")
 
 
 func feed_reason(count: int) -> String:
@@ -165,12 +166,12 @@ func place(def_id: StringName, cell: Vector2i, buildable: Dictionary) -> String:
 	var money := state.money
 	var reason := Build.place(state, db, def_id, cell, buildable)
 	var def: BuildableDef = db.buildables.get(def_id)
-	return _did(reason, "Built a %s (%+d gold)" % [def.display_name.to_lower() if def else String(def_id), state.money - money])
+	return _did(reason, "Built a %s (%+d gold)" % [def.display_name.to_lower() if def else String(def_id), state.money - money], &"build")
 
 
 func accept(template_id: StringName) -> String:
 	var t: OrderTemplate = db.orders.get(template_id)
-	return _did(OrderBoard.accept(state, db, template_id), "Accepted %s's request" % (t.customer if t else String(template_id)))
+	return _did(OrderBoard.accept(state, db, template_id), "Accepted %s's request" % (t.customer if t else String(template_id)), &"accept")
 
 
 func deliver(index: int, c: CreatureData) -> String:
@@ -180,7 +181,7 @@ func deliver(index: int, c: CreatureData) -> String:
 	var rep := state.reputation
 	var reason := Day.deliver(state, db, index, c)
 	return _did(reason, "Delivered %s to %s (%+d gold, %+d reputation)" % [who, t.customer if t else "?",
-		state.money - money, state.reputation - rep])
+		state.money - money, state.reputation - rep], &"deliver")
 
 
 func end_day() -> PackedStringArray:
@@ -195,6 +196,7 @@ func end_day() -> PackedStringArray:
 	report["events"] = day_log + events
 	_new_day()
 	changed.emit()
+	acted.emit(&"end_day")
 	return events
 
 
@@ -292,13 +294,22 @@ func _with_status(status: CreatureData.Status) -> Array[CreatureData]:
 
 
 ## Emits `changed` when the action happened (reason ""), noting `log_line` in today's log.
-func _did(reason: String, log_line := "") -> String:
+func _did(reason: String, log_line := "", what := &"") -> String:
 	if reason == "":
 		if log_line != "":
 			day_log.append(log_line)
 		_save()
 		changed.emit()
+		if what != &"":
+			acted.emit(what)
 	return reason
+
+
+## Stores the tutorial's step (Tutorial.advance / SKIPPED) and saves it.
+func set_tutorial_step(step: int) -> void:
+	state.tutorial_step = step
+	_save()
+	changed.emit()
 
 
 func has_save() -> bool:
