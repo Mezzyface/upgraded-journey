@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dhvypw3rjvvxv" path="res://shop/panels/stable_panel.gd" id="1_kkx6v"]
 
 [node name="StablePanel" type="PanelContainer" unique_id=270691957]
-custom_minimum_size = Vector2(260, 200)
+custom_minimum_size = Vector2(260, 260)
 script = ExtResource("1_kkx6v")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=2039645236]

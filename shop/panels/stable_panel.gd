@@ -54,7 +54,7 @@ func _breed() -> void:
 		return  # e.g. a second click after the slots cleared
 	var reason := Game.breed(slots[0], slots[1])
 	if reason != "":
-		%Reason.text = _sentence(reason)
+		_show_reason(reason)
 		return
 	slots.fill(null)
 	_refresh()
@@ -76,7 +76,7 @@ func _refresh() -> void:
 	%Mark.text = Game.compat_mark(slots[0], slots[1]) if pair else ""
 	var reason := Game.breed_reason(slots[0], slots[1]) if pair else ""
 	%Breed.disabled = not pair or reason != ""
-	%Reason.text = _sentence(reason)
+	_show_reason(reason)
 	for row in %List.get_children():
 		%List.remove_child(row)
 		row.queue_free()
@@ -88,6 +88,12 @@ func _refresh() -> void:
 		row.show_row(c, Game.compat_mark(a, c) if a and a != c else "", slots.has(c))
 		row.picked.connect(pick)
 		row.card_pressed.connect(creature_chosen.emit)
+
+
+## An empty reason hides its line, so the list keeps the room (as the card does with its Message).
+func _show_reason(reason: String) -> void:
+	%Reason.text = _sentence(reason)
+	%Reason.visible = reason != ""
 
 
 static func _sentence(reason: String) -> String:

@@ -159,3 +159,18 @@ func test_card_button_emits_creature_chosen() -> void:
 	panel.get_node("%List").get_child(1).get_node("%Card").pressed.emit()
 	eq(chosen, [parts[2][1]], "Card opens that creature")
 	_done(parts[0])
+
+
+func test_the_list_shows_at_least_four_rows() -> void:
+	var parts: Array = await _stable()
+	await tree.process_frame
+	await tree.process_frame  # PanelHost fits the panel after its first layout
+	var panel: StablePanel = parts[1]
+	check(not panel.get_node("%Reason").visible, "an empty reason takes no line")
+	var row: Control = panel.get_node("%List").get_child(0)
+	var scroll: Control = panel.get_node("Margin/Rows/Scroll")
+	check(scroll.size.y >= 4 * row.size.y, "list %.0f px tall, rows %.0f px" % [scroll.size.y, row.size.y])
+	panel.pick(parts[2][0])
+	panel.pick(parts[2][2])
+	check(panel.get_node("%Reason").visible, "a refusal shows its line")
+	_done(parts[0])
