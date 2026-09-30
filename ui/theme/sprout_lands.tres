@@ -2,7 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://qgbqp5i6ebcd" path="res://art/sprout/ui/Sprite sheet for Basic Pack.png" id="1_35fd2"]
 [ext_resource type="Texture2D" uid="uid://be0mkpn2a0uyd" path="res://art/sprout/tiles/Wooden_House_Walls_Tilset.png" id="2_qorvh"]
+[ext_resource type="Texture2D" uid="uid://bt6k6d7ckkgu5" path="res://art/sprout/ui/backdrops_c1.png" id="2_s8h0v"]
 [ext_resource type="FontFile" uid="uid://cewnhafgcaoy3" path="res://art/sprout/fonts/pixelFont-7-8x14-sproutLands.ttf" id="2_v2mq5"]
+[ext_resource type="Texture2D" uid="uid://d3dtepjvjtoc2" path="res://art/sprout/ui/backdrops_a1.png" id="3_0jiqr"]
+[ext_resource type="Texture2D" uid="uid://b0ux5hn7yt6g" path="res://art/sprout/ui/dialog box medium.png" id="5_horj2"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w4jy1"]
 content_margin_left = 8.0
@@ -362,6 +365,30 @@ corner_radius_top_right = 22
 corner_radius_bottom_right = 22
 corner_radius_bottom_left = 22
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cf1iw"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("2_s8h0v")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+region_rect = Rect2(9, 9, 30, 30)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uf5cx"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("3_0jiqr")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+region_rect = Rect2(9, 9, 30, 30)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xbpyb"]
 texture = ExtResource("1_35fd2")
 texture_margin_left = 3.0
@@ -406,6 +433,18 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 region_rect = Rect2(56, 18, 8, 12)
 modulate_color = Color(1, 1, 1, 0.7)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r5u3f"]
+content_margin_left = 11.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+texture = ExtResource("5_horj2")
+texture_margin_left = 8.0
+texture_margin_top = 27.0
+texture_margin_right = 4.0
+texture_margin_bottom = 5.0
+region_rect = Rect2(2, 7, 124, 35)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_818v2"]
 content_margin_left = 2.0
@@ -624,6 +663,10 @@ PopupDialog/styles/panel = SubResource("StyleBoxTexture_w4jy1")
 PopupPanel/styles/panel = SubResource("StyleBoxTexture_w4jy1")
 PortraitFrame/base_type = &"PanelContainer"
 PortraitFrame/styles/panel = SubResource("StyleBoxFlat_qorvh")
+PortraitFrameWood/base_type = &"PanelContainer"
+PortraitFrameWood/styles/panel = SubResource("StyleBoxTexture_cf1iw")
+PortraitFrameWoodLight/base_type = &"PanelContainer"
+PortraitFrameWoodLight/styles/panel = SubResource("StyleBoxTexture_uf5cx")
 ProgressBar/styles/background = SubResource("StyleBoxTexture_xbpyb")
 ProgressBar/styles/fill = SubResource("StyleBoxTexture_avs0p")
 RankBadge/base_type = &"PanelContainer"
@@ -632,6 +675,8 @@ Rope/base_type = &"Panel"
 Rope/styles/panel = SubResource("StyleBoxFlat_cf1iw")
 RopeStrip/base_type = &"Panel"
 RopeStrip/styles/panel = SubResource("StyleBoxTexture_cl4q8")
+SpeechBox/base_type = &"PanelContainer"
+SpeechBox/styles/panel = SubResource("StyleBoxTexture_r5u3f")
 StatBox/base_type = &"PanelContainer"
 StatBox/styles/panel = SubResource("StyleBoxFlat_818v2")
 StatHeader/base_type = &"PanelContainer"

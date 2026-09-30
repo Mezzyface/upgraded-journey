@@ -1,7 +1,22 @@
 [gd_scene format=3 uid="uid://dxloup12ko71b"]
 
 [ext_resource type="Script" uid="uid://4b3ihwtikey2" path="res://shop/panels/stat_box.gd" id="1_k0fsv"]
-[ext_resource type="Script" uid="uid://b72n83htq3emk" path="res://shop/panels/stat_bar.gd" id="2_yeiy3"]
+[ext_resource type="FontFile" uid="uid://bbc4oncl26sbr" path="res://ui/theme/pack/honeyblot_caps.ttf" id="2_iwx3x"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_kq1tw"]
+font = ExtResource("2_iwx3x")
+font_color = Color(1, 1, 0.94509804, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pd3st"]
+font = ExtResource("2_iwx3x")
+font_size = 19
+outline_size = 4
+outline_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_v6o1e"]
+font = ExtResource("2_iwx3x")
+outline_size = 3
+outline_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
 
 [node name="StatBox" type="PanelContainer" unique_id=837065558]
 size_flags_horizontal = 3
@@ -15,37 +30,48 @@ theme_override_constants/separation = 1
 
 [node name="Header" type="PanelContainer" parent="Rows" unique_id=850075291]
 unique_name_in_owner = true
+self_modulate = Color(0.96, 0.6, 0.3, 1)
 layout_mode = 2
 theme_type_variation = &"StatHeader"
 
 [node name="StatName" type="Label" parent="Rows/Header" unique_id=27563299]
 unique_name_in_owner = true
 layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 1)
 theme_type_variation = &"OnMapLabel"
 text = "Power"
+label_settings = SubResource("LabelSettings_kq1tw")
 horizontal_alignment = 1
 
-[node name="Line" type="HBoxContainer" parent="Rows" unique_id=686680441]
+[node name="Body" type="MarginContainer" parent="Rows" unique_id=1737431450]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = -4
+
+[node name="Content" type="VBoxContainer" parent="Rows/Body" unique_id=197328029]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Line" type="HBoxContainer" parent="Rows/Body/Content" unique_id=686680441]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="Grade" type="Label" parent="Rows/Line" unique_id=853424148]
+[node name="Grade" type="Label" parent="Rows/Body/Content/Line" unique_id=853424148]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"GradeLabel"
 text = "C"
+label_settings = SubResource("LabelSettings_pd3st")
 vertical_alignment = 1
 
-[node name="Value" type="Label" parent="Rows/Line" unique_id=1452033150]
+[node name="Value" type="Label" parent="Rows/Body/Content/Line" unique_id=1452033150]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "300"
+label_settings = SubResource("LabelSettings_v6o1e")
 horizontal_alignment = 2
 vertical_alignment = 1
-
-[node name="Bar" type="Control" parent="Rows" unique_id=42567491]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 4)
-layout_mode = 2
-script = ExtResource("2_yeiy3")

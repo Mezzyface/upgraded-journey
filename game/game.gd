@@ -12,6 +12,9 @@ var db: Db
 var state: GameState
 var rng := RandomNumberGenerator.new()
 var save_path := GameState.SAVE_PATH
+var day_start := {}  ## DayReport.snapshot this morning (not saved: saves happen in the evening, a load is a morning)
+var day_log: PackedStringArray = []  ## today's actions, for the end-of-day summary
+var report := {}  ## the last end_day: DayReport.compare plus "day" and "events" (the day log, then the evening)
 
 
 ## Loads the save at save_path, or starts a new game from NEW_GAME when there is none or it can't be read.
@@ -24,6 +27,7 @@ func start(content: Db = null) -> void:
 	elif state.board.is_empty():
 		OrderBoard.post_offers(state, db, rng)  # saves from before the order board had none
 	Build.migrate(state, db, load(NEW_GAME))  # saves from before pens were placed
+	_new_day()
 	changed.emit()
 
 
@@ -31,6 +35,7 @@ func start_new(setup: NewGameSetup, content: Db, seed_value: int) -> void:
 	db = content
 	rng.seed = seed_value
 	state = Day.new_game(setup, db, rng)
+	_new_day()
 	changed.emit()
 
 
@@ -43,30 +48,50 @@ func care(c: CreatureData, kind: String) -> String:
 
 
 func retire(c: CreatureData) -> String:
-	return _did(Day.retire(state, db, c, rng))
+	var who := _who(c)
+	return _did(Day.retire(state, db, c, rng), "Retired %s to the stable" % who)
 
 
 func sell(c: CreatureData) -> String:
-	return _did(Day.sell(state, c))
+	var who := _who(c)
+	var money := state.money
+	var reason := Day.sell(state, c)
+	return _did(reason, "Sold %s (%+d gold)" % [who, state.money - money])
 
 
 func place(def_id: StringName, cell: Vector2i, buildable: Dictionary) -> String:
-	return _did(Build.place(state, db, def_id, cell, buildable))
+	var money := state.money
+	var reason := Build.place(state, db, def_id, cell, buildable)
+	var def: BuildableDef = db.buildables.get(def_id)
+	return _did(reason, "Built a %s (%+d gold)" % [def.display_name.to_lower() if def else String(def_id), state.money - money])
 
 
 func accept(template_id: StringName) -> String:
-	return _did(OrderBoard.accept(state, db, template_id))
+	var t: OrderTemplate = db.orders.get(template_id)
+	return _did(OrderBoard.accept(state, db, template_id), "Accepted %s's request" % (t.customer if t else String(template_id)))
 
 
 func deliver(index: int, c: CreatureData) -> String:
-	return _did(Day.deliver(state, db, index, c))
+	var t := order_template(index) if index >= 0 and index < state.orders.size() else null
+	var who := _who(c)
+	var money := state.money
+	var rep := state.reputation
+	var reason := Day.deliver(state, db, index, c)
+	return _did(reason, "Delivered %s to %s (%+d gold, %+d reputation)" % [who, t.customer if t else "?",
+		state.money - money, state.reputation - rep])
 
 
 func end_day() -> PackedStringArray:
+	var day := state.day
+	var before_evening := DayReport.snapshot(state)
 	var events := Day.end_day(state, db, rng)
 	var err := state.save(save_path)
 	if err != OK:
 		events.append("Couldn't save the game (%s)" % error_string(err))
+	report = DayReport.compare(day_start, before_evening, state, db)
+	report["day"] = day
+	report["events"] = day_log + events
+	_new_day()
 	changed.emit()
 	return events
 
@@ -129,7 +154,22 @@ func _with_status(status: CreatureData.Status) -> Array[CreatureData]:
 	return out
 
 
-func _did(reason: String) -> String:
+## Emits `changed` when the action happened (reason ""), noting `log_line` in today's log.
+func _did(reason: String, log_line := "") -> String:
 	if reason == "":
+		if log_line != "":
+			day_log.append(log_line)
 		changed.emit()
 	return reason
+
+
+func _new_day() -> void:
+	day_start = DayReport.snapshot(state)
+	day_log.clear()
+
+
+func _who(c: CreatureData) -> String:
+	if c == null:
+		return "?"
+	var sp := species_of(c)
+	return "%s #%d" % [sp.display_name if sp else String(c.species), c.id]

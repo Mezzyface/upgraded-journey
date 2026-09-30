@@ -6,6 +6,8 @@ extends Resource
 
 @export var id: StringName
 @export var customer: String
+## Shown in the customer's frame on the request board; until it is set, the frame shows their initial.
+@export var portrait: Texture2D
 @export_multiline var request_text: String
 @export var required: Array[RequirementGroup] = []
 @export var bonus: Array[RequirementGroup] = []

@@ -150,11 +150,10 @@ func open_expedition() -> void:
 
 
 func end_day() -> void:
-	var day := Game.state.day
-	var events := Game.end_day()
+	Game.end_day()
 	var summary := SUMMARY.instantiate()
 	%PanelHost.open(summary)
-	summary.show_events(day, events)
+	summary.show_report(Game.report)
 
 
 func toast(msg: String) -> void:

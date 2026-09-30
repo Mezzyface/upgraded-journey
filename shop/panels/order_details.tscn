@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://bfqkafmjkhuco"]
+
+[ext_resource type="Script" uid="uid://be571feima3as" path="res://shop/panels/order_details.gd" id="1_hm7e8"]
+[ext_resource type="PackedScene" uid="uid://s06utlqyq201" path="res://shop/panels/order_note.tscn" id="2_hm7e8"]
+[ext_resource type="FontFile" uid="uid://bbc4oncl26sbr" path="res://ui/theme/pack/honeyblot_caps.ttf" id="3_284fw"]
+[ext_resource type="FontFile" uid="uid://b2g4fral2lj45" path="res://ui/theme/pack/HoneyPigeon.ttf" id="4_pob5h"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_v6o1e"]
+font = ExtResource("3_284fw")
+
+[sub_resource type="LabelSettings" id="LabelSettings_b0vsh"]
+font = ExtResource("4_pob5h")
+font_color = Color(0.9529412, 0.9490196, 0.7529412, 1)
+outline_size = 2
+outline_color = Color(0.48235294, 0.40392157, 0.38431373, 1)
+
+[node name="OrderDetails" type="PanelContainer" unique_id=1118747330]
+custom_minimum_size = Vector2(340, 0)
+script = ExtResource("1_hm7e8")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1926846405]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="Rows" type="VBoxContainer" parent="Margin" unique_id=2063855992]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Prompt" parent="Margin/Rows" unique_id=782728715 instance=ExtResource("2_hm7e8")]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+
+[node name="NeedsTitle" type="Label" parent="Margin/Rows" unique_id=926735144]
+layout_mode = 2
+text = "Requirements:"
+label_settings = SubResource("LabelSettings_v6o1e")
+
+[node name="Needs" type="VBoxContainer" parent="Margin/Rows" unique_id=1862162783]
+unique_name_in_owner = true
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(5, 0)
+theme_override_constants/separation = 0
+
+[node name="Reward" type="Label" parent="Margin/Rows" unique_id=1004364133]
+unique_name_in_owner = true
+layout_mode = 2
+text = "80 gold · +3 reputation · due day 5"
+label_settings = SubResource("LabelSettings_b0vsh")
+autowrap_mode = 3
+
+[node name="Message" type="Label" parent="Margin/Rows" unique_id=24644547]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="Margin/Rows" unique_id=222158763]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Accept" type="Button" parent="Margin/Rows/Actions" unique_id=677417676]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Accept"
+
+[node name="Deliver" type="MenuButton" parent="Margin/Rows/Actions" unique_id=1112091620]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Deliver…"
+flat = false
+
+[node name="Spacer" type="Control" parent="Margin/Rows/Actions" unique_id=932786665]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Back" type="Button" parent="Margin/Rows/Actions" unique_id=1519801319]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Close"

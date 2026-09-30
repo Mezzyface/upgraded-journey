@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://cktuj1xwnu7au"]
+
+[ext_resource type="Script" uid="uid://12q3agvqin2r" path="res://shop/panels/order_need.gd" id="1_c0g4i"]
+[ext_resource type="FontFile" uid="uid://b2g4fral2lj45" path="res://ui/theme/pack/HoneyPigeon.ttf" id="2_kc2xq"]
+[ext_resource type="FontFile" uid="uid://bbc4oncl26sbr" path="res://ui/theme/pack/honeyblot_caps.ttf" id="3_01fky"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_kc2xq"]
+font = ExtResource("2_kc2xq")
+font_size = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_01fky"]
+font = ExtResource("3_01fky")
+font_size = 14
+
+[sub_resource type="LabelSettings" id="LabelSettings_vr3a8"]
+font = ExtResource("2_kc2xq")
+font_size = 12
+
+[node name="OrderNeed" type="HBoxContainer" unique_id=1598821884]
+theme_override_constants/separation = 4
+script = ExtResource("1_c0g4i")
+
+[node name="Mark" type="Label" parent="." unique_id=1771158023]
+unique_name_in_owner = true
+layout_mode = 2
+text = "·"
+label_settings = SubResource("LabelSettings_kc2xq")
+
+[node name="Bonus" type="Label" parent="." unique_id=527387112]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Bonus:"
+label_settings = SubResource("LabelSettings_01fky")
+
+[node name="Text" type="Label" parent="." unique_id=234028268]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Any slime"
+label_settings = SubResource("LabelSettings_vr3a8")
+autowrap_mode = 3

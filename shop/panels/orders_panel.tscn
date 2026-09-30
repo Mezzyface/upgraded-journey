@@ -1,9 +1,20 @@
 [gd_scene format=3 uid="uid://7uqjplo584q4"]
 
 [ext_resource type="Script" uid="uid://jq2jb6o1dvdp" path="res://shop/panels/orders_panel.gd" id="1_lqhj2"]
+[ext_resource type="PackedScene" uid="uid://bfqkafmjkhuco" path="res://shop/panels/order_details.tscn" id="2_6g2wb"]
+[ext_resource type="FontFile" uid="uid://bbc4oncl26sbr" path="res://ui/theme/pack/honeyblot_caps.ttf" id="2_o1u57"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_g51xn"]
+font = ExtResource("2_o1u57")
+font_size = 18
+outline_size = 3
+outline_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6uip"]
+bg_color = Color(0, 0, 0, 0.35)
 
 [node name="OrdersPanel" type="PanelContainer" unique_id=573499012]
-custom_minimum_size = Vector2(380, 280)
+custom_minimum_size = Vector2(620, 290)
 script = ExtResource("1_lqhj2")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=439490203]
@@ -15,7 +26,7 @@ theme_override_constants/margin_bottom = 8
 
 [node name="Rows" type="VBoxContainer" parent="Margin" unique_id=1945832504]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 6
 
 [node name="Title" type="HBoxContainer" parent="Margin/Rows" unique_id=1776190225]
 layout_mode = 2
@@ -23,7 +34,8 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Margin/Rows/Title" unique_id=791087151]
 layout_mode = 2
 theme_type_variation = &"HeaderLabel"
-text = "Orders"
+text = "Request Board"
+label_settings = SubResource("LabelSettings_g51xn")
 
 [node name="Slots" type="Label" parent="Margin/Rows/Title" unique_id=1303109546]
 unique_name_in_owner = true
@@ -36,6 +48,7 @@ size_flags_horizontal = 3
 [node name="Close" type="Button" parent="Margin/Rows/Title" unique_id=1270994586]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"DecoratedButton"
 text = "Close"
 
 [node name="Scroll" type="ScrollContainer" parent="Margin/Rows" unique_id=1572160840]
@@ -43,12 +56,51 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="List" type="VBoxContainer" parent="Margin/Rows/Scroll" unique_id=1277369850]
+[node name="Sections" type="VBoxContainer" parent="Margin/Rows/Scroll" unique_id=2089863122]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="AcceptedTitle" type="Label" parent="Margin/Rows/Scroll/Sections" unique_id=100782110]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Accepted"
+
+[node name="Accepted" type="GridContainer" parent="Margin/Rows/Scroll/Sections" unique_id=2136773524]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 8
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="OffersTitle" type="Label" parent="Margin/Rows/Scroll/Sections" unique_id=1126934848]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New requests"
+
+[node name="Offers" type="GridContainer" parent="Margin/Rows/Scroll/Sections" unique_id=1935307534]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 6
+columns = 2
 
 [node name="Message" type="Label" parent="Margin/Rows" unique_id=2017449095]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DetailsLayer" type="PanelContainer" parent="." unique_id=838312176]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6uip")
+
+[node name="Center" type="CenterContainer" parent="DetailsLayer" unique_id=304591330]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="Details" parent="DetailsLayer/Center" unique_id=1118747330 instance=ExtResource("2_6g2wb")]
 unique_name_in_owner = true
 layout_mode = 2

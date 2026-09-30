@@ -2,8 +2,8 @@
 class_name StatBox
 extends PanelContainer
 ## One stat on the creature card (creature_card.tscn places five): a coloured header with the stat's name, its grade
-## letter coloured by grade, the value, and a thin bar toward the creature's cap. `stat` and `header_color` are set per
-## box in the Inspector; the grade colours are shared defaults here.
+## letter coloured by grade, and the value. `stat` and `header_color` are set per box in the Inspector; the grade
+## colours are shared defaults here.
 
 @export var stat := "power":
 	set(v):
@@ -21,15 +21,21 @@ extends PanelContainer
 
 func _ready() -> void:
 	_dress()
+	if not Engine.is_editor_hint() and %Grade.label_settings:
+		%Grade.label_settings = %Grade.label_settings.duplicate()  # the five boxes share one; each needs its own colour
 
 
-func show_value(value: int, cap: int) -> void:
+## Shows `value` and its grade letter in that grade's colour. Label Settings override theme colours, so the colour goes
+## on the (per-box) Label Settings when the label has them.
+func show_value(value: int) -> void:
 	var g := Stats.grade(value)
-	%Grade.text = Stats.GRADE_NAMES[g]
-	%Grade.add_theme_color_override("font_color", grade_colors[g])
+	var grade: Label = %Grade
+	grade.text = Stats.GRADE_NAMES[g]
+	if grade.label_settings:
+		grade.label_settings.font_color = grade_colors[g]
+	else:
+		grade.add_theme_color_override("font_color", grade_colors[g])
 	%Value.text = str(value)
-	%Bar.value = value
-	%Bar.cap = cap
 
 
 func _dress() -> void:
