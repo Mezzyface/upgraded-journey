@@ -33,10 +33,13 @@ static func resolve(state: GameState, db: Db, location_id: StringName, team_ids:
 			events.append("found a %s egg" % sp.display_name)
 		else:
 			events.append("found a %s egg, but the pens are full, so it was released" % sp.display_name)
+	var hurt_ids: Array[int] = []
 	for i in failures:
 		var hurt := team[rng.randi() % team.size()]
 		hurt.injured_days = INJURY_DAYS
-		events.append("%s #%d was injured" % [db.species[hurt.species].display_name, hurt.id])
+		if not hurt_ids.has(hurt.id):
+			hurt_ids.append(hurt.id)
+			events.append("%s #%d was injured" % [db.species[hurt.species].display_name, hurt.id])
 	for c in team:
 		var s: String = Stats.NAMES[rng.randi() % Stats.NAMES.size()]
 		c.stats[s] = mini(int(c.stats[s]) + XP_GAIN, int(c.potential[s]))

@@ -161,6 +161,7 @@ func open_expedition() -> void:
 
 
 func end_day() -> void:
+	%Toast.text = ""  # the morning's news doesn't belong over the evening summary
 	Game.end_day()
 	var summary := SUMMARY.instantiate()
 	%PanelHost.open(summary)

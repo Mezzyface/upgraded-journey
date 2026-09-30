@@ -96,3 +96,12 @@ func test_challenges_met_is_the_count_resolve_reports() -> void:
 	eq(Expedition.challenges_met(st2, db, &"cave", [null, dark]), 1, "nulls ignored")
 	eq(Expedition.challenges_met(st2, db, &"cave", []), 0, "empty team")
 	eq(Expedition.challenges_met(st2, db, &"atlantis", [dark]), 0, "unknown location")
+
+
+func test_each_injured_creature_is_reported_once() -> void:
+	var db := Fixtures.db()
+	var st := Fixtures.state(db)
+	var weak := Fixtures.adult(st, "spider", 50)  # fails both challenges: both injuries land on it
+	var events := Expedition.resolve(st, db, &"cave", [weak.id], Fixtures.rng())
+	var hurt := Array(events).filter(func(e: String) -> bool: return e.contains("was injured"))
+	eq(hurt.size(), 1, "one line for one hurt creature: %s" % [events])

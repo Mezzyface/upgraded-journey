@@ -272,3 +272,13 @@ func test_the_compact_hint_has_no_skip_button_to_hit_by_mistake() -> void:
 	await tree.process_frame
 	check(not hint.get_node("%Skip").is_visible_in_tree(), "no Skip in the compact hint over the Orders board")
 	_done(shop)
+
+
+func test_end_day_clears_the_mornings_toast() -> void:
+	await tree.process_frame
+	var shop := _shop()
+	await tree.process_frame
+	shop.call("toast", "Off to the Meadow")
+	shop.call("end_day")
+	eq(shop.get_node("%Toast").text, "", "no morning toast over the evening summary")
+	_done(shop)
