@@ -172,3 +172,27 @@ func test_send_expedition_costs_ap_logs_and_lists_it() -> void:
 	g.state.expeditions.append({"location": "atlantis", "team": [a.id]})
 	eq(g.expeditions_today().size(), 1, "unknown locations skipped")
 	_cleanup(g)
+
+
+func test_market_buys_cost_money_and_log() -> void:
+	var g := _game()
+	var count := [0]
+	g.changed.connect(func() -> void: count[0] += 1)
+	g.state.money = 1000
+	var feed: int = g.state.inventory.get("feed", 0)
+	eq(g.buy_feed(5), "", "feed")
+	eq(g.state.inventory["feed"], feed + 5, "stocked")
+	eq(g.day_log[-1], "Bought 5 feed (-50 gold)", "logged feed")
+	eq(g.buy_egg(&"slime"), "", "egg")
+	eq(g.day_log[-1], "Bought a Slime egg (-60 gold)", "logged egg")
+	eq(g.buy_upgrade(&"extra_pen"), "", "upgrade")
+	eq(g.day_log[-1], "Bought Extra Pen (-300 gold)", "logged upgrade")
+	eq(g.state.money, 1000 - 50 - 60 - 300, "paid")
+	eq(count[0], 3, "changed per purchase")
+	eq(g.buy_upgrade(&"extra_pen"), g.upgrade_reason(&"extra_pen"), "refused with the panel's reason")
+	eq(count[0], 3, "no change on refusal")
+	eq(g.eggs_on_offer().map(func(s: Species) -> StringName: return s.id), [&"slime", &"spider"], "price order")
+	eq(g.upgrades_on_offer().map(func(u: UpgradeDef) -> StringName: return u.id),
+		[&"extra_pen", &"extra_ap", &"gene_scanner"], "cost order")
+	check(g.feed_reason(1) == "" and g.egg_reason(&"spider") != "", "reason wrappers")
+	_cleanup(g)

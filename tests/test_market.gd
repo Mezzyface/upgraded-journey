@@ -29,7 +29,7 @@ func test_buy_feed() -> void:
 func test_buy_egg_rules() -> void:
 	var db := Fixtures.db()
 	var st := Fixtures.state(db)
-	eq(Market.buy_egg(st, db, &"spider", Fixtures.rng()), "not sold here yet", "spider needs tier 1")
+	eq(Market.buy_egg(st, db, &"spider", Fixtures.rng()), "needs reputation tier 1", "spider needs tier 1")
 	eq(Market.buy_egg(st, db, &"spider_large", Fixtures.rng()), "not sold here yet", "never sold")
 	eq(Market.buy_egg(st, db, &"slime", Fixtures.rng()), "", "slime egg")
 	eq(st.money, 440, "paid 60")
@@ -82,3 +82,28 @@ func test_upgrades() -> void:
 	st.reputation = 20
 	eq(Market.buy_upgrade(st, db, &"extra_ap"), "not enough money", "400 > 200")
 	eq(Market.buy_upgrade(st, db, &"nope"), "no such upgrade", "unknown")
+
+
+func test_reasons_match_what_buy_refuses() -> void:
+	var db := Fixtures.db()
+	var st := Fixtures.state(db)
+	st.money = 25
+	eq(Market.feed_reason(st, 0), "buy at least one", "count")
+	eq(Market.feed_reason(st, 2), "", "affordable")
+	eq(Market.feed_reason(st, 3), "not enough money", "30 > 25")
+	eq(Market.buy_feed(st, 3), Market.feed_reason(st, 3), "buy_feed agrees")
+	st.money = 1000
+	eq(Market.egg_reason(st, db, &"slime"), "", "tier 0 egg")
+	eq(Market.egg_reason(st, db, &"spider"), "needs reputation tier 1", "locked")
+	eq(Market.egg_reason(st, db, &"spider_large"), "not sold here yet", "never sold")
+	eq(Market.egg_reason(st, db, &"nope"), "not sold here yet", "unknown")
+	for i in 6:
+		Fixtures.adult(st, "spider")
+	eq(Market.egg_reason(st, db, &"slime"), "the pens are full", "full")
+	eq(Market.buy_egg(st, db, &"slime", Fixtures.rng()), Market.egg_reason(st, db, &"slime"), "buy_egg agrees")
+	eq(Market.upgrade_reason(st, db, &"extra_pen"), "", "affordable tier 0")
+	eq(Market.upgrade_reason(st, db, &"extra_ap"), "needs reputation tier 1", "tier")
+	eq(Market.upgrade_reason(st, db, &"nope"), "no such upgrade", "unknown")
+	Market.buy_upgrade(st, db, &"extra_pen")
+	eq(Market.upgrade_reason(st, db, &"extra_pen"), "already bought", "once")
+	eq(Market.buy_upgrade(st, db, &"extra_pen"), "already bought", "buy_upgrade agrees")

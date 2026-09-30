@@ -29,33 +29,10 @@ static func has_pen_space(state: GameState) -> bool:
 	return pen_used(state) < pen_capacity(state)
 
 
-static func buy_feed(state: GameState, count := 1) -> String:
-	if count < 1:
-		return "buy at least one"
-	if state.money < FEED_PRICE * count:
-		return "not enough money"
-	state.money -= FEED_PRICE * count
-	state.inventory["feed"] = int(state.inventory.get("feed", 0)) + count
-	return ""
-
-
 ## Eggs on sale: species with a market tier that the current reputation has unlocked.
 static func egg_for_sale(state: GameState, db: Db, species_id: StringName) -> bool:
 	var sp: Species = db.species.get(species_id)
 	return sp != null and sp.market_tier >= 0 and sp.market_tier <= OrderBoard.tier(state.reputation)
-
-
-static func buy_egg(state: GameState, db: Db, species_id: StringName, rng: RandomNumberGenerator) -> String:
-	if not egg_for_sale(state, db, species_id):
-		return "not sold here yet"
-	var sp: Species = db.species[species_id]
-	if state.money < sp.market_price:
-		return "not enough money"
-	if not has_pen_space(state):
-		return "the pens are full"
-	state.money -= sp.market_price
-	state.add(CreatureData.wild_egg(sp, state.new_id(), rng))
-	return ""
 
 
 static func sell_price(c: CreatureData) -> int:
@@ -79,7 +56,51 @@ static func sell(state: GameState, c: CreatureData) -> String:
 	return ""
 
 
-static func buy_upgrade(state: GameState, db: Db, upgrade_id: StringName) -> String:
+## "" when `count` feed can be bought now, otherwise why not.
+static func feed_reason(state: GameState, count: int) -> String:
+	if count < 1:
+		return "buy at least one"
+	if state.money < FEED_PRICE * count:
+		return "not enough money"
+	return ""
+
+
+static func buy_feed(state: GameState, count := 1) -> String:
+	var reason := feed_reason(state, count)
+	if reason != "":
+		return reason
+	state.money -= FEED_PRICE * count
+	state.inventory["feed"] = int(state.inventory.get("feed", 0)) + count
+	return ""
+
+
+## "" when an egg of `species_id` can be bought now, otherwise why not. A species the market sells at a higher
+## reputation tier says which tier.
+static func egg_reason(state: GameState, db: Db, species_id: StringName) -> String:
+	var sp: Species = db.species.get(species_id)
+	if sp == null or sp.market_tier < 0:
+		return "not sold here yet"
+	if not egg_for_sale(state, db, species_id):
+		return "needs reputation tier %d" % sp.market_tier
+	if state.money < sp.market_price:
+		return "not enough money"
+	if not has_pen_space(state):
+		return "the pens are full"
+	return ""
+
+
+static func buy_egg(state: GameState, db: Db, species_id: StringName, rng: RandomNumberGenerator) -> String:
+	var reason := egg_reason(state, db, species_id)
+	if reason != "":
+		return reason
+	var sp: Species = db.species[species_id]
+	state.money -= sp.market_price
+	state.add(CreatureData.wild_egg(sp, state.new_id(), rng))
+	return ""
+
+
+## "" when `upgrade_id` can be bought now, otherwise why not.
+static func upgrade_reason(state: GameState, db: Db, upgrade_id: StringName) -> String:
 	var u: UpgradeDef = db.upgrades.get(upgrade_id)
 	if u == null:
 		return "no such upgrade"
@@ -89,6 +110,13 @@ static func buy_upgrade(state: GameState, db: Db, upgrade_id: StringName) -> Str
 		return "needs reputation tier %d" % u.min_tier
 	if state.money < u.cost:
 		return "not enough money"
-	state.money -= u.cost
+	return ""
+
+
+static func buy_upgrade(state: GameState, db: Db, upgrade_id: StringName) -> String:
+	var reason := upgrade_reason(state, db, upgrade_id)
+	if reason != "":
+		return reason
+	state.money -= db.upgrades[upgrade_id].cost
 	state.upgrades.append(upgrade_id)
 	return ""

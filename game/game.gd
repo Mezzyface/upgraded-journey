@@ -107,6 +107,57 @@ func expeditions_today() -> Array[Dictionary]:
 		out.append({"location": loc, "team": team})
 	return out
 
+func buy_feed(count: int) -> String:
+	var money := state.money
+	var reason := Market.buy_feed(state, count)
+	return _did(reason, "Bought %d feed (%+d gold)" % [count, state.money - money])
+
+
+func buy_egg(species_id: StringName) -> String:
+	var money := state.money
+	var sp: Species = db.species.get(species_id)
+	var reason := Market.buy_egg(state, db, species_id, rng)
+	return _did(reason, "Bought a %s egg (%+d gold)" % [sp.display_name if sp else String(species_id), state.money - money])
+
+
+func buy_upgrade(upgrade_id: StringName) -> String:
+	var money := state.money
+	var u: UpgradeDef = db.upgrades.get(upgrade_id)
+	var reason := Market.buy_upgrade(state, db, upgrade_id)
+	return _did(reason, "Bought %s (%+d gold)" % [u.display_name if u else String(upgrade_id), state.money - money])
+
+
+func feed_reason(count: int) -> String:
+	return Market.feed_reason(state, count)
+
+
+func egg_reason(species_id: StringName) -> String:
+	return Market.egg_reason(state, db, species_id)
+
+
+func upgrade_reason(upgrade_id: StringName) -> String:
+	return Market.upgrade_reason(state, db, upgrade_id)
+
+
+## Species the Market sells at some tier (market_tier >= 0), cheapest first, then by name.
+func eggs_on_offer() -> Array[Species]:
+	var out: Array[Species] = []
+	for sp: Species in db.species.values():
+		if sp.market_tier >= 0:
+			out.append(sp)
+	out.sort_custom(func(a: Species, b: Species) -> bool:
+		return a.market_price < b.market_price or (a.market_price == b.market_price and a.display_name < b.display_name))
+	return out
+
+
+## Every upgrade, cheapest first, then by name.
+func upgrades_on_offer() -> Array[UpgradeDef]:
+	var out: Array[UpgradeDef] = []
+	out.assign(db.upgrades.values())
+	out.sort_custom(func(a: UpgradeDef, b: UpgradeDef) -> bool:
+		return a.cost < b.cost or (a.cost == b.cost and a.display_name < b.display_name))
+	return out
+
 func place(def_id: StringName, cell: Vector2i, buildable: Dictionary) -> String:
 	var money := state.money
 	var reason := Build.place(state, db, def_id, cell, buildable)
