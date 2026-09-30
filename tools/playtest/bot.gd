@@ -12,6 +12,8 @@ const MAX_STEPS := 30  ## per day, against loops on a refused action
 
 var shop: Control
 var gaps: PackedStringArray = []
+var reload_on_day := -1  ## on this day, after sending an expedition, save-and-reload through Game.start and compare
+var _reload_result := "not run"
 var _did: PackedStringArray = []
 var _kinds_filled := {}  ## requirement kind -> true, from delivered orders
 var _evolved := {}  ## line -> {species id: true}
@@ -29,15 +31,14 @@ func play_day() -> Dictionary:
 	await _market()
 	await _breed()
 	await _expedition()
+	if day == reload_on_day:
+		_reload_mid_day()
 	await _care_and_train()
 	var ap_left := Game.state.ap
 	var orders := Game.state.orders.size()
+	var before := species_now()
 	var events := await _end_day()
-	for e in events:
-		if e.contains(" evolved into "):
-			for sp: Species in Game.db.species.values():
-				if e.ends_with(" " + sp.display_name):
-					_evolved.get_or_add(String(sp.line), {})[String(sp.id)] = true
+	note_evolutions(before)
 	return {"day": day, "gold": Game.state.money, "gold_delta": Game.state.money - gold, "rep": Game.state.reputation,
 		"tier": Game.tier(), "owned": Game.owned().size(), "retired": Game.retired().size(),
 		"eggs": Game.owned().filter(func(c: CreatureData) -> bool: return c.stage == "egg").size(),
@@ -56,10 +57,62 @@ func goals() -> Dictionary:
 	for line in _evolved:
 		if (_evolved[line] as Dictionary).size() >= 2:
 			branching.append("%s (%s)" % [line, ", ".join(PackedStringArray((_evolved[line] as Dictionary).keys()))])
+	var never: Array = []
+	for t: OrderTemplate in Game.db.orders.values():
+		for g in t.required:
+			for r in g.any_of:
+				if r and not _kinds_filled.has(r.kind) and not never.has(r.kind):
+					never.append(r.kind)
+	never.sort()
 	return {"order kinds filled": ", ".join(PackedStringArray(kinds)) if not kinds.is_empty() else "none",
+		"order kinds never filled": ", ".join(PackedStringArray(never)) if not never.is_empty() else "none",
+		"spark carried across two generations": "not measured",
+		"mid-day reload": _reload_result,
 		"3-generation pedigree": "yes" if three_gen else "no",
 		"evolutions": ", ".join(PackedStringArray(_evolved.keys())) if not _evolved.is_empty() else "none",
 		"branching evolution": ", ".join(branching) if not branching.is_empty() else "no"}
+
+
+## Species of every creature now, to see evolutions after the evening.
+func species_now() -> Dictionary:
+	var out := {}
+	for c: CreatureData in Game.state.creatures.values():
+		out[c.id] = c.species
+	return out
+
+
+func note_evolutions(before: Dictionary) -> void:
+	for c: CreatureData in Game.state.creatures.values():
+		if before.has(c.id) and before[c.id] != c.species:
+			var sp := Game.species_of(c)
+			if sp:
+				_evolved.get_or_add(String(sp.line), {})[String(sp.id)] = true
+
+
+## The requirement kinds of `t` that `c` actually meets (not every alternative of an any-of group).
+func kinds_met(c: CreatureData, t: OrderTemplate) -> Array:
+	var out: Array = []
+	for g in t.required:
+		for r in g.any_of:
+			if r and Orders.met(c, r, Game.db, Game.state) and not out.has(r.kind):
+				out.append(r.kind)
+	return out
+
+
+## Presses `b` like a player: a disabled or hidden button is a UI gap, not a press.
+func press(b: BaseButton, what: String) -> bool:
+	if b.disabled or not b.is_visible_in_tree():
+		gaps.append("day %d: %s was %s" % [Game.state.day if Game.state else 0, what, "disabled" if b.disabled else "hidden"])
+		return false
+	b.pressed.emit()
+	return true
+
+
+func _reload_mid_day() -> void:
+	var before: Dictionary = Game.state.to_dict()
+	Game.start(Game.db)  # a real load of the save the last action wrote
+	_reload_result = ("yes (day %d, after sending an expedition)" if Game.state.to_dict() == before
+		else "NO (day %d: the reloaded state differs)") % Game.state.day
 
 
 # --- popups -----------------------------------------------------------------------------------------------------
@@ -88,13 +141,20 @@ func _orders() -> void:
 			i += 1
 			continue
 		var t := Game.order_template(i)
+		var kinds := kinds_met(c, t)
 		panel.open_active(i)
-		panel.get_node("%Details").get_node("%Deliver").get_popup().id_pressed.emit(c.id)
+		var menu: PopupMenu = panel.get_node("%Details").get_node("%Deliver").get_popup()
+		var item := menu.get_item_index(c.id)
+		if item < 0 or menu.is_item_disabled(item):
+			gaps.append("day %d: Deliver menu for %s lacks %s" % [Game.state.day, t.customer, Game.who(c)])
+			i += 1
+			panel = await _open(&"open_orders")
+			continue
+		menu.id_pressed.emit(c.id)
 		if c.status == CreatureData.Status.GONE:
 			_did.append("delivered %s to %s" % [Game.who(c), t.customer])
-			for g in t.required:
-				for r in g.any_of:
-					_kinds_filled[r.kind] = true
+			for k in kinds:
+				_kinds_filled[k] = true
 		else:
 			gaps.append("day %d: Deliver of %s to %s did nothing" % [Game.state.day, Game.who(c), t.customer])
 			i += 1
@@ -105,9 +165,11 @@ func _orders() -> void:
 		if Game.state.orders.size() >= OrderBoard.slots(Game.state):
 			break
 		panel.open_offer(id)
-		panel.get_node("%Details").get_node("%Accept").pressed.emit()
-		if not Game.state.board.has(id):
-			_did.append("accepted %s" % Game.db.orders[id].customer)
+		if press(panel.get_node("%Details").get_node("%Accept"), "Accept"):
+			if not Game.state.board.has(id):
+				_did.append("accepted %s" % Game.db.orders[id].customer)
+			else:
+				gaps.append("day %d: Accept of %s did nothing" % [Game.state.day, Game.db.orders[id].customer])
 		panel = await _open(&"open_orders")
 	await _close()
 
@@ -130,7 +192,7 @@ func _fit(id: StringName) -> int:
 
 func _market() -> void:
 	var panel: Control = await _open(&"open_market")
-	if int(Game.state.inventory.get("feed", 0)) < FEED_MIN:
+	if int(Game.state.inventory.get("feed", 0)) < FEED_MIN and Game.feed_reason(5) == "":
 		await _buy(panel, "Feed/feed_5", "bought 5 feed")
 	for u in Game.upgrades_on_offer():
 		if Game.upgrade_reason(u.id) == "" and Game.state.money >= u.cost + MONEY_BUFFER:
@@ -140,20 +202,23 @@ func _market() -> void:
 		await _buy(panel, "Eggs/" + String(eggs[0].id), "bought a %s egg" % eggs[0].display_name)
 	var pen: BuildableDef = Game.db.buildables.get(&"pen")
 	if pen and not Market.has_pen_space(Game.state) and Game.state.money >= pen.cost + 100:
-		panel.get_node("%Pens/pen/%Buy").pressed.emit()  # the farm closes the Market and starts placing
-		await _frame()
-		await _place_pen(pen)
-		return
+		if press(panel.get_node("%Pens/pen/%Buy"), "Pen Buy"):  # the farm closes the Market and starts placing
+			await _frame()
+			await _place_pen(pen)
+			return
 	await _close()
 
 
+## Buys a row the rules say is on sale: a disabled Buy is a gap, and so is a Buy that changes no money.
 func _buy(panel: Control, row: String, said: String) -> void:
-	var buy: Button = panel.get_node("%" + row + "/%Buy")
-	if buy.disabled:
+	var money := Game.state.money
+	if not press(panel.get_node("%" + row + "/%Buy"), row + " Buy"):
 		return
-	buy.pressed.emit()
 	await _frame()
-	_did.append(said)
+	if Game.state.money < money:
+		_did.append(said)
+	else:
+		gaps.append("day %d: %s Buy did nothing" % [Game.state.day, row])
 
 
 func _place_pen(def: BuildableDef) -> void:
@@ -168,10 +233,14 @@ func _place_pen(def: BuildableDef) -> void:
 		if placer.move_to(centre) != "":
 			continue
 		placer.pin(true)
-		placer.get_node("%Place").pressed.emit()
+		var pens := Game.state.placed.size()
+		press(placer.get_node("%Place"), "Place")
 		await _frame()
-		_did.append("built a pen")
-		return
+		if Game.state.placed.size() > pens:
+			_did.append("built a pen")
+			return
+		gaps.append("day %d: Place did nothing at %s" % [Game.state.day, cell])
+		break
 	gaps.append("day %d: no spot to build a pen" % Game.state.day)
 	placer.get_node("%Cancel").pressed.emit()
 	await _frame()
@@ -190,10 +259,13 @@ func _breed() -> void:
 			return
 		for c: CreatureData in pair:
 			var card: Control = await _open(&"open_card", [c])
-			card.get_node("%Retire").pressed.emit()  # arms
-			card.get_node("%Retire").pressed.emit()  # retires
+			press(card.get_node("%Retire"), "Retire")  # arms
+			press(card.get_node("%Retire"), "Retire")  # retires
 			await _frame()
-			_did.append("retired %s" % Game.who(c))
+			if c.status == CreatureData.Status.RETIRED:
+				_did.append("retired %s" % Game.who(c))
+			else:
+				gaps.append("day %d: Retire of %s did nothing" % [Game.state.day, Game.who(c)])
 		await _close()
 		if Game.breed_reason(pair[0], pair[1]) != "":
 			return
@@ -201,7 +273,7 @@ func _breed() -> void:
 	var before := Game.state.creatures.size()
 	stable.pick(pair[0])
 	stable.pick(pair[1])
-	stable.get_node("%Breed").pressed.emit()
+	press(stable.get_node("%Breed"), "Breed")
 	await _frame()
 	if Game.state.creatures.size() > before:
 		_did.append("bred %s and %s" % [Game.who(pair[0]), Game.who(pair[1])])
@@ -261,9 +333,12 @@ func _expedition() -> void:
 	panel.choose(best_id)
 	for c in best_team:
 		panel.pick(c)
-	panel.get_node("%Send").pressed.emit()
+	var sent := Game.state.expeditions.size()
+	press(panel.get_node("%Send"), "Send")
 	await _frame()
-	if not Game.state.expeditions.is_empty():
+	if Game.state.expeditions.size() <= sent:
+		gaps.append("day %d: Send to the %s did nothing" % [Game.state.day, Game.db.locations[best_id].display_name])
+	else:
 		_did.append("sent %d to the %s (%d/%d)" % [best_team.size(), Game.db.locations[best_id].display_name, best,
 			Game.db.locations[best_id].challenges.size()])
 	await _close()

@@ -1,7 +1,7 @@
 extends SceneTree
 ## Bot playtest (docs/superpowers/specs/2026-09-30-bot-playtest-design.md):
 ##   godot --headless --path . -s res://tools/playtest/playtest.gd -- --days=30 --seeds=1,2,3 --out=user://playtest_report.md
-## Plays each seed from a fresh game for --days days with tools/playtest/bot.gd, then checks a mid-run reload, and writes
+## Plays each seed from a fresh game for --days days with tools/playtest/bot.gd (reloading mid-day halfway), and writes
 ## the Markdown report (tools/playtest/report.gd). Never touches the player's save.
 
 
@@ -38,6 +38,7 @@ func _initialize() -> void:
 		root.add_child(shop)
 		await process_frame
 		var bot = load("res://tools/playtest/bot.gd").new(shop)
+		bot.reload_on_day = maxi(2, days / 2)  # a real mid-day reload, then the bot plays on from it
 		var records: Array = []
 		var errors: PackedStringArray = []
 		for n in days:
@@ -49,14 +50,16 @@ func _initialize() -> void:
 			print("seed %d day %d: gold %d, rep %d, %d actions" % [seed_value, record["day"], record["gold"], record["rep"],
 				(record["actions"] as PackedStringArray).size()])
 		var goals: Dictionary = bot.goals()
-		var before: Dictionary = game.state.to_dict()
-		game.start(game.db)  # a real reload from the save written by the last action / evening
-		goals["mid-run reload restores the state"] = "yes" if game.state.to_dict() == before else "NO"
 		runs.append({"seed": seed_value, "days": records, "errors": errors, "gaps": bot.gaps, "goals": goals})
 		shop.queue_free()
 		await process_frame
 	var md: String = load("res://tools/playtest/report.gd").markdown(runs)
 	var f := FileAccess.open(out, FileAccess.WRITE)
+	if f == null:
+		printerr("playtest: can't write %s (%s)" % [out, error_string(FileAccess.get_open_error())])
+		print(md)
+		quit(1)
+		return
 	f.store_string(md)
 	f.close()
 	print("report: ", ProjectSettings.globalize_path(out))
