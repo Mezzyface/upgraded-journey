@@ -86,7 +86,9 @@ static func care(state: GameState, c: CreatureData, kind: String) -> String:
 	return ""
 
 
-static func breed(state: GameState, db: Db, a: CreatureData, b: CreatureData, rng: RandomNumberGenerator) -> String:
+## "" when a and b can breed right now, otherwise the reason. The Stable shows it before Breed is pressed, and
+## breed() refuses with the same text.
+static func breed_reason(state: GameState, db: Db, a: CreatureData, b: CreatureData) -> String:
 	if a == null or b == null:
 		return "no such creature"
 	var reason := Inheritance.can_breed(a, b, db)
@@ -96,6 +98,11 @@ static func breed(state: GameState, db: Db, a: CreatureData, b: CreatureData, rn
 		reason = "the pens are full"
 	if reason == "":
 		reason = _afford(state, COST_BREED)
+	return reason
+
+
+static func breed(state: GameState, db: Db, a: CreatureData, b: CreatureData, rng: RandomNumberGenerator) -> String:
+	var reason := breed_reason(state, db, a, b)
 	if reason != "":
 		return reason
 	Inheritance.breed(a, b, state, db, rng)

@@ -48,16 +48,29 @@ func care(c: CreatureData, kind: String) -> String:
 
 
 func retire(c: CreatureData) -> String:
-	var who := _who(c)
+	var who := who(c)
 	return _did(Day.retire(state, db, c, rng), "Retired %s to the stable" % who)
 
 
 func sell(c: CreatureData) -> String:
-	var who := _who(c)
+	var who := who(c)
 	var money := state.money
 	var reason := Day.sell(state, c)
 	return _did(reason, "Sold %s (%+d gold)" % [who, state.money - money])
 
+
+func breed(a: CreatureData, b: CreatureData) -> String:
+	var line := "Bred %s and %s — an egg" % [who(a), who(b)]
+	return _did(Day.breed(state, db, a, b, rng), line)
+
+
+func breed_reason(a: CreatureData, b: CreatureData) -> String:
+	return Day.breed_reason(state, db, a, b)
+
+
+## ◎, ○ or △ for the pair (Inheritance.COMPAT_MARKS).
+func compat_mark(a: CreatureData, b: CreatureData) -> String:
+	return Inheritance.COMPAT_MARKS[Inheritance.compatibility(a, b, db)]
 
 func place(def_id: StringName, cell: Vector2i, buildable: Dictionary) -> String:
 	var money := state.money
@@ -73,7 +86,7 @@ func accept(template_id: StringName) -> String:
 
 func deliver(index: int, c: CreatureData) -> String:
 	var t := order_template(index) if index >= 0 and index < state.orders.size() else null
-	var who := _who(c)
+	var who := who(c)
 	var money := state.money
 	var rep := state.reputation
 	var reason := Day.deliver(state, db, index, c)
@@ -168,7 +181,8 @@ func _new_day() -> void:
 	day_log.clear()
 
 
-func _who(c: CreatureData) -> String:
+## "Spider #3", or "?" for null. Used by panels for creature names.
+func who(c: CreatureData) -> String:
 	if c == null:
 		return "?"
 	var sp := species_of(c)

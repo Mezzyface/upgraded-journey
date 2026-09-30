@@ -86,3 +86,27 @@ func test_queries_and_orders() -> void:
 	eq(g.deliver(0, slime), "", "delivered")
 	check(g.owned().is_empty(), "handed over")
 	_cleanup(g)
+
+
+func test_breed_lays_an_egg_and_logs_it() -> void:
+	var g := _game()
+	var a: CreatureData = Fixtures.adult(g.state, "spider")
+	var b: CreatureData = Fixtures.adult(g.state, "spider")
+	eq(g.retire(a), "", "retire a")
+	eq(g.retire(b), "", "retire b")
+	var count := [0]
+	g.changed.connect(func() -> void: count[0] += 1)
+	var ap: int = g.state.ap
+	eq(g.breed_reason(a, b), "", "a valid pair")
+	check(g.compat_mark(a, b) in Inheritance.COMPAT_MARKS, "a mark: %s" % g.compat_mark(a, b))
+	eq(g.breed(a, b), "", "bred")
+	eq(g.state.ap, ap - Day.COST_BREED, "2 AP")
+	var eggs: Array = g.state.creatures.values().filter(func(c: CreatureData) -> bool: return c.parents.size() == 2)
+	eq(eggs.size(), 1, "one child")
+	eq(eggs[0].stage, "egg", "an egg")
+	eq(eggs[0].parents, PackedInt32Array([a.id, b.id]), "both parents")
+	eq(count[0], 1, "changed once")
+	eq(g.day_log[-1], "Bred %s and %s — an egg" % [g.who(a), g.who(b)], "logged")
+	eq(g.breed(a, b), g.breed_reason(a, b), "refused with the Stable's reason")
+	eq(count[0], 1, "no change on refusal")
+	_cleanup(g)

@@ -195,3 +195,27 @@ func test_extra_ap_upgrade() -> void:
 	var st := _state()
 	st.upgrades.append(&"extra_ap")
 	eq(Day.max_ap(st), 6, "6 AP a day")
+
+
+func test_breed_reason_matches_what_breed_refuses() -> void:
+	var db := Fixtures.db()
+	var st := _state()
+	var a := Fixtures.adult(st, "spider")
+	var b := Fixtures.adult(st, "spider")
+	var slime := Fixtures.adult(st, "slime")
+	eq(Day.breed_reason(st, db, a, null), "no such creature", "missing")
+	eq(Day.breed_reason(st, db, a, a), "needs two different creatures", "same creature")
+	check(Day.breed_reason(st, db, a, b).ends_with("is not in the breeding stable"), "not retired")
+	for c in [a, b, slime]:
+		Sparks.retire(c, db, Fixtures.rng())
+	eq(Day.breed_reason(st, db, a, slime), "their egg groups differ", "egg groups")
+	b.injured_days = 1
+	eq(Day.breed_reason(st, db, a, b), "an injured creature needs rest", "injured")
+	b.injured_days = 0
+	st.ap = 1
+	eq(Day.breed_reason(st, db, a, b), "not enough action points", "AP")
+	st.ap = 5
+	eq(Day.breed_reason(st, db, a, b), "", "valid pair")
+	eq(Day.breed(st, db, a, b, Fixtures.rng()), "", "breeds")
+	check(Day.breed_reason(st, db, a, b).ends_with("more days of rest"), "cooldown after breeding")
+	eq(Day.breed(st, db, a, b, Fixtures.rng()), Day.breed_reason(st, db, a, b), "breed refuses with the same reason")
