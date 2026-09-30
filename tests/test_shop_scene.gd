@@ -163,3 +163,20 @@ func test_the_market_starts_placement_and_placing_builds() -> void:
 	check(not placer.visible and not shop.get_node("%Buildable").visible, "placement over")
 	eq(shop.get_node("%Toast").text, "Pen built", "toasted")
 	_done(shop)
+
+
+func test_a_creature_on_an_expedition_leaves_its_pen_until_evening() -> void:
+	await tree.process_frame
+	var shop := _shop()
+	await tree.process_frame
+	var c: CreatureData = Game.owned()[0]
+	var pen: SpawnArea = shop.call("pen_area", c.pen)
+	var shown := func() -> Array: return pen.sprites().map(func(s: CreatureSprite) -> int: return s.creature.id)
+	check(shown.call().has(c.id), "in its pen")
+	eq(Game.send_expedition(&"meadow", [c]), "", "sent")
+	await tree.process_frame
+	check(not shown.call().has(c.id), "gone for the day")
+	Game.end_day()
+	await tree.process_frame
+	check(shown.call().has(c.id), "back after the evening")
+	_done(shop)

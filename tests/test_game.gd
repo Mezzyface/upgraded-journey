@@ -147,3 +147,28 @@ func test_spark_rows_skip_missing_ancestors() -> void:
 	var rows: Array[Dictionary] = g.spark_rows(child)
 	eq(rows.map(func(r: Dictionary) -> String: return r["who"]), [g.who(p)], "only the known parent")
 	_cleanup(g)
+
+
+func test_send_expedition_costs_ap_logs_and_lists_it() -> void:
+	var g := _game()
+	var a: CreatureData = g.owned()[0]
+	var b: CreatureData = g.owned()[1]
+	var count := [0]
+	g.changed.connect(func() -> void: count[0] += 1)
+	var ap: int = g.state.ap
+	eq(g.expedition_reason(&"cave", [a, b]), "", "valid")
+	eq(g.travel_reason(a), "", "a can travel")
+	check(g.challenges_met(&"cave", [a, b]) >= 0, "a count")
+	eq(g.send_expedition(&"cave", [a, b]), "", "sent")
+	eq(g.state.ap, ap - Day.COST_EXPEDITION, "2 AP")
+	eq(count[0], 1, "changed once")
+	eq(g.day_log[-1], "Sent %s and %s to the Cave" % [g.who(a), g.who(b)], "logged")
+	var today: Array[Dictionary] = g.expeditions_today()
+	eq(today.size(), 1, "one expedition")
+	eq(today[0]["location"].id, &"cave", "to the cave")
+	eq(today[0]["team"], [a, b] as Array[CreatureData], "with both")
+	eq(g.send_expedition(&"cave", [a]), g.expedition_reason(&"cave", [a]), "refused with the panel's reason")
+	eq(count[0], 1, "no change on refusal")
+	g.state.expeditions.append({"location": "atlantis", "team": [a.id]})
+	eq(g.expeditions_today().size(), 1, "unknown locations skipped")
+	_cleanup(g)

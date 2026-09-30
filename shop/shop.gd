@@ -3,6 +3,7 @@ extends Control
 ## Game.state.placed and each pen's %Creatures area shows the creatures living in it. %Buildable marks where the
 ## player may build (hidden except while %Placer is placing). The hanging %TopBar shows the state and its tags (and
 ## %ShopDoor, over the shop building) open popups in %PanelHost, each its own scene.
+## Creatures away on an expedition are not drawn until the evening.
 
 const TOAST_SECONDS := 2.5
 const CARD := preload("res://shop/panels/creature_card.tscn")
@@ -92,7 +93,8 @@ func _refresh() -> void:
 				area.creature_clicked.connect(open_card)
 		var pen := node.get_node_or_null("%Creatures") as SpawnArea
 		if pen:
-			pen.sync(Game.owned().filter(func(c: CreatureData) -> bool: return c.pen == p["id"]), Game.db, _rng)
+			pen.sync(Game.owned().filter(func(c: CreatureData) -> bool:
+				return c.pen == p["id"] and not Game.state.busy.has(c.id)), Game.db, _rng)  # away: gone until evening
 
 
 ## The creature area of placed pen `placed_id`, or null.

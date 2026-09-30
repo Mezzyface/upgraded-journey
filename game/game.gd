@@ -72,6 +72,41 @@ func breed_reason(a: CreatureData, b: CreatureData) -> String:
 func compat_mark(a: CreatureData, b: CreatureData) -> String:
 	return Inheritance.COMPAT_MARKS[Inheritance.compatibility(a, b, db)]
 
+func send_expedition(location_id: StringName, team: Array) -> String:
+	var loc: Location = db.locations.get(location_id)
+	var names := PackedStringArray(team.map(func(c: CreatureData) -> String: return who(c)))
+	var line := "Sent %s to the %s" % [_and_list(names), loc.display_name if loc else String(location_id)]
+	return _did(Day.send_expedition(state, db, location_id, team), line)
+
+
+func expedition_reason(location_id: StringName, team: Array) -> String:
+	return Day.expedition_reason(state, db, location_id, team)
+
+
+func travel_reason(c: CreatureData) -> String:
+	return Day.travel_reason(state, c)
+
+
+func challenges_met(location_id: StringName, team: Array) -> int:
+	return Expedition.challenges_met(state, db, location_id, team)
+
+
+## Today's expeditions for the Expedition panel: {location: Location, team: Array[CreatureData]}; unknown locations
+## and missing creatures are skipped.
+func expeditions_today() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for ex in state.expeditions:
+		var loc: Location = db.locations.get(StringName(ex["location"]))
+		if loc == null:
+			continue
+		var team: Array[CreatureData] = []
+		for id in ex["team"]:
+			var c := state.get_creature(int(id))
+			if c:
+				team.append(c)
+		out.append({"location": loc, "team": team})
+	return out
+
 func place(def_id: StringName, cell: Vector2i, buildable: Dictionary) -> String:
 	var money := state.money
 	var reason := Build.place(state, db, def_id, cell, buildable)
@@ -199,6 +234,13 @@ func _did(reason: String, log_line := "") -> String:
 func _new_day() -> void:
 	day_start = DayReport.snapshot(state)
 	day_log.clear()
+
+
+## "A", "A and B", "A, B and C".
+static func _and_list(names: PackedStringArray) -> String:
+	if names.size() <= 1:
+		return "".join(names)
+	return ", ".join(names.slice(0, names.size() - 1)) + " and " + names[names.size() - 1]
 
 
 ## "Spider #3", or "?" for null. Used by panels for creature names.
