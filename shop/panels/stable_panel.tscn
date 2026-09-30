@@ -30,6 +30,50 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Close"
 
+[node name="PairRow" type="HBoxContainer" parent="Margin/Rows" unique_id=1830088254]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="SlotA" type="Button" parent="Margin/Rows/PairRow" unique_id=1978666489]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(104, 28)
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Pick a parent"
+expand_icon = true
+
+[node name="Mark" type="Label" parent="Margin/Rows/PairRow" unique_id=1199298202]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="SlotB" type="Button" parent="Margin/Rows/PairRow" unique_id=621958409]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(104, 28)
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Pick a parent"
+expand_icon = true
+
+[node name="Breed" type="Button" parent="Margin/Rows" unique_id=710636468]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"DecoratedButton"
+disabled = true
+text = "Breed (2 AP)"
+
+[node name="Reason" type="Label" parent="Margin/Rows" unique_id=1930183529]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Separator" type="HSeparator" parent="Margin/Rows" unique_id=1078533787]
+layout_mode = 2
+
 [node name="Empty" type="Label" parent="Margin/Rows" unique_id=2091591039]
 unique_name_in_owner = true
 layout_mode = 2

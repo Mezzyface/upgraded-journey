@@ -65,3 +65,97 @@ func test_row_shows_the_creature_and_its_rest() -> void:
 	eq(carded, [spider], "Card emits card_pressed")
 	row.queue_free()
 	DirAccess.remove_absolute(SAVE)
+
+
+func test_picking_fills_slots_and_shows_the_mark() -> void:
+	var parts: Array = await _stable()
+	await tree.process_frame
+	var panel: StablePanel = parts[1]
+	var r: Array = parts[2]
+	eq(panel.get_node("%SlotA").text, StablePanel.EMPTY_SLOT, "empty slot")
+	check(panel.get_node("%Breed").disabled, "no pair, no Breed")
+	panel.pick(r[0])
+	eq(panel.get_node("%SlotA").text, Game.who(r[0]), "A filled")
+	var rows: Array = panel.get_node("%List").get_children()
+	check(rows[0].get_node("%Pick").disabled, "a slotted creature can't be picked again")
+	eq(rows[0].get_node("%Mark").text, "", "no mark against itself")
+	eq(rows[1].get_node("%Mark").text, Game.compat_mark(r[0], r[1]), "rows show their mark against A")
+	panel.pick(r[0])
+	eq(panel.slots[1], null, "picking the same creature again is ignored")
+	panel.pick(r[1])
+	eq(panel.get_node("%Mark").text, Game.compat_mark(r[0], r[1]), "pair mark")
+	check(not panel.get_node("%Breed").disabled, "a valid pair can breed")
+	eq(panel.get_node("%Reason").text, "", "no reason")
+	panel.get_node("%SlotB").pressed.emit()
+	eq(panel.slots[1], null, "pressing a filled slot empties it")
+	eq(panel.get_node("%Mark").text, "", "no pair, no mark")
+	panel.pick(r[2])
+	eq(panel.get_node("%Reason").text, "Their egg groups differ", "the refusal reason, capitalised")
+	check(panel.get_node("%Breed").disabled, "no Breed for a refused pair")
+	panel.pick(r[1])
+	eq(panel.slots[1], r[2], "a full pair ignores more picks")
+	_done(parts[0])
+
+
+func test_breed_lays_an_egg_and_clears_the_slots() -> void:
+	var parts: Array = await _stable()
+	await tree.process_frame
+	var panel: StablePanel = parts[1]
+	var r: Array = parts[2]
+	var bred := [0]
+	panel.bred.connect(func() -> void: bred[0] += 1)
+	var n := Game.state.creatures.size()
+	panel.pick(r[0])
+	panel.pick(r[1])
+	panel.get_node("%Breed").pressed.emit()
+	eq(Game.state.creatures.size(), n + 1, "an egg")
+	eq(bred[0], 1, "bred emitted")
+	eq(panel.slots[0], null, "slot A cleared")
+	eq(panel.slots[1], null, "slot B cleared")
+	eq(panel.get_node("%List").get_child(0).get_node("%Note").text, "rests %d days" % Inheritance.COOLDOWN_DAYS,
+		"the list shows the rest")
+	panel.get_node("%Breed").pressed.emit()  # a double click
+	eq(Game.state.creatures.size(), n + 1, "no second egg")
+	eq(panel.get_node("%Reason").text, "", "no 'No such creature'")
+	_done(parts[0])
+
+
+func test_breed_state_follows_game_changes() -> void:
+	var parts: Array = await _stable()
+	await tree.process_frame
+	var panel: StablePanel = parts[1]
+	var r: Array = parts[2]
+	panel.pick(r[0])
+	panel.pick(r[1])
+	check(not panel.get_node("%Breed").disabled, "can breed")
+	Game.state.ap = 0
+	Game.changed.emit()
+	check(panel.get_node("%Breed").disabled, "AP gone: Breed disabled")
+	eq(panel.get_node("%Reason").text, "Not enough action points", "and says why")
+	eq(panel.slots[0], r[0], "the pair is kept")
+	_done(parts[0])
+
+
+func test_a_slot_drops_a_creature_that_left_the_stable() -> void:
+	var parts: Array = await _stable()
+	await tree.process_frame
+	var panel: StablePanel = parts[1]
+	var r: Array = parts[2]
+	panel.pick(r[0])
+	panel.pick(r[1])
+	panel.show_creatures([r[1], r[2]])
+	eq(panel.slots[0], null, "A emptied")
+	eq(panel.slots[1], r[1], "B kept")
+	eq(panel.get_node("%SlotA").text, StablePanel.EMPTY_SLOT, "A shows empty")
+	_done(parts[0])
+
+
+func test_card_button_emits_creature_chosen() -> void:
+	var parts: Array = await _stable()
+	await tree.process_frame
+	var panel: StablePanel = parts[1]
+	var chosen: Array = []
+	panel.creature_chosen.connect(func(c: CreatureData) -> void: chosen.append(c))
+	panel.get_node("%List").get_child(1).get_node("%Card").pressed.emit()
+	eq(chosen, [parts[2][1]], "Card opens that creature")
+	_done(parts[0])

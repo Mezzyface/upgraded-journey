@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://shop/panels/stable_row.gd" id="1_w6btw"]
+[ext_resource type="Script" uid="uid://7yqxcgptie7w" path="res://shop/panels/stable_row.gd" id="1_w6btw"]
 
 [node name="StableRow" type="HBoxContainer" unique_id=1796410521]
 theme_override_constants/separation = 6
