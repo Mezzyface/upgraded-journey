@@ -216,3 +216,42 @@ func test_family_looks_up_parents_and_grandparents() -> void:
 	eq(g.family(child)["parents"], [null, p1], "a lost parent is null")
 	eq(g.family(child)["grandparents"], [[], [gp, null]], "and has no grandparents")
 	_cleanup(g)
+
+
+func test_every_action_saves() -> void:
+	var g := _game()
+	DirAccess.remove_absolute(SAVE)
+	check(not g.has_save(), "no save yet")
+	var c: CreatureData = g.owned()[0]
+	eq(g.care(c, "play"), "", "played")
+	check(g.has_save(), "saved after the action")
+	eq(g.send_expedition(&"cave", [c]), "", "sent")
+	var loaded := GameState.load_file(g.db, SAVE)
+	eq(loaded.to_dict(), g.state.to_dict(), "the save is this moment: AP, cared, busy, expeditions")
+	g.state.ap = 0
+	var before := FileAccess.get_file_as_string(SAVE)
+	eq(g.care(g.owned()[1], "feed"), "not enough action points", "refused")
+	eq(FileAccess.get_file_as_string(SAVE), before, "a refusal doesn't save")
+	_cleanup(g)
+
+
+func test_new_game_replaces_the_save() -> void:
+	var g := _game()
+	g.end_day()
+	eq(g.state.day, 2, "day 2 saved")
+	g.new_game(Fixtures.db())
+	eq(g.state.day, 1, "a fresh game")
+	eq(GameState.load_file(g.db, SAVE).day, 1, "and it's the save now")
+	_cleanup(g)
+
+
+func test_a_failed_save_warns_but_the_action_stands() -> void:
+	var g := _game()
+	g.save_path = "user://no_such_dir/deeper/save.json"
+	var c: CreatureData = g.owned()[0]
+	eq(g.care(c, "play"), "", "the action still happens")
+	_cleanup(g)
+
+
+func test_the_runner_never_uses_the_players_save() -> void:
+	check(Game.save_path != GameState.SAVE_PATH, "tests default to %s" % Game.save_path)

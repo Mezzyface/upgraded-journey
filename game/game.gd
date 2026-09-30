@@ -1,7 +1,7 @@
 extends Node
 ## The one path from the UI to the rules (autoload "Game"). Holds the content, the game state and the RNG. Every
-## action returns "" or the reason it was refused and emits `changed` only when it did something. Autosaves after
-## each evening. start() is called by the shop scene, not _ready, so tests and tools never touch the player's save.
+## action returns "" or the reason it was refused and emits `changed` only when it did something. Saves after every
+## action and each evening. start() is called by the shop scene, not _ready, so tests and tools never touch the player's save.
 
 signal changed
 
@@ -12,7 +12,7 @@ var db: Db
 var state: GameState
 var rng := RandomNumberGenerator.new()
 var save_path := GameState.SAVE_PATH
-var day_start := {}  ## DayReport.snapshot this morning (not saved: saves happen in the evening, a load is a morning)
+var day_start := {}  ## DayReport.snapshot this morning, or at the last load (not saved: after a mid-day load the summary covers what happened since)
 var day_log: PackedStringArray = []  ## today's actions, for the end-of-day summary
 var report := {}  ## the last end_day: DayReport.compare plus "day" and "events" (the day log, then the evening)
 
@@ -293,8 +293,28 @@ func _did(reason: String, log_line := "") -> String:
 	if reason == "":
 		if log_line != "":
 			day_log.append(log_line)
+		_save()
 		changed.emit()
 	return reason
+
+
+func has_save() -> bool:
+	return FileAccess.file_exists(save_path)
+
+
+## Starts over: deletes the save, begins a fresh game from NEW_GAME and saves it.
+func new_game(content: Db = null) -> void:
+	DirAccess.remove_absolute(save_path)
+	state = null
+	start(content)
+	_save()
+
+
+## Saves now; a failure is warned about, never fatal (end_day reports its own).
+func _save() -> void:
+	var err := state.save(save_path)
+	if err != OK:
+		push_warning("Game: couldn't save to %s (%s)" % [save_path, error_string(err)])
 
 
 func _new_day() -> void:

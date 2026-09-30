@@ -21,6 +21,7 @@ func _initialize() -> void:
 
 ## Runs on the main loop (not in _init) so autoloads exist and tests can await frames.
 func _run() -> void:
+	root.get_node("Game").save_path = "user://test_runner_save.json"  # every action saves: never the player's save (the autoload is looked up: this script compiles before autoloads exist)
 	var catcher := ErrorCatcher.new()
 	OS.add_logger(catcher)
 	var ran := 0
