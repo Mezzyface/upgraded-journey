@@ -29,7 +29,9 @@ func refresh() -> void:
 				Market.FEED_PRICE * n, Game.feed_reason(n))
 		row.get_node("%Buy").pressed.connect(_buy.bind(func() -> String: return Game.buy_feed(n), "Bought %d feed" % n))
 	for sp in Game.eggs_on_offer():
-		var row := _row(%Eggs, String(sp.id), "%s egg" % sp.display_name, "", sp.market_price, Game.egg_reason(sp.id))
+		var reason := Game.egg_reason(sp.id)
+		var why := reason.left(1).to_upper() + reason.substr(1)  # locked eggs say what unlocks them
+		var row := _row(%Eggs, String(sp.id), "%s egg" % sp.display_name, why, sp.market_price, reason)
 		row.get_node("%Buy").pressed.connect(_buy.bind(func() -> String: return Game.buy_egg(sp.id), "Bought a %s egg" % sp.display_name))
 	for u in Game.upgrades_on_offer():
 		var reason := Game.upgrade_reason(u.id)

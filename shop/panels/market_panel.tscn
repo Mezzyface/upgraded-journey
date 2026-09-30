@@ -48,7 +48,6 @@ size_flags_horizontal = 3
 
 [node name="FeedTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=2057001536]
 layout_mode = 2
-theme_type_variation = &"HeaderLabel"
 text = "Feed"
 
 [node name="Feed" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=618628594]
@@ -57,7 +56,6 @@ layout_mode = 2
 
 [node name="EggsTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1887606193]
 layout_mode = 2
-theme_type_variation = &"HeaderLabel"
 text = "Eggs"
 
 [node name="Eggs" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1605064377]
@@ -66,7 +64,6 @@ layout_mode = 2
 
 [node name="UpgradesTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=334142150]
 layout_mode = 2
-theme_type_variation = &"HeaderLabel"
 text = "Upgrades"
 
 [node name="Upgrades" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1351261292]

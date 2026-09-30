@@ -41,6 +41,8 @@ func test_sections_and_rows() -> void:
 	eq(panel.get_node("%Eggs").get_children().map(func(r: Node) -> String: return r.name), ["slime", "spider"], "eggs by price")
 	check(_buy(panel, "Eggs", "spider").disabled, "locked egg disabled")
 	eq(_buy(panel, "Eggs", "spider").tooltip_text, "Needs reputation tier 1", "and says why")
+	eq(panel.get_node("%Eggs/spider/%Holds").text, "Needs reputation tier 1", "visibly, not only on hover")
+	eq(panel.get_node("%Eggs/slime/%Holds").text, "", "nothing to say for one on sale")
 	check(not _buy(panel, "Eggs", "slime").disabled, "tier-0 egg on sale")
 	eq(panel.get_node("%Upgrades").get_child_count(), 3, "every upgrade")
 	eq(panel.get_node("%Pens").get_child_count(), 1, "pens kept")
