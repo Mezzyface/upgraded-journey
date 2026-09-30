@@ -133,6 +133,7 @@ func open_market() -> void:
 	var market := MARKET.instantiate()
 	%PanelHost.open(market)
 	market.build_requested.connect(start_building)
+	market.bought.connect(toast)
 
 
 ## Closes any popup and enters placement mode for `def_id`, showing where building is allowed.

@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://barrqx0pts5kw"]
 
-[ext_resource type="Script" path="res://shop/panels/market_panel.gd" id="1_lhyux"]
+[ext_resource type="Script" uid="uid://6gvw5adiseyr" path="res://shop/panels/market_panel.gd" id="1_lhyux"]
+[ext_resource type="Script" uid="uid://dvua4rmjstjat" path="res://ui/pack_scroll_bar.gd" id="2_1yj7x"]
 
 [node name="MarketPanel" type="PanelContainer" unique_id=1591691446]
-custom_minimum_size = Vector2(260, 120)
+custom_minimum_size = Vector2(380, 280)
 script = ExtResource("1_lhyux")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=2139927402]
@@ -30,11 +31,58 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Close"
 
-[node name="PensTitle" type="Label" parent="Margin/Rows" unique_id=1158312658]
+[node name="Page" type="HBoxContainer" parent="Margin/Rows" unique_id=1540755258]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Rows/Page" unique_id=1062100062]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="Sections" type="VBoxContainer" parent="Margin/Rows/Page/Scroll" unique_id=391924326]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FeedTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=2057001536]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Feed"
+
+[node name="Feed" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=618628594]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EggsTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1887606193]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Eggs"
+
+[node name="Eggs" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1605064377]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UpgradesTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=334142150]
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Upgrades"
+
+[node name="Upgrades" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1351261292]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PensTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1158312658]
 layout_mode = 2
 text = "Pens"
 
-[node name="Pens" type="VBoxContainer" parent="Margin/Rows" unique_id=309004270]
+[node name="Pens" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=309004270]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
+
+[node name="Bar" type="VSlider" parent="Margin/Rows/Page" unique_id=2093082487]
+layout_mode = 2
+theme_type_variation = &"PackScrollBar"
+script = ExtResource("2_1yj7x")
