@@ -349,6 +349,18 @@ texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 region_rect = Rect2(107, 107, 26, 26)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bdq70"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+texture = ExtResource("1_35fd2")
+texture_margin_left = 6.0
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 8.0
+region_rect = Rect2(11, 11, 26, 28)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qorvh"]
 content_margin_left = 4.0
 content_margin_top = 4.0
@@ -510,18 +522,6 @@ border_color = Color(0, 0, 0, 0)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bdq70"]
-content_margin_left = 4.0
-content_margin_top = 2.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-texture = ExtResource("1_35fd2")
-texture_margin_left = 6.0
-texture_margin_top = 6.0
-texture_margin_right = 6.0
-texture_margin_bottom = 8.0
-region_rect = Rect2(11, 11, 26, 28)
-
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m0caa"]
 texture = ExtResource("1_35fd2")
 texture_margin_left = 3.0
@@ -660,6 +660,11 @@ PackScrollBar/styles/slider = SubResource("StyleBoxTexture_xai6j")
 Panel/styles/panel = SubResource("StyleBoxTexture_hdkho")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_s8h0v")
 PopupDialog/styles/panel = SubResource("StyleBoxTexture_w4jy1")
+PopupMenu/colors/font_color = Color(0.39215687, 0.33333334, 0.32156864, 1)
+PopupMenu/colors/font_disabled_color = Color(0.39215687, 0.33333334, 0.32156864, 0.45)
+PopupMenu/colors/font_hover_color = Color(0.39215687, 0.33333334, 0.32156864, 1)
+PopupMenu/styles/hover = SubResource("StyleBoxTexture_krtg3")
+PopupMenu/styles/panel = SubResource("StyleBoxTexture_bdq70")
 PopupPanel/styles/panel = SubResource("StyleBoxTexture_w4jy1")
 PortraitFrame/base_type = &"PanelContainer"
 PortraitFrame/styles/panel = SubResource("StyleBoxFlat_qorvh")

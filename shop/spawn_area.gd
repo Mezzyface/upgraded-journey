@@ -51,7 +51,7 @@ func _notification(what: int) -> void:
 	var r := Rect2(Vector2.ZERO, size)
 	for s in sprites():
 		if s.position == Vector2.ZERO or not r.has_point(s.position):
-			s.place(random_point(_rng))
+			s.place(s.random_spot())
 
 
 func _draw() -> void:

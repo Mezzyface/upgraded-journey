@@ -208,3 +208,20 @@ func test_the_whole_body_stays_inside_not_just_the_origin() -> void:
 			body = s.get_node("%Hit").get_global_rect()
 			check(inside.encloses(body), "seed %d walk: body %s outside %s" % [seed_value, body, inside])
 	a.queue_free()
+
+
+func test_spots_spread_out_instead_of_piling_on_the_walls() -> void:
+	var a := _area(40)
+	a.size = Vector2(64, 48)
+	await tree.process_frame
+	a.sync(_creatures(40), Fixtures.db(), Fixtures.rng(3))
+	var on_wall := 0
+	for s: CreatureSprite in a.sprites():
+		for i in 30:
+			s._physics_process(0.1)
+		var body: Rect2 = s.get_node("%Hit").get_global_rect()
+		var inner := a.get_global_rect()
+		if absf(body.position.x - inner.position.x) < 0.01 or absf(body.end.x - inner.end.x) < 0.01 				or absf(body.position.y - inner.position.y) < 0.01 or absf(body.end.y - inner.end.y) < 0.01:
+			on_wall += 1
+	check(on_wall <= 4, "%d of 40 creatures stand pressed against a wall" % on_wall)
+	a.queue_free()

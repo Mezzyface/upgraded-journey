@@ -31,10 +31,10 @@ func setup(c: CreatureData, frames: SpriteFrames, area: SpawnArea, rng: RandomNu
 	_size_tiles = size_tiles
 	_area = area
 	_rng = rng
-	place(area.random_point(rng))
 	_wait = rng.randf_range(0.2, 2.0)
 	%Sprite.sprite_frames = frames
 	refresh()
+	place(random_spot())  # after refresh: the spot depends on the body size
 
 
 ## Moves the creature to `p` (inside its area) and makes it stand there.
@@ -74,6 +74,16 @@ func refresh() -> void:
 		_play("idle")
 
 
+## A random spot where the whole body fits inside the area, chosen evenly (clamping random points instead would pile
+## creatures up against the walls). Vector2.ZERO while the area has no size: SpawnArea re-places those on resize.
+func random_spot() -> Vector2:
+	if _area == null or _area.size == Vector2.ZERO:
+		return Vector2.ZERO
+	var lo := -_body.position
+	var hi := _area.size - _body.end
+	return Vector2(_rng.randf_range(lo.x, maxf(lo.x, hi.x)), _rng.randf_range(lo.y, maxf(lo.y, hi.y)))
+
+
 ## `p` moved just enough that the whole body (not only the origin, which sits above the feet) is inside the area.
 func _inside(p: Vector2) -> Vector2:
 	if _area == null or _area.size == Vector2.ZERO:
@@ -89,7 +99,7 @@ func _physics_process(delta: float) -> void:
 	if _wait > 0.0:
 		_wait -= delta
 		if _wait <= 0.0:
-			_target = _inside(_area.random_point(_rng))
+			_target = random_spot()
 			_facing = "left" if _target.x < position.x else "right"
 			_play("move")
 		return
