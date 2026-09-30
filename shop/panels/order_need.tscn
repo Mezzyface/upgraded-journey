@@ -15,6 +15,7 @@ font_size = 14
 [sub_resource type="LabelSettings" id="LabelSettings_vr3a8"]
 font = ExtResource("2_kc2xq")
 font_size = 12
+font_color = Color(0.39, 0.33, 0.32, 1)
 
 [node name="OrderNeed" type="HBoxContainer" unique_id=1598821884]
 theme_override_constants/separation = 4

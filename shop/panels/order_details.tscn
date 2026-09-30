@@ -11,8 +11,8 @@ font = ExtResource("3_284fw")
 [sub_resource type="LabelSettings" id="LabelSettings_b0vsh"]
 font = ExtResource("4_pob5h")
 font_color = Color(0.9529412, 0.9490196, 0.7529412, 1)
-outline_size = 2
-outline_color = Color(0.48235294, 0.40392157, 0.38431373, 1)
+outline_size = 4
+outline_color = Color(0.39, 0.33, 0.32, 1)
 
 [node name="OrderDetails" type="PanelContainer" unique_id=1118747330]
 custom_minimum_size = Vector2(340, 0)
