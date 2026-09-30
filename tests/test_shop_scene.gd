@@ -189,3 +189,15 @@ func test_the_toast_shows_above_popups() -> void:
 	var toast: Control = shop.get_node("%Toast")
 	check(toast.z_index > shop.get_node("%PanelHost").z_index, "toast z %d above the popups" % toast.z_index)
 	_done(shop)
+
+
+func test_the_farm_shows_the_tutorial_and_opening_orders_advances_it() -> void:
+	await tree.process_frame
+	var shop := _shop()
+	await tree.process_frame
+	var hint: TutorialHint = shop.get_node("%TutorialHint")
+	check(hint.visible, "a new game shows the tutorial")
+	check(hint.z_index > shop.get_node("%PanelHost").z_index, "above popups")
+	shop.call("open_orders")
+	eq(Game.state.tutorial_step, 1, "opening Orders counts")
+	_done(shop)

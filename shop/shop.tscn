@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cfoco68hcdn2r" path="res://shop/placer.tscn" id="5_q4g17"]
 [ext_resource type="PackedScene" uid="uid://b6fny218gdvkq" path="res://ui/top_bar.tscn" id="9_pafut"]
 [ext_resource type="Script" uid="uid://ey0ju0iqjbkn" path="res://shop/panel_host.gd" id="11_cd0xb"]
+[ext_resource type="PackedScene" uid="uid://cjpe3xpb1fvje" path="res://ui/tutorial_hint.tscn" id="12_tut"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_c8ks2"]
 texture = ExtResource("3_cd0xb")
@@ -184,3 +185,16 @@ offset_right = 640.0
 offset_bottom = 360.0
 mouse_filter = 2
 script = ExtResource("11_cd0xb")
+
+[node name="TutorialHint" parent="." unique_id=852135231 instance=ExtResource("12_tut")]
+unique_name_in_owner = true
+z_index = 10
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -96.0
+offset_right = 238.0
+offset_bottom = -30.0
+grow_vertical = 0

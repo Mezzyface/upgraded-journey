@@ -115,10 +115,12 @@ func open_card(c: CreatureData) -> void:
 	var card := CARD.instantiate()
 	%PanelHost.open(card)
 	card.show_creature(c)
+	%TutorialHint.saw(&"card")
 
 
 func open_orders() -> void:
 	%PanelHost.open(ORDERS.instantiate())
+	%TutorialHint.saw(&"orders")
 
 
 func open_stable() -> void:
@@ -134,6 +136,7 @@ func open_market() -> void:
 	%PanelHost.open(market)
 	market.build_requested.connect(start_building)
 	market.bought.connect(toast)
+	%TutorialHint.saw(&"market")
 
 
 ## Closes any popup and enters placement mode for `def_id`, showing where building is allowed.
