@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://dabkrpgeb8mx8"]
 
-[ext_resource type="Script" uid="uid://ci4qqx3hvkg5l" path="res://shop/panels/closable_panel.gd" id="1_oo8tl"]
+[ext_resource type="Script" uid="uid://df7q4x6bp1yls" path="res://shop/panels/expedition_panel.gd" id="1_4gika"]
+[ext_resource type="Script" uid="uid://dvua4rmjstjat" path="res://ui/pack_scroll_bar.gd" id="2_cat4f"]
 
 [node name="ExpeditionPanel" type="PanelContainer" unique_id=537861118]
-custom_minimum_size = Vector2(260, 120)
-script = ExtResource("1_oo8tl")
+custom_minimum_size = Vector2(600, 280)
+script = ExtResource("1_4gika")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=97302562]
 layout_mode = 2
@@ -30,6 +31,113 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Close"
 
-[node name="Text" type="Label" parent="Margin/Rows" unique_id=566210927]
+[node name="Body" type="HBoxContainer" parent="Margin/Rows" unique_id=331138033]
 layout_mode = 2
-text = "Expeditions start soon."
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Left" type="VBoxContainer" parent="Margin/Rows/Body" unique_id=675495698]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Places" type="HFlowContainer" parent="Margin/Rows/Body/Left" unique_id=2031544586]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+
+[node name="Needs" type="VBoxContainer" parent="Margin/Rows/Body/Left" unique_id=662693018]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Finds" type="Label" parent="Margin/Rows/Body/Left" unique_id=550044635]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Send" type="Button" parent="Margin/Rows/Body/Left" unique_id=1053644080]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"DecoratedButton"
+disabled = true
+text = "Send (2 AP)"
+
+[node name="Reason" type="Label" parent="Margin/Rows/Body/Left" unique_id=43004826]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Out" type="Label" parent="Margin/Rows/Body/Left" unique_id=1116166330]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Separator" type="VSeparator" parent="Margin/Rows/Body" unique_id=1953028371]
+layout_mode = 2
+
+[node name="Right" type="VBoxContainer" parent="Margin/Rows/Body" unique_id=136803103]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Team" type="HBoxContainer" parent="Margin/Rows/Body/Right" unique_id=314534605]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Slot1" type="Button" parent="Margin/Rows/Body/Right/Team" unique_id=47725793]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"DecoratedButton"
+text = "Pick a creature"
+clip_text = true
+expand_icon = true
+
+[node name="Slot2" type="Button" parent="Margin/Rows/Body/Right/Team" unique_id=1908926767]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"DecoratedButton"
+text = "Pick a creature"
+clip_text = true
+expand_icon = true
+
+[node name="Slot3" type="Button" parent="Margin/Rows/Body/Right/Team" unique_id=479365663]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"DecoratedButton"
+text = "Pick a creature"
+clip_text = true
+expand_icon = true
+
+[node name="Separator" type="HSeparator" parent="Margin/Rows/Body/Right" unique_id=1273743709]
+layout_mode = 2
+
+[node name="Page" type="HBoxContainer" parent="Margin/Rows/Body/Right" unique_id=2132279194]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Rows/Body/Right/Page" unique_id=450751917]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="List" type="VBoxContainer" parent="Margin/Rows/Body/Right/Page/Scroll" unique_id=104880097]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Bar" type="VSlider" parent="Margin/Rows/Body/Right/Page" unique_id=372800361]
+layout_mode = 2
+theme_type_variation = &"PackScrollBar"
+script = ExtResource("2_cat4f")

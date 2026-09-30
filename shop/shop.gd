@@ -149,7 +149,10 @@ func _placed(built: bool) -> void:
 
 
 func open_expedition() -> void:
-	%PanelHost.open(EXPEDITION.instantiate())
+	var panel: ExpeditionPanel = EXPEDITION.instantiate()
+	%PanelHost.open(panel)
+	panel.creature_chosen.connect(open_card)
+	panel.sent.connect(func(loc: Location) -> void: toast("Off to the %s — back this evening" % loc.display_name))
 
 
 func end_day() -> void:
