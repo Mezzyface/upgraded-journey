@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://2rd1e2qdjkvo"]
+
+[ext_resource type="Script" uid="uid://casaq3i6oy7ck" path="res://ui/title.gd" id="1_co4ec"]
+
+[node name="Title" type="Control" unique_id=1981363669]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_co4ec")
+
+[node name="Backdrop" type="Panel" parent="." unique_id=1358168334]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Center" type="CenterContainer" parent="." unique_id=1431572022]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Box" type="PanelContainer" parent="Center" unique_id=1098360912]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/Box" unique_id=190453044]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Rows" type="VBoxContainer" parent="Center/Box/Margin" unique_id=772994469]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Name" type="Label" parent="Center/Box/Margin/Rows" unique_id=756556792]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderLabel"
+text = "Creature Ranch"
+horizontal_alignment = 1
+
+[node name="Continue" type="Button" parent="Center/Box/Margin/Rows" unique_id=1111634067]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Continue"
+
+[node name="NewGame" type="Button" parent="Center/Box/Margin/Rows" unique_id=1937812171]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "New game"
+
+[node name="Quit" type="Button" parent="Center/Box/Margin/Rows" unique_id=376414556]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_type_variation = &"DecoratedButton"
+text = "Quit"

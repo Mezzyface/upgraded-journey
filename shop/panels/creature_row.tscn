@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dix78mjktyyxb"]
 
 [ext_resource type="Script" uid="uid://7yqxcgptie7w" path="res://shop/panels/creature_row.gd" id="1_w6btw"]
 
