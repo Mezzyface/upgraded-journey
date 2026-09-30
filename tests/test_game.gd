@@ -196,3 +196,23 @@ func test_market_buys_cost_money_and_log() -> void:
 		[&"extra_pen", &"extra_ap", &"gene_scanner"], "cost order")
 	check(g.feed_reason(1) == "" and g.egg_reason(&"spider") != "", "reason wrappers")
 	_cleanup(g)
+
+
+func test_family_looks_up_parents_and_grandparents() -> void:
+	var g := _game()
+	var wild: CreatureData = g.owned()[0]
+	eq(g.family(wild), {"parents": [], "grandparents": []}, "a wild creature")
+	var gp := Fixtures.adult(g.state, "spider")
+	var p1 := Fixtures.adult(g.state, "spider")
+	p1.parents = PackedInt32Array([gp.id, 999])
+	var p2 := Fixtures.adult(g.state, "spider")
+	p2.status = CreatureData.Status.GONE  # sold: still in the pedigree
+	var child := Fixtures.adult(g.state, "spider")
+	child.parents = PackedInt32Array([p1.id, p2.id])
+	var f: Dictionary = g.family(child)
+	eq(f["parents"], [p1, p2], "both parents, the sold one too")
+	eq(f["grandparents"], [[gp, null], []], "p1's parents (one lost), p2 wild")
+	child.parents = PackedInt32Array([998, p1.id])
+	eq(g.family(child)["parents"], [null, p1], "a lost parent is null")
+	eq(g.family(child)["grandparents"], [[], [gp, null]], "and has no grandparents")
+	_cleanup(g)

@@ -231,6 +231,21 @@ func spark_rows(c: CreatureData) -> Array[Dictionary]:
 				rows.append({"who": who(gp), "sparks": gp.sparks, "hidden": not scanner})
 	return rows
 
+## The card's Family tab: {parents: Array (CreatureData, or null where the save lost one), grandparents: Array (per
+## parent, its parents the same way; empty for a lost or wild parent)}. Gone ancestors are kept in the state.
+func family(c: CreatureData) -> Dictionary:
+	var parents: Array = []
+	var grandparents: Array = []
+	for pid in c.parents:
+		var p := state.get_creature(pid)
+		parents.append(p)
+		var gps: Array = []
+		if p:
+			for gid in p.parents:
+				gps.append(state.get_creature(gid))
+		grandparents.append(gps)
+	return {"parents": parents, "grandparents": grandparents}
+
 func species_of(c: CreatureData) -> Species:
 	return db.species.get(c.species)
 
