@@ -25,5 +25,13 @@ func test_every_panel_fits_on_screen() -> void:
 		check(panel != null, "%s opened" % name)
 		if panel:
 			check(screen.encloses(panel.get_global_rect()), "%s fits: %s" % [name, panel.get_global_rect()])
+	shop.call("open_card", Game.owned()[0])  # the card again, with a refusal showing (one more line)
+	Game.state.ap = 0
+	shop.get_node("%PanelHost").current().get_node("%Feed").pressed.emit()
+	await tree.process_frame
+	await tree.process_frame
+	var card: Control = shop.get_node("%PanelHost").current()
+	check(card.get_node("%Message").visible, "the refusal shows")
+	check(card.get_global_rect().end.y <= 360 - 8, "card with a message keeps a margin: %s" % card.get_global_rect())
 	shop.queue_free()
 	DirAccess.remove_absolute(SAVE)

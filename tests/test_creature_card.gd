@@ -178,7 +178,7 @@ func test_family_tab_shows_three_generations() -> void:
 	eq(_texts(card.get_node("%FamilyRows")), ["Parents: ?, %s" % Game.who(p2), "Grandparents: ? · wild"],
 		"a lost parent: no mark")
 	var both_wild := Fixtures.adult(Game.state, "spider")
-	both_wild.parents = PackedInt32Array([p2.id, p2.id])
+	both_wild.parents = PackedInt32Array([p2.id, Fixtures.adult(Game.state, "slime").id])  # two different wild parents
 	card.show_creature(both_wild)
 	eq(_texts(card.get_node("%FamilyRows"))[1], "Grandparents: none recorded", "no grandparents at all")
 	card.show_creature(parts[2])
