@@ -1,7 +1,8 @@
 extends PanelContainer
 ## The creature card, laid out like Uma Musume's details screen: portrait with its rank badge, epithet (personality),
 ## name and score; five StatBoxes (grade and value); Traits & Moves and Sparks tabs (own, parents' and — until the
-## Gene Scanner — hidden grandparents' sparks); this creature's actions and Close. Every
+## Gene Scanner — hidden grandparents' sparks) and
+## Family (parents with their compatibility mark, grandparents); this creature's actions and Close. Every
 ## action goes through Game; a refused one shows its reason. Closes itself if the creature leaves the shop.
 
 const EGG_TEXTURE := preload("res://creatures/egg.tres")
@@ -13,6 +14,7 @@ const EGG_TEXTURE := preload("res://creatures/egg.tres")
 @export var hidden_tint := Color(0.82, 0.82, 0.82)
 
 const NO_SPARKS := "No sparks yet — retire it to lock its sparks"
+const WILD := "Wild — no recorded parents"
 
 var creature: CreatureData
 var _pending_sell := false  ## Sell/Retire are two-step: the first press only arms the button
@@ -104,6 +106,7 @@ func _refresh() -> void:
 		box.show_value(creature.stats[box.stat])
 	_fill_chips()
 	_fill_sparks()
+	_fill_family()
 	_update_action_buttons()
 
 
@@ -139,6 +142,41 @@ func _fill_sparks() -> void:
 				_chip(grid, "? " + stars, hidden_tint)
 			else:
 				_chip(grid, "%s %s" % [_spark_name(sp), stars], _spark_tint(sp["kind"]))
+
+
+func _fill_family() -> void:
+	_clear(%FamilyRows)
+	var f := Game.family(creature)
+	var p: Array = f["parents"]
+	var mark := Game.compat_mark(p[0], p[1]) if p.size() == 2 and p[0] and p[1] else ""
+	for line in family_lines(f, mark):
+		var label := Label.new()
+		label.text = line
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		%FamilyRows.add_child(label)
+
+
+## "Parents: A ◎ B" (just "A, B" with "?" for a lost one and no mark), then "Grandparents: …" per parent ("wild" for a
+## wild parent, "?" for a lost one or lost grandparent) or "none recorded"; WILD without parents.
+static func family_lines(f: Dictionary, mark: String) -> PackedStringArray:
+	var parents: Array = f["parents"]
+	if parents.is_empty():
+		return PackedStringArray([WILD])
+	var names := PackedStringArray(parents.map(func(c: CreatureData) -> String: return Game.who(c) if c else "?"))
+	var first := "Parents: %s %s %s" % [names[0], mark, names[1]] if mark != "" and names.size() == 2 \
+			else "Parents: " + ", ".join(names)
+	var groups: PackedStringArray = []
+	var any := false
+	for i in parents.size():
+		var gps: Array = f["grandparents"][i]
+		if parents[i] == null:
+			groups.append("?")
+		elif gps.is_empty():
+			groups.append("wild")
+		else:
+			any = true
+			groups.append(", ".join(PackedStringArray(gps.map(func(c: CreatureData) -> String: return Game.who(c) if c else "?"))))
+	return PackedStringArray([first, "Grandparents: " + (" · ".join(groups) if any or groups.has("?") else "none recorded")])
 
 
 ## The display name of a spark's stat, trait, move or personality; falls back to the capitalised id.

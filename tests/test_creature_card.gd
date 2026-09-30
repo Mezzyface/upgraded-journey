@@ -114,9 +114,10 @@ func test_tabs_hold_traits_and_moves_then_sparks() -> void:
 	var card: Control = parts[1]
 	var c: CreatureData = parts[2]
 	var tabs: TabContainer = card.get_node("%Tabs")
-	eq(tabs.get_tab_count(), 2, "Traits & Moves and Sparks")
+	eq(tabs.get_tab_count(), 3, "Traits & Moves, Sparks and Family")
 	eq(tabs.get_tab_title(0), "Traits & Moves", "first title")
 	eq(tabs.get_tab_title(1), "Sparks", "second title")
+	eq(tabs.get_tab_title(2), "Family", "third title")
 	eq(tabs.current_tab, 0, "opens on Traits & Moves")
 	eq(card.get_node("%Chips").get_child_count(), c.all_traits(Game.db).size() + c.moves.size(), "a chip per trait and move")
 	parts[0].queue_free()
@@ -154,5 +155,33 @@ func test_sparks_tab_shows_own_parents_and_hidden_grandparents() -> void:
 	eq(_texts(card.get_node("%SparkRows"))[0], "Own", "a retired creature's own sparks come first")
 	card.show_creature(parts[2])  # a starter: no parents, not retired
 	eq(_texts(card.get_node("%SparkRows")), ["No sparks yet — retire it to lock its sparks"], "empty text")
+	parts[0].queue_free()
+	DirAccess.remove_absolute(SAVE)
+
+
+func test_family_tab_shows_three_generations() -> void:
+	var parts := _card()
+	await tree.process_frame
+	var card: Control = parts[1]
+	var gp := Fixtures.adult(Game.state, "spider")
+	var p1 := Fixtures.adult(Game.state, "spider")
+	p1.parents = PackedInt32Array([gp.id, 999])
+	var p2 := Fixtures.adult(Game.state, "slime")
+	var child := Fixtures.adult(Game.state, "spider")
+	child.parents = PackedInt32Array([p1.id, p2.id])
+	card.show_creature(child)
+	eq(_texts(card.get_node("%FamilyRows")), [
+		"Parents: %s %s %s" % [Game.who(p1), Game.compat_mark(p1, p2), Game.who(p2)],
+		"Grandparents: %s, ? · wild" % Game.who(gp)], "two lines")
+	child.parents = PackedInt32Array([998, p2.id])
+	card.show_creature(child)
+	eq(_texts(card.get_node("%FamilyRows")), ["Parents: ?, %s" % Game.who(p2), "Grandparents: ? · wild"],
+		"a lost parent: no mark")
+	var both_wild := Fixtures.adult(Game.state, "spider")
+	both_wild.parents = PackedInt32Array([p2.id, p2.id])
+	card.show_creature(both_wild)
+	eq(_texts(card.get_node("%FamilyRows"))[1], "Grandparents: none recorded", "no grandparents at all")
+	card.show_creature(parts[2])
+	eq(_texts(card.get_node("%FamilyRows")), ["Wild — no recorded parents"], "a wild creature")
 	parts[0].queue_free()
 	DirAccess.remove_absolute(SAVE)
