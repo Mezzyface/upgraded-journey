@@ -152,3 +152,16 @@ func test_card_button_emits_creature_chosen() -> void:
 	_row(panel, parts[3]).get_node("%Card").pressed.emit()
 	eq(chosen, [parts[3]], "Card opens that creature")
 	_done(parts[0])
+
+
+func test_a_team_that_misses_challenges_is_warned_before_sending() -> void:
+	var parts: Array = await _panel()
+	var panel: ExpeditionPanel = parts[1]
+	panel.choose(&"cave")
+	panel.pick(parts[2])  # dark: passes 1 of 2
+	check(not panel.get_node("%Send").disabled, "still allowed")
+	eq(panel.get_node("%Reason").text, "Misses 1 challenge: someone may come back hurt", "warned")
+	check(panel.get_node("%Reason").visible, "shown")
+	panel.pick(parts[3])  # tough: now 2 of 2
+	check(not panel.get_node("%Reason").visible, "no warning when the team passes everything")
+	_done(parts[0])

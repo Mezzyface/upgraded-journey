@@ -14,6 +14,7 @@ const EMPTY_SLOT := "+"
 
 @export var met_color := Color("67835c")  ## a challenge the team passes (OrderNeed's colours)
 @export var missing_color := Color("a35b70")
+@export var risk_color := Color("b7773a")  ## the "someone may come back hurt" warning
 
 var place: StringName
 var team: Array[CreatureData] = [null, null, null]
@@ -98,7 +99,11 @@ func refresh() -> void:
 		_slot(i).icon = CreatureAnim.portrait(sp.sprite_frames) if sp else null
 	var reason := Game.expedition_reason(place, picked) if not picked.is_empty() else ""
 	%Send.disabled = picked.is_empty() or reason != ""
-	_show(%Reason, _sentence(reason))
+	_show(%Reason, _sentence(reason) if reason != "" else _risk(loc, picked))
+	if reason == "" and %Reason.visible:
+		%Reason.add_theme_color_override("font_color", risk_color)
+	else:
+		%Reason.remove_theme_color_override("font_color")
 	var outs: PackedStringArray = []
 	for ex in Game.expeditions_today():
 		var names := PackedStringArray(ex["team"].map(func(c: CreatureData) -> String: return Game.who(c)))
@@ -147,6 +152,16 @@ static func _finds(loc: Location) -> String:
 			names.append(e.species.display_name)
 	var eggs := ", ".join(names) + " eggs · " if not names.is_empty() else ""
 	return "Finds: %s%d–%d gold" % [eggs, loc.money_min, loc.money_max]
+
+
+## A warning when the team would miss challenges (each miss injures a member in the evening), else "".
+func _risk(loc: Location, picked: Array[CreatureData]) -> String:
+	if loc == null or picked.is_empty():
+		return ""
+	var misses := loc.challenges.size() - Game.challenges_met(loc.id, picked)
+	if misses <= 0:
+		return ""
+	return "Misses %d challenge%s: someone may come back hurt" % [misses, "" if misses == 1 else "s"]
 
 
 ## Empty text hides the line so the column keeps its room.
