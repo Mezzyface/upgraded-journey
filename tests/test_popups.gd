@@ -71,3 +71,17 @@ func test_empty_stable_says_so() -> void:
 	eq(panel.get_node("%List").get_child_count(), 0, "no rows")
 	check(panel.get_node("%Empty").visible, "empty text shown")
 	_done(host)
+
+
+func test_every_scrolling_list_uses_the_pack_scroll_bar() -> void:
+	for file in ResourceLoader.list_directory("res://shop/panels"):
+		if not file.ends_with(".tscn"):
+			continue
+		var scene: Node = load("res://shop/panels/" + file).instantiate()
+		for scroll: ScrollContainer in scene.find_children("*", "ScrollContainer", true, true):  # the scene's own, not popup menus' internals
+			var where := "%s:%s" % [file, scene.get_path_to(scroll)]
+			eq(scroll.vertical_scroll_mode, ScrollContainer.SCROLL_MODE_SHOW_NEVER, where + " hides the stock bar")
+			var bars := scroll.get_parent().get_children().filter(func(n: Node) -> bool:
+				return n is VSlider and n.get_script() == preload("res://ui/pack_scroll_bar.gd"))
+			eq(bars.size(), 1, where + " has a PackScrollBar beside it (CLAUDE.md)")
+		scene.free()

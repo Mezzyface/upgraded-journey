@@ -9,6 +9,7 @@ extends PanelContainer
 const WIDE := 230.0  ## on the open farm: a readable box in the bottom-right corner, clear of the shop and the pen
 const NARROW := 96.0  ## while a popup is open: a column on the left edge, the one strip popups leave free
 const EDGE := 4.0  ## gap to the screen edge
+const COMPACT := 180.0  ## over a wide popup (Orders, Expedition): "3/10 · Open a card" on one line at the bottom edge
 
 ## The farm's PanelHost: while it shows a popup the hint narrows; a popup reaching under the column shortens it.
 @export var panel_host: PanelHost
@@ -40,7 +41,9 @@ func saw(what: StringName) -> void:
 func _process(_delta: float) -> void:
 	var popup: Control = panel_host.current() if panel_host else null
 	var width := NARROW if popup else WIDE
-	var compact := popup != null and popup.get_global_rect().position.x < get_global_rect().position.x + NARROW + 4
+	if popup != null and popup.get_global_rect().position.x < EDGE + NARROW + 4:
+		width = COMPACT  # a wide popup: one line along the bottom edge, below its content
+	var compact := width == COMPACT
 	if width != _width or compact != _compact:
 		_width = width
 		custom_minimum_size.x = width
@@ -48,6 +51,8 @@ func _process(_delta: float) -> void:
 		var screen_w: float = get_parent_area_size().x
 		offset_left = EDGE if popup else screen_w - EDGE - width
 		offset_right = offset_left + width
+		offset_bottom = -2.0 if compact else -30.0
+		offset_top = offset_bottom - 16.0  # grows upward to fit its text
 		_compact = compact
 		refresh()
 
@@ -67,12 +72,16 @@ func refresh() -> void:
 	visible = Tutorial.active(step) or finished
 	if Tutorial.active(step):
 		_was_active = true
-		%Text.text = Tutorial.STEPS[step]["short" if _compact else "text"]
+		%Text.text = Tutorial.STEPS[step]["text"]
+		%Text.visible = not _compact
 		%Step.text = "%d/%d" % [step + 1, Tutorial.STEPS.size()]
+		if _compact:
+			%Step.text += " · " + Tutorial.STEPS[step]["short"]
 		%Skip.text = "Sure?" if _skip_armed else "Skip"
 		%Skip.visible = not _compact  # the compact line sits over popups: nothing in it to hit by mistake
 	elif finished:
 		%Text.text = Tutorial.DONE_TEXT
+		%Text.visible = true
 		%Step.text = ""
 		%Skip.text = "Close"
 		%Skip.visible = not _compact

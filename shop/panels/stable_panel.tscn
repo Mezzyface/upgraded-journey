@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://i046ddkjqfl3"]
 
 [ext_resource type="Script" uid="uid://dhvypw3rjvvxv" path="res://shop/panels/stable_panel.gd" id="1_kkx6v"]
+[ext_resource type="Script" uid="uid://dvua4rmjstjat" path="res://ui/pack_scroll_bar.gd" id="2_mdjmp"]
 
 [node name="StablePanel" type="PanelContainer" unique_id=270691957]
 custom_minimum_size = Vector2(260, 260)
@@ -79,13 +80,26 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "No retired creatures yet"
 
-[node name="Scroll" type="ScrollContainer" parent="Margin/Rows" unique_id=111309868]
+[node name="Page" type="HBoxContainer" parent="Margin/Rows" unique_id=977648169]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_vertical = 3
-horizontal_scroll_mode = 0
 
-[node name="List" type="VBoxContainer" parent="Margin/Rows/Scroll" unique_id=798103137]
+[node name="Scroll" type="ScrollContainer" parent="Margin/Rows/Page" unique_id=111309868]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="List" type="VBoxContainer" parent="Margin/Rows/Page/Scroll" unique_id=798103137]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Bar" type="VSlider" parent="Margin/Rows/Page" unique_id=1495052897]
+visible = false
+layout_mode = 2
+theme_type_variation = &"PackScrollBar"
+max_value = 0.0
+script = ExtResource("2_mdjmp")

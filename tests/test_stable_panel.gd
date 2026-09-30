@@ -168,7 +168,7 @@ func test_the_list_shows_at_least_four_rows() -> void:
 	var panel: StablePanel = parts[1]
 	check(not panel.get_node("%Reason").visible, "an empty reason takes no line")
 	var row: Control = panel.get_node("%List").get_child(0)
-	var scroll: Control = panel.get_node("Margin/Rows/Scroll")
+	var scroll: Control = panel.get_node("Margin/Rows/Page/Scroll")
 	check(scroll.size.y >= 4 * row.size.y, "list %.0f px tall, rows %.0f px" % [scroll.size.y, row.size.y])
 	panel.pick(parts[2][0])
 	panel.pick(parts[2][2])

@@ -208,6 +208,7 @@ func test_the_tutorial_hint_never_covers_a_popups_buttons() -> void:
 	var shop := _shop()
 	await tree.process_frame
 	var hint: Control = shop.get_node("%TutorialHint")
+	Game.accept(Game.state.board[0])  # an accepted order pushes the offers down the board
 	var opens := [func(): shop.call("open_card", Game.owned()[0]), Callable(shop, "open_orders"),
 			Callable(shop, "open_stable"), Callable(shop, "open_market"), Callable(shop, "open_expedition")]
 	for step in Tutorial.STEPS.size():
@@ -222,9 +223,15 @@ func test_the_tutorial_hint_never_covers_a_popups_buttons() -> void:
 			var panel: Control = shop.get_node("%PanelHost").current()
 			var targets: Array = panel.find_children("*", "BaseButton", true, false) + panel.find_children("*", "OrderNote", true, false)
 			for t: Control in targets:
-				if t.is_visible_in_tree():
-					check(not hint.get_global_rect().intersects(t.get_global_rect()),
-						"step %d, %s: hint %s covers %s %s" % [step + 1, panel.name, hint.get_global_rect(), t.name, t.get_global_rect()])
+				var r := t.get_global_rect()
+				var scroll := t.get_parent()
+				while scroll and not scroll is ScrollContainer:
+					scroll = scroll.get_parent()
+				if scroll:
+					r = r.intersection((scroll as Control).get_global_rect())  # only the part you can see
+				if t.is_visible_in_tree() and r.has_area():
+					check(not hint.get_global_rect().intersects(r),
+						"step %d, %s: hint %s covers %s %s" % [step + 1, panel.name, hint.get_global_rect(), t.name, r])
 	_done(shop)
 
 
