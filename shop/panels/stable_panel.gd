@@ -1,14 +1,14 @@
 class_name StablePanel
 extends PanelContainer
 ## The breeding stable, laid out like Uma Musume's parent select: two parent slots with their compatibility mark,
-## Breed or the reason the pair can't breed, and a StableRow per retired creature. A row's Pick fills the next empty
+## Breed or the reason the pair can't breed, and a CreatureRow per retired creature. A row's Pick fills the next empty
 ## slot, pressing a filled slot empties it, and a row's Card emits creature_chosen (shop.gd opens the card in place).
 ## Refreshes on Game.changed, so AP, pens and cooldowns stay current.
 
 signal creature_chosen(c: CreatureData)
 signal bred
 
-const ROW := preload("res://shop/panels/stable_row.tscn")
+const ROW := preload("res://shop/panels/creature_row.tscn")
 const EMPTY_SLOT := "Pick a parent"
 
 var slots: Array[CreatureData] = [null, null]
@@ -83,7 +83,7 @@ func _refresh() -> void:
 	%Empty.visible = _retired.is_empty()
 	var a := slots[0]
 	for c: CreatureData in _retired:
-		var row: StableRow = ROW.instantiate()
+		var row: CreatureRow = ROW.instantiate()
 		%List.add_child(row)
 		row.show_row(c, Game.compat_mark(a, c) if a and a != c else "", slots.has(c))
 		row.picked.connect(pick)

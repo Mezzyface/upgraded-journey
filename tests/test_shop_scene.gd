@@ -84,7 +84,7 @@ func test_stable_row_opens_the_card_in_place() -> void:
 	shop.call("open_stable")
 	await tree.process_frame
 	var stable: StablePanel = shop.get_node("%PanelHost").current()
-	(stable.get_node("%List").get_child(0) as StableRow).get_node("%Card").pressed.emit()
+	(stable.get_node("%List").get_child(0) as CreatureRow).get_node("%Card").pressed.emit()
 	await tree.process_frame
 	eq(_open_name(shop), "CreatureCard", "the card replaces the Stable window")
 	eq(shop.get_node("%PanelHost").get_child_count(), 1, "one popup at a time")

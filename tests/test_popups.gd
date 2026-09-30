@@ -56,7 +56,7 @@ func test_stable_lists_retired_creatures_and_emits_the_choice() -> void:
 	check(not panel.get_node("%Empty").visible, "no empty text")
 	var chosen: Array = []
 	panel.creature_chosen.connect(func(c: CreatureData) -> void: chosen.append(c))
-	(panel.get_node("%List").get_child(0) as StableRow).get_node("%Card").pressed.emit()
+	(panel.get_node("%List").get_child(0) as CreatureRow).get_node("%Card").pressed.emit()
 	eq(chosen, [Game.retired()[0]], "a row's Card emits creature_chosen")
 	_done(host)
 

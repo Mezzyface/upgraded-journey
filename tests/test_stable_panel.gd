@@ -1,5 +1,5 @@
 extends TestSuite
-## The Stable's parent slots, marks and Breed (stable_panel.tscn) and its rows (stable_row.tscn).
+## The Stable's parent slots, marks and Breed (stable_panel.tscn) and its rows (creature_row.tscn).
 
 const SAVE := "user://test_stable_panel_save.json"
 
@@ -39,7 +39,7 @@ func test_row_shows_the_creature_and_its_rest() -> void:
 	setup.species.assign([db.species[&"spider"]])
 	Game.start_new(setup, db, 4)
 	var spider: CreatureData = Game.owned()[0]
-	var row: StableRow = load("res://shop/panels/stable_row.tscn").instantiate()
+	var row: CreatureRow = load("res://shop/panels/creature_row.tscn").instantiate()
 	tree.root.add_child(row)
 	await tree.process_frame  # the root is busy while tests run: add_child lands next frame
 	row.show_row(spider, "", false)
@@ -174,3 +174,26 @@ func test_the_list_shows_at_least_four_rows() -> void:
 	panel.pick(parts[2][2])
 	check(panel.get_node("%Reason").visible, "a refusal shows its line")
 	_done(parts[0])
+
+
+func test_blocked_row_is_disabled_and_says_why() -> void:
+	await tree.process_frame
+	Game.save_path = SAVE
+	var db := Fixtures.db()
+	var setup := NewGameSetup.new()
+	setup.species.assign([db.species[&"spider"]])
+	Game.start_new(setup, db, 4)
+	var spider: CreatureData = Game.owned()[0]
+	var row: CreatureRow = load("res://shop/panels/creature_row.tscn").instantiate()
+	tree.root.add_child(row)
+	await tree.process_frame
+	row.show_row(spider, "1/2", false, "busy on an expedition today")
+	check(row.get_node("%Pick").disabled, "blocked: not pickable")
+	eq(row.get_node("%Note").text, "busy on an expedition today", "says why")
+	eq(row.get_node("%Note").tooltip_text, "busy on an expedition today", "full text on hover")
+	eq(row.get_node("%Note").text_overrun_behavior, TextServer.OVERRUN_TRIM_ELLIPSIS, "long notes clip with …")
+	row.show_row(spider, "", false)
+	check(not row.get_node("%Pick").disabled, "not blocked: pickable again")
+	eq(row.get_node("%Note").text, "Dark · Bug", "back to element and egg group")
+	row.queue_free()
+	DirAccess.remove_absolute(SAVE)
