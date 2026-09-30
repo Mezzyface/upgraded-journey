@@ -62,7 +62,7 @@ func test_start_without_a_save_begins_a_new_game() -> void:
 
 func test_a_save_from_before_the_board_gets_offers() -> void:
 	var g := _game()
-	var d := g.state.to_dict()
+	var d: Dictionary = g.state.to_dict()
 	d.erase("board")  # the format before the order board existed
 	var f := FileAccess.open(SAVE, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
