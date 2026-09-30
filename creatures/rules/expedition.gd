@@ -19,10 +19,7 @@ static func resolve(state: GameState, db: Db, location_id: StringName, team_ids:
 			team.append(c)
 	if loc == null or team.is_empty():
 		return events
-	var passes := 0
-	for g in loc.challenges:
-		if g and team.any(func(c: CreatureData) -> bool: return Orders.group_met(c, g, db, state)):
-			passes += 1
+	var passes := challenges_met(state, db, location_id, team)
 	var failures := loc.challenges.size() - passes
 	events.append("%s: %d of %d challenges passed" % [loc.display_name, passes, loc.challenges.size()])
 	for i in passes:
@@ -46,6 +43,19 @@ static func resolve(state: GameState, db: Db, location_id: StringName, team_ids:
 		Leanings.add(c, &"bold")
 	return events
 
+
+
+## How many of the location's challenges `team` (CreatureData; nulls ignored) passes: a challenge passes if any
+## member meets it. resolve counts passes with this, so the Expedition panel's preview is the evening's result.
+static func challenges_met(state: GameState, db: Db, location_id: StringName, team: Array) -> int:
+	var loc: Location = db.locations.get(location_id)
+	if loc == null:
+		return 0
+	var n := 0
+	for g in loc.challenges:
+		if g and team.any(func(c: CreatureData) -> bool: return c != null and Orders.group_met(c, g, db, state)):
+			n += 1
+	return n
 
 ## A species from the loot table (by weight) EGG_CHANCE of the time, otherwise null (a money find).
 static func _roll_egg(loc: Location, db: Db, rng: RandomNumberGenerator) -> Species:

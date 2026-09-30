@@ -110,7 +110,21 @@ static func breed(state: GameState, db: Db, a: CreatureData, b: CreatureData, rn
 	return ""
 
 
-static func send_expedition(state: GameState, db: Db, location_id: StringName, team: Array) -> String:
+## "" when `c` could join an expedition today, otherwise why not. expedition_reason uses it per member.
+static func travel_reason(state: GameState, c: CreatureData) -> String:
+	if c == null:
+		return "no such creature"
+	var reason := _owned(c)
+	if reason == "" and c.stage == "egg":
+		reason = "eggs can't travel"
+	if reason == "":
+		reason = _available(state, c)
+	return reason
+
+
+## "" when `team` can go to `location_id` now, otherwise the reason. The Expedition panel shows it before Send, and
+## send_expedition refuses with the same text.
+static func expedition_reason(state: GameState, db: Db, location_id: StringName, team: Array) -> String:
 	if not db.locations.has(location_id):
 		return "unknown location"
 	if team.is_empty() or team.size() > Expedition.MAX_TEAM:
@@ -118,21 +132,20 @@ static func send_expedition(state: GameState, db: Db, location_id: StringName, t
 	var ids: Array = []
 	for member in team:
 		var c: CreatureData = member
-		if c == null:
-			return "no such creature"
-		if ids.has(c.id):
+		if c != null and ids.has(c.id):
 			return "a creature can only go once"
-		var reason := _owned(c)
-		if reason == "" and c.stage == "egg":
-			reason = "eggs can't travel"
-		if reason == "":
-			reason = _available(state, c)
+		var reason := travel_reason(state, c)
 		if reason != "":
 			return reason
 		ids.append(c.id)
-	var cost_reason := _afford(state, COST_EXPEDITION)
-	if cost_reason != "":
-		return cost_reason
+	return _afford(state, COST_EXPEDITION)
+
+
+static func send_expedition(state: GameState, db: Db, location_id: StringName, team: Array) -> String:
+	var reason := expedition_reason(state, db, location_id, team)
+	if reason != "":
+		return reason
+	var ids: Array = team.map(func(c: CreatureData) -> int: return c.id)
 	state.expeditions.append({"location": String(location_id), "team": ids})
 	for id in ids:
 		state.busy.append(id)

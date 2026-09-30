@@ -79,3 +79,20 @@ func test_unknown_location_or_missing_team_does_nothing() -> void:
 	var st := Fixtures.state(db)
 	eq(Expedition.resolve(st, db, &"atlantis", [1], Fixtures.rng()).size(), 0, "unknown location")
 	eq(Expedition.resolve(st, db, &"cave", [42], Fixtures.rng()).size(), 0, "no such creatures")
+
+
+func test_challenges_met_is_the_count_resolve_reports() -> void:
+	var db := Fixtures.db()
+	for case in [["spider", 50, 0], ["spider_albino", 100, 1], ["spider", 300, 1]]:
+		var st := Fixtures.state(db)
+		var c := Fixtures.adult(st, case[0], case[1])
+		eq(Expedition.challenges_met(st, db, &"cave", [c]), case[2], "%s at %d" % [case[0], case[1]])
+		var events := Expedition.resolve(st, db, &"cave", [c.id], Fixtures.rng())
+		check(events[0].contains("%d of 2" % case[2]), "resolve agrees: %s" % events[0])
+	var st2 := Fixtures.state(db)
+	var dark := Fixtures.adult(st2, "spider_albino", 100)
+	var tough := Fixtures.adult(st2, "spider", 300)
+	eq(Expedition.challenges_met(st2, db, &"cave", [dark, tough]), 2, "any member meets each")
+	eq(Expedition.challenges_met(st2, db, &"cave", [null, dark]), 1, "nulls ignored")
+	eq(Expedition.challenges_met(st2, db, &"cave", []), 0, "empty team")
+	eq(Expedition.challenges_met(st2, db, &"atlantis", [dark]), 0, "unknown location")

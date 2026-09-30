@@ -219,3 +219,37 @@ func test_breed_reason_matches_what_breed_refuses() -> void:
 	eq(Day.breed(st, db, a, b, Fixtures.rng()), "", "breeds")
 	check(Day.breed_reason(st, db, a, b).ends_with("more days of rest"), "cooldown after breeding")
 	eq(Day.breed(st, db, a, b, Fixtures.rng()), Day.breed_reason(st, db, a, b), "breed refuses with the same reason")
+
+
+func test_travel_and_expedition_reasons_match_what_send_refuses() -> void:
+	var db := Fixtures.db()
+	var st := _state()
+	var a := Fixtures.adult(st, "spider")
+	var b := Fixtures.adult(st, "spider")
+	eq(Day.travel_reason(st, null), "no such creature", "null")
+	eq(Day.travel_reason(st, a), "", "free")
+	var retired := Fixtures.adult(st, "spider")
+	retired.status = CreatureData.Status.RETIRED
+	eq(Day.travel_reason(st, retired), "retired creatures only breed", "retired")
+	var gone := Fixtures.adult(st, "spider")
+	gone.status = CreatureData.Status.GONE
+	eq(Day.travel_reason(st, gone), "no longer in the shop", "gone")
+	var egg := Fixtures.adult(st, "slime")
+	egg.stage = "egg"
+	eq(Day.travel_reason(st, egg), "eggs can't travel", "egg")
+	b.injured_days = 2
+	eq(Day.travel_reason(st, b), "injured for 2 more days", "injured")
+	b.injured_days = 0
+	eq(Day.expedition_reason(st, db, &"atlantis", [a]), "unknown location", "location")
+	eq(Day.expedition_reason(st, db, &"cave", []), "a team is 1 to 3 creatures", "empty")
+	eq(Day.expedition_reason(st, db, &"cave", [a, a]), "a creature can only go once", "twice")
+	eq(Day.expedition_reason(st, db, &"cave", [a, egg]), "eggs can't travel", "a member's reason")
+	st.ap = 1
+	eq(Day.expedition_reason(st, db, &"cave", [a]), "not enough action points", "AP")
+	st.ap = 5
+	eq(Day.expedition_reason(st, db, &"cave", [a, b]), "", "valid")
+	eq(Day.send_expedition(st, db, &"cave", [a, b]), "", "sent")
+	eq(st.ap, 5 - Day.COST_EXPEDITION, "2 AP")
+	check(st.busy.has(a.id) and st.busy.has(b.id), "both busy")
+	eq(Day.travel_reason(st, a), "busy on an expedition today", "busy now")
+	eq(Day.send_expedition(st, db, &"cave", [a]), Day.expedition_reason(st, db, &"cave", [a]), "same refusal")
