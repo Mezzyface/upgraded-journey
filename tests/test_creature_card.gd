@@ -108,13 +108,51 @@ func test_another_action_disarms_the_sell_button() -> void:
 	parts[0].queue_free()
 
 
-func test_one_tab_holds_traits_and_moves() -> void:
+func test_tabs_hold_traits_and_moves_then_sparks() -> void:
 	var parts := _card()
 	await tree.process_frame
 	var card: Control = parts[1]
 	var c: CreatureData = parts[2]
 	var tabs: TabContainer = card.get_node("%Tabs")
-	eq(tabs.get_tab_count(), 1, "just Traits & Moves for now")
-	eq(tabs.get_tab_title(0), "Traits & Moves", "its title")
+	eq(tabs.get_tab_count(), 2, "Traits & Moves and Sparks")
+	eq(tabs.get_tab_title(0), "Traits & Moves", "first title")
+	eq(tabs.get_tab_title(1), "Sparks", "second title")
+	eq(tabs.current_tab, 0, "opens on Traits & Moves")
 	eq(card.get_node("%Chips").get_child_count(), c.all_traits(Game.db).size() + c.moves.size(), "a chip per trait and move")
 	parts[0].queue_free()
+
+
+func _texts(node: Node) -> Array:
+	return node.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
+
+
+func test_sparks_tab_shows_own_parents_and_hidden_grandparents() -> void:
+	var parts := _card()
+	await tree.process_frame
+	var card: Control = parts[1]
+	var gp := Fixtures.adult(Game.state, "spider")
+	var p := Fixtures.adult(Game.state, "spider")
+	p.parents = PackedInt32Array([gp.id])
+	eq(Game.retire(gp), "", "retire the grandparent")
+	eq(Game.retire(p), "", "retire the parent")
+	var child := Fixtures.adult(Game.state, "spider")
+	child.parents = PackedInt32Array([p.id])
+	card.show_creature(child)
+	var texts := _texts(card.get_node("%SparkRows"))
+	eq(texts[0], Game.who(p), "parent header first")
+	check(texts.has(Game.who(gp)), "grandparent header")
+	var stat: Dictionary = p.sparks[0]  # Sparks.roll puts the stat spark first
+	var shown := "%s %s" % [String(stat["id"]).capitalize(), "★".repeat(stat["stars"])]
+	check(texts.has(shown), "parent's stat spark '%s' in %s" % [shown, texts])
+	var hidden := texts.filter(func(t: String) -> bool: return t.begins_with("? ★"))
+	eq(hidden.size(), gp.sparks.size(), "every grandparent spark hidden")
+	Game.state.upgrades.append(&"gene_scanner")
+	card.show_creature(child)
+	eq(_texts(card.get_node("%SparkRows")).filter(func(t: String) -> bool: return t.begins_with("? ★")).size(), 0,
+		"the Gene Scanner reveals them")
+	card.show_creature(p)
+	eq(_texts(card.get_node("%SparkRows"))[0], "Own", "a retired creature's own sparks come first")
+	card.show_creature(parts[2])  # a starter: no parents, not retired
+	eq(_texts(card.get_node("%SparkRows")), ["No sparks yet — retire it to lock its sparks"], "empty text")
+	parts[0].queue_free()
+	DirAccess.remove_absolute(SAVE)

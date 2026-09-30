@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dcakjcjavqa27" path="res://shop/panels/creature_card.gd" id="1_wkiug"]
 [ext_resource type="PackedScene" uid="uid://dxloup12ko71b" path="res://shop/panels/stat_box.tscn" id="2_3xiop"]
+[ext_resource type="Script" uid="uid://dvua4rmjstjat" path="res://ui/pack_scroll_bar.gd" id="3_maiqb"]
 
 [node name="CreatureCard" type="PanelContainer" unique_id=13860526]
 custom_minimum_size = Vector2(420, 0)
@@ -148,6 +149,29 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 columns = 2
+
+[node name="Sparks" type="HBoxContainer" parent="Margin/Rows/Tabs" unique_id=895201596]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Rows/Tabs/Sparks" unique_id=154976207]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="SparkRows" type="VBoxContainer" parent="Margin/Rows/Tabs/Sparks/Scroll" unique_id=21774746]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Bar" type="VSlider" parent="Margin/Rows/Tabs/Sparks" unique_id=252598849]
+layout_mode = 2
+theme_type_variation = &"PackScrollBar"
+script = ExtResource("3_maiqb")
 
 [node name="Message" type="Label" parent="Margin/Rows" unique_id=509511004]
 unique_name_in_owner = true

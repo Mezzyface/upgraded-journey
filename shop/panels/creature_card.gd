@@ -1,12 +1,18 @@
 extends PanelContainer
 ## The creature card, laid out like Uma Musume's details screen: portrait with its rank badge, epithet (personality),
-## name and score; five StatBoxes (grade and value); a Traits & Moves tab; this creature's actions and Close. Every
+## name and score; five StatBoxes (grade and value); Traits & Moves and Sparks tabs (own, parents' and — until the
+## Gene Scanner — hidden grandparents' sparks); this creature's actions and Close. Every
 ## action goes through Game; a refused one shows its reason. Closes itself if the creature leaves the shop.
 
 const EGG_TEXTURE := preload("res://creatures/egg.tres")
 
 @export var trait_tint := Color(0.8, 1, 0.75)
 @export var move_tint := Color(1, 0.86, 0.7)
+@export var stat_tint := Color(0.75, 0.87, 1)
+@export var personality_tint := Color(1, 0.8, 0.9)
+@export var hidden_tint := Color(0.82, 0.82, 0.82)
+
+const NO_SPARKS := "No sparks yet — retire it to lock its sparks"
 
 var creature: CreatureData
 var _pending_sell := false  ## Sell/Retire are two-step: the first press only arms the button
@@ -97,6 +103,7 @@ func _refresh() -> void:
 	for box: StatBox in %Stats.get_children():
 		box.show_value(creature.stats[box.stat])
 	_fill_chips()
+	_fill_sparks()
 	_update_action_buttons()
 
 
@@ -108,6 +115,57 @@ func _fill_chips() -> void:
 	for m in creature.moves:
 		var def: MoveDef = Game.db.moves.get(m)
 		_chip(%Chips, def.display_name if def else String(m).capitalize(), move_tint)
+
+
+func _fill_sparks() -> void:
+	_clear(%SparkRows)
+	var rows := Game.spark_rows(creature)
+	if rows.is_empty():
+		var none := Label.new()
+		none.text = NO_SPARKS
+		none.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		%SparkRows.add_child(none)
+		return
+	for row in rows:
+		var head := Label.new()
+		head.theme_type_variation = &"HeaderLabel"
+		head.text = row["who"]
+		%SparkRows.add_child(head)
+		var grid := GridContainer.new()
+		grid.columns = 2
+		%SparkRows.add_child(grid)
+		for sp: Dictionary in row["sparks"]:
+			var stars := "★".repeat(sp["stars"])
+			if row["hidden"]:
+				_chip(grid, "? " + stars, hidden_tint)
+			else:
+				_chip(grid, "%s %s" % [_spark_name(sp), stars], _spark_tint(sp["kind"]))
+
+
+## The display name of a spark's stat, trait, move or personality; falls back to the capitalised id.
+func _spark_name(sp: Dictionary) -> String:
+	var id := StringName(sp["id"])
+	var def: Resource = null
+	match sp["kind"]:
+		"trait":
+			def = Game.db.traits.get(id)
+		"move":
+			def = Game.db.moves.get(id)
+		"personality":
+			def = Game.db.personalities.get(id)
+	var shown: String = def.get("display_name") if def else ""
+	return shown if shown != "" else String(id).capitalize()
+
+
+func _spark_tint(kind: String) -> Color:
+	match kind:
+		"trait":
+			return trait_tint
+		"move":
+			return move_tint
+		"personality":
+			return personality_tint
+	return stat_tint
 
 
 func _chip(parent: Node, text: String, tint: Color) -> void:
