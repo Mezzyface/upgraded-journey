@@ -226,3 +226,41 @@ func test_the_tutorial_hint_never_covers_a_popups_buttons() -> void:
 					check(not hint.get_global_rect().intersects(t.get_global_rect()),
 						"step %d, %s: hint %s covers %s %s" % [step + 1, panel.name, hint.get_global_rect(), t.name, t.get_global_rect()])
 	_done(shop)
+
+
+func test_on_the_open_farm_the_hint_is_wide_and_clear_of_the_shop_door() -> void:
+	await tree.process_frame
+	var shop := _shop()
+	await tree.process_frame
+	await tree.process_frame
+	var hint: Control = shop.get_node("%TutorialHint")
+	check(hint.size.x >= 200, "wide on the farm: %s" % hint.get_global_rect())
+	var door: Control = shop.get_node("%ShopDoor")
+	check(not hint.get_global_rect().intersects(door.get_global_rect()),
+		"clear of the shop door %s: %s" % [door.get_global_rect(), hint.get_global_rect()])
+	for p in Game.state.placed:
+		var pen: Control = shop.call("pen_area", p["id"])
+		check(not hint.get_global_rect().intersects(pen.get_global_rect()),
+			"clear of the pen %s: %s" % [pen.get_global_rect(), hint.get_global_rect()])
+	shop.call("open_card", Game.owned()[0])
+	await tree.process_frame
+	await tree.process_frame
+	check(hint.size.x <= 100, "narrow beside a popup: %s" % hint.get_global_rect())
+	shop.get_node("%PanelHost").close()
+	await tree.process_frame
+	await tree.process_frame
+	check(hint.size.x >= 200, "wide again after closing it")
+	_done(shop)
+
+
+func test_the_compact_hint_has_no_skip_button_to_hit_by_mistake() -> void:
+	await tree.process_frame
+	var shop := _shop()
+	await tree.process_frame
+	var hint: Control = shop.get_node("%TutorialHint")
+	check(hint.get_node("%Skip").is_visible_in_tree(), "Skip on the open farm")
+	shop.call("open_orders")
+	await tree.process_frame
+	await tree.process_frame
+	check(not hint.get_node("%Skip").is_visible_in_tree(), "no Skip in the compact hint over the Orders board")
+	_done(shop)

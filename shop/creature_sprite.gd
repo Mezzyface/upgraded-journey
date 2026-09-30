@@ -17,6 +17,7 @@ var _rng: RandomNumberGenerator
 var _target := Vector2.ZERO
 var _wait := 0.0
 var _facing := "right"
+var _body := Rect2()  ## the drawn body around the origin, scaled (set by refresh)
 
 
 func _ready() -> void:
@@ -38,8 +39,8 @@ func setup(c: CreatureData, frames: SpriteFrames, area: SpawnArea, rng: RandomNu
 
 ## Moves the creature to `p` (inside its area) and makes it stand there.
 func place(p: Vector2) -> void:
-	position = p
-	_target = p
+	position = _inside(p)
+	_target = position
 
 
 ## Re-reads the creature's stage (egg, baby, adult) and size. Leaves a creature that's mid-walk alone — only
@@ -65,8 +66,21 @@ func refresh() -> void:
 	var feet: CircleShape2D = %Feet.shape
 	feet.radius = minf(body.size.x, body.size.y) * FEET
 	%Feet.position = Vector2(body.get_center().x, body.end.y - feet.radius)
-	if position == _target:
+	_body = Rect2(body.position * scale, body.size * scale)
+	var standing := position == _target
+	position = _inside(position)  # a new size may reach past the pen's edge: step back in
+	_target = position if standing else _inside(_target)
+	if standing:
 		_play("idle")
+
+
+## `p` moved just enough that the whole body (not only the origin, which sits above the feet) is inside the area.
+func _inside(p: Vector2) -> Vector2:
+	if _area == null or _area.size == Vector2.ZERO:
+		return p  # not laid out yet: SpawnArea re-places its creatures when it gets a size
+	var lo := -_body.position
+	var hi := _area.size - _body.end
+	return Vector2(clampf(p.x, lo.x, maxf(lo.x, hi.x)), clampf(p.y, lo.y, maxf(lo.y, hi.y)))
 
 
 func _physics_process(delta: float) -> void:
@@ -75,7 +89,7 @@ func _physics_process(delta: float) -> void:
 	if _wait > 0.0:
 		_wait -= delta
 		if _wait <= 0.0:
-			_target = _area.random_point(_rng)
+			_target = _inside(_area.random_point(_rng))
 			_facing = "left" if _target.x < position.x else "right"
 			_play("move")
 		return

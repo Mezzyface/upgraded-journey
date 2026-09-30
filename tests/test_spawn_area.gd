@@ -190,3 +190,21 @@ func test_panel_host_shows_one_panel_at_a_time() -> void:
 	host.close()
 	check(host.current() == null, "closed")
 	host.queue_free()
+
+
+func test_the_whole_body_stays_inside_not_just_the_origin() -> void:
+	var a := _area()
+	a.size = Vector2(64, 48)  # a real pen's inside
+	await tree.process_frame
+	var inside := a.get_global_rect().grow(0.5)
+	for seed_value in 20:
+		a.sync([], Fixtures.db(), Fixtures.rng(seed_value))
+		a.sync(_creatures(2), Fixtures.db(), Fixtures.rng(seed_value))
+		for s: CreatureSprite in a.sprites():
+			var body: Rect2 = s.get_node("%Hit").get_global_rect()
+			check(inside.encloses(body), "seed %d spawn: body %s outside %s" % [seed_value, body, inside])
+			for i in 60:
+				s._physics_process(0.1)
+			body = s.get_node("%Hit").get_global_rect()
+			check(inside.encloses(body), "seed %d walk: body %s outside %s" % [seed_value, body, inside])
+	a.queue_free()
