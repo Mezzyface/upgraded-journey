@@ -70,6 +70,7 @@ func test_empty_stable_says_so() -> void:
 	panel.show_creatures([])
 	eq(panel.get_node("%List").get_child_count(), 0, "no rows")
 	check(panel.get_node("%Empty").visible, "empty text shown")
+	check(panel.get_node("%Empty").text.contains("same egg group"), "and it says how to fill the stable: %s" % panel.get_node("%Empty").text)
 	_done(host)
 
 
