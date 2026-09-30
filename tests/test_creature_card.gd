@@ -185,3 +185,23 @@ func test_family_tab_shows_three_generations() -> void:
 	eq(_texts(card.get_node("%FamilyRows")), ["Wild — no recorded parents"], "a wild creature")
 	parts[0].queue_free()
 	DirAccess.remove_absolute(SAVE)
+
+
+func test_family_tab_shows_both_lines_without_scrolling() -> void:
+	await tree.process_frame
+	var parts := _card()
+	await tree.process_frame
+	var card: Control = parts[1]
+	var p := Fixtures.adult(Game.state, "spider")
+	p.parents = PackedInt32Array([Fixtures.adult(Game.state, "spider").id, Fixtures.adult(Game.state, "spider").id])
+	var child := Fixtures.adult(Game.state, "spider")
+	child.parents = PackedInt32Array([p.id, Fixtures.adult(Game.state, "spider").id])
+	card.show_creature(child)
+	card.get_node("%Tabs").current_tab = 2
+	await tree.process_frame
+	await tree.process_frame
+	var rows: Control = card.get_node("%FamilyRows")
+	var scroll: Control = rows.get_parent()
+	check(scroll.size.y >= rows.get_combined_minimum_size().y, "tab %.0f px tall for %.0f px of family" % [scroll.size.y, rows.get_combined_minimum_size().y])
+	parts[0].queue_free()
+	DirAccess.remove_absolute(SAVE)
