@@ -101,3 +101,11 @@ editor tool, never a script that silently overwrites editor-editable files.
 `ui/title.tscn` is the main scene (Continue / New game / Quit); it opens the farm, `shop/shop.tscn`. The `Game` autoload (`game/game.gd`) is the only path from the UI to the rules.
 Pens and the stable are `SpawnArea` nodes and panels open in the `PanelHost` node: move or resize them in the editor
 (they draw placeholders there). Screenshots open the farm directly: `godot --path . res://shop/shop.tscn -- --save=user://shot_save.json --open=card --screenshot=out.png`.
+
+The game saves after every action (`user://save.json`); New game keeps the old ranch as `save.json.bak`, and a save
+that can't be read is moved to `save.json.bad` instead of being overwritten. A new ranch starts the tutorial
+(`ui/tutorial.gd` steps, the `TutorialHint` column on the farm's left edge); older saves skip it.
+
+Bot playtest: `godot --headless --path . -s res://tools/playtest/playtest.gd -- --days=30 --seeds=1,2,3
+--out=user://playtest_report.md` plays the real farm and popups for each seed and writes a report (days, gold,
+reputation, goals reached, errors, stalls, UI gaps). The latest is in `docs/playtest/`.
