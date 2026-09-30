@@ -127,8 +127,7 @@ func _fill_sparks() -> void:
 		%SparkRows.add_child(none)
 		return
 	for row in rows:
-		var head := Label.new()
-		head.theme_type_variation = &"HeaderLabel"
+		var head := Label.new()  # plain Label: HeaderLabel is the panel-title size and fills the 72 px tab
 		head.text = row["who"]
 		%SparkRows.add_child(head)
 		var grid := GridContainer.new()
