@@ -14,8 +14,14 @@ var db: Db
 var state: GameState
 var rng := RandomNumberGenerator.new()
 var save_path := GameState.SAVE_PATH
-var day_start := {}  ## DayReport.snapshot this morning, or at the last load (not saved: after a mid-day load the summary covers what happened since)
-var day_log: PackedStringArray = []  ## today's actions, for the end-of-day summary
+## This morning's DayReport.snapshot and today's actions, for the evening summary. Both live in the saved state, so
+## a mid-day Continue still sums up the whole day.
+var day_start: Dictionary:
+	get:
+		return state.day_start if state else {}
+var day_log: PackedStringArray:
+	get:
+		return state.day_log if state else PackedStringArray()
 var report := {}  ## the last end_day: DayReport.compare plus "day" and "events" (the day log, then the evening)
 
 
@@ -31,7 +37,8 @@ func start(content: Db = null) -> void:
 	elif state.predates_board:
 		OrderBoard.post_offers(state, db, rng)  # saves from before the order board (an emptied board stays empty)
 	Build.migrate(state, db, load(NEW_GAME))  # saves from before pens were placed
-	_new_day()
+	if state.day_start.is_empty():
+		_new_day()  # a new game or an older save; a mid-day save keeps its morning and log
 	changed.emit()
 
 
@@ -187,14 +194,15 @@ func deliver(index: int, c: CreatureData) -> String:
 func end_day() -> PackedStringArray:
 	var day := state.day
 	var before_evening := DayReport.snapshot(state)
+	var report_log := state.day_log.duplicate()
 	var events := Day.end_day(state, db, rng)
+	report = DayReport.compare(day_start, before_evening, state, db)
+	report["day"] = day
+	_new_day()  # before saving, so the save holds the new morning, not yesterday's
 	var err := state.save(save_path)
 	if err != OK:
 		events.append("Couldn't save the game (%s)" % error_string(err))
-	report = DayReport.compare(day_start, before_evening, state, db)
-	report["day"] = day
-	report["events"] = day_log + events
-	_new_day()
+	report["events"] = report_log + events
 	changed.emit()
 	acted.emit(&"end_day")
 	return events
@@ -297,7 +305,7 @@ func _with_status(status: CreatureData.Status) -> Array[CreatureData]:
 func _did(reason: String, log_line := "", what := &"") -> String:
 	if reason == "":
 		if log_line != "":
-			day_log.append(log_line)
+			state.day_log.append(log_line)
 		_save()
 		changed.emit()
 		if what != &"":
@@ -350,8 +358,8 @@ func _save() -> void:
 
 
 func _new_day() -> void:
-	day_start = DayReport.snapshot(state)
-	day_log.clear()
+	state.day_start = DayReport.snapshot(state)
+	state.day_log.clear()
 
 
 ## "A", "A and B", "A, B and C".

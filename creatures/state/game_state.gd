@@ -26,6 +26,8 @@ var busy: Array[int] = []  ## creature ids away on an expedition for the rest of
 var cared: Array[int] = []  ## creature ids cared for today
 var placed: Array[Dictionary] = []  ## buildables on the farm, in placing order: {"id": int, "def": StringName, "cell": Vector2i}
 var next_placed_id := 1
+var day_start := {}  ## DayReport.snapshot this morning, for the evening summary (saved: a mid-day Continue keeps it)
+var day_log: PackedStringArray = []  ## today's actions, for the evening summary
 var tutorial_step := Tutorial.STEPS.size()  ## Tutorial: 0.. active, STEPS.size() finished, -1 skipped; older saves load as finished
 var content: Db  ## the game content, for pen capacities; set by Day.new_game and from_dict, never saved
 
@@ -67,6 +69,8 @@ func to_dict() -> Dictionary:
 		"placed": placed.map(func(p: Dictionary) -> Dictionary:
 			return {"id": p["id"], "def": String(p["def"]), "x": p["cell"].x, "y": p["cell"].y}),
 		"next_placed_id": next_placed_id,
+		"day_start": var_to_str(day_start),  # Godot text keeps its int keys and StringNames
+		"day_log": Array(day_log),
 		"tutorial_step": tutorial_step,
 	}
 
@@ -108,6 +112,10 @@ static func from_dict(d: Dictionary, db: Db) -> GameState:
 	g.next_id = maxi(g.next_id, highest_id + 1)  # never reuse an id, even if the saved next_id fell behind
 	g.board = _known_ids(d.get("board", []), db.orders)
 	g.predates_board = not d.has("board")
+	var morning: Variant = str_to_var(str(d.get("day_start", ""))) if d.get("day_start") is String else null
+	g.day_start = morning if morning is Dictionary else {}  # missing or unreadable: Game.start starts a fresh morning
+	for line in _list(d.get("day_log", [])):
+		g.day_log.append(str(line))
 	g.recent_templates = _known_ids(d.get("recent_templates", []), db.orders, false)  # legitimately repeats: the
 	## same template can be re-offered on non-consecutive mornings while still inside the last RECENT_LIMIT
 	g.upgrades = _known_ids(d.get("upgrades", []), db.upgrades)

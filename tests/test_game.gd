@@ -315,3 +315,26 @@ func test_acted_reports_each_successful_action() -> void:
 	g.set_tutorial_step(3)
 	eq(GameState.load_file(g.db, SAVE).tutorial_step, 3, "the step is saved")
 	_cleanup(g)
+
+
+func test_a_mid_day_reload_keeps_the_days_log_and_morning() -> void:
+	var g := _game()
+	var c: CreatureData = g.owned()[0]
+	var gold: int = g.state.money
+	eq(g.buy_feed(1), "", "bought feed")
+	eq(g.care(c, "feed"), "", "fed")
+	var g2: Node = GameScript.new()
+	g2.save_path = SAVE
+	g2.start(Fixtures.db())  # quit and Continue mid-day
+	eq(g2.day_log, g.day_log, "the day's actions survive the reload")
+	g2.end_day()
+	eq(g2.report["totals"]["gold"], g2.state.money - gold, "gold counted from this morning, not from the reload")
+	check((g2.report["events"] as PackedStringArray).has("Bought 1 feed (-10 gold)"), "the morning's purchase is in the summary")
+	var g3: Node = GameScript.new()
+	g3.save_path = SAVE
+	g3.start(Fixtures.db())  # Continue the next morning
+	eq(g3.day_log.size(), 0, "a new morning starts an empty log")
+	eq(g3.day_start, DayReport.snapshot(g3.state), "the saved morning is today's, not yesterday's")
+	g2.free()
+	g3.free()
+	_cleanup(g)
