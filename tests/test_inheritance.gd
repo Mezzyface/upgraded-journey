@@ -213,3 +213,16 @@ func test_only_owned_adults_can_retire() -> void:
 	Sparks.retire(c, db, Fixtures.rng())
 	eq(c.status, CreatureData.Status.RETIRED, "retired")
 	check(Sparks.can_retire(c) != "", "cannot retire twice")
+
+
+func test_the_rest_reason_counts_days_properly() -> void:
+	var db := Fixtures.db()
+	var st := Fixtures.state(db)
+	var a := Fixtures.adult(st, "spider")
+	var b := Fixtures.adult(st, "spider")
+	for c in [a, b]:
+		Sparks.retire(c, db, Fixtures.rng())
+	a.breed_cooldown = 1
+	check(Inheritance.can_breed(a, b, db).ends_with("needs 1 more day of rest"), Inheritance.can_breed(a, b, db))
+	a.breed_cooldown = 2
+	check(Inheritance.can_breed(a, b, db).ends_with("needs 2 more days of rest"), Inheritance.can_breed(a, b, db))

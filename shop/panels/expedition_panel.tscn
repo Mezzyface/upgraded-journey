@@ -94,7 +94,7 @@ custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"DecoratedButton"
-text = "Pick a creature"
+text = "+"
 clip_text = true
 expand_icon = true
 
@@ -104,7 +104,7 @@ custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"DecoratedButton"
-text = "Pick a creature"
+text = "+"
 clip_text = true
 expand_icon = true
 
@@ -114,7 +114,7 @@ custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"DecoratedButton"
-text = "Pick a creature"
+text = "+"
 clip_text = true
 expand_icon = true
 

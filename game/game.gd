@@ -52,15 +52,15 @@ func care(c: CreatureData, kind: String) -> String:
 
 
 func retire(c: CreatureData) -> String:
-	var who := who(c)
-	return _did(Day.retire(state, db, c, rng), "Retired %s to the stable" % who, &"retire")
+	var label := who(c)
+	return _did(Day.retire(state, db, c, rng), "Retired %s to the stable" % label, &"retire")
 
 
 func sell(c: CreatureData) -> String:
-	var who := who(c)
+	var label := who(c)
 	var money := state.money
 	var reason := Day.sell(state, c)
-	return _did(reason, "Sold %s (%+d gold)" % [who, state.money - money], &"sell")
+	return _did(reason, "Sold %s (%+d gold)" % [label, state.money - money], &"sell")
 
 
 func breed(a: CreatureData, b: CreatureData) -> String:
@@ -176,11 +176,11 @@ func accept(template_id: StringName) -> String:
 
 func deliver(index: int, c: CreatureData) -> String:
 	var t := order_template(index) if index >= 0 and index < state.orders.size() else null
-	var who := who(c)
+	var label := who(c)
 	var money := state.money
 	var rep := state.reputation
 	var reason := Day.deliver(state, db, index, c)
-	return _did(reason, "Delivered %s to %s (%+d gold, %+d reputation)" % [who, t.customer if t else "?",
+	return _did(reason, "Delivered %s to %s (%+d gold, %+d reputation)" % [label, t.customer if t else "?",
 		state.money - money, state.reputation - rep], &"deliver")
 
 

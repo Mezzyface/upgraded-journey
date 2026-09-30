@@ -107,3 +107,13 @@ func test_reasons_match_what_buy_refuses() -> void:
 	Market.buy_upgrade(st, db, &"extra_pen")
 	eq(Market.upgrade_reason(st, db, &"extra_pen"), "already bought", "once")
 	eq(Market.buy_upgrade(st, db, &"extra_pen"), "already bought", "buy_upgrade agrees")
+
+
+func test_helping_hands_gives_its_heart_today() -> void:
+	var db := Fixtures.db()
+	var st := Fixtures.state(db)
+	st.reputation = 20
+	st.money = 1000
+	st.ap = 3
+	eq(Market.buy_upgrade(st, db, &"extra_ap"), "", "bought")
+	eq(st.ap, 4, "the extra heart is usable at once, not only from tomorrow")

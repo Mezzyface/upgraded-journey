@@ -48,7 +48,7 @@ static func can_breed(a: CreatureData, b: CreatureData, db: Db) -> String:
 		if c.status != CreatureData.Status.RETIRED:
 			return "%s #%d is not in the breeding stable" % [name, c.id]
 		if c.breed_cooldown > 0:
-			return "%s #%d needs %d more days of rest" % [name, c.id, c.breed_cooldown]
+			return "%s #%d needs %d more day%s of rest" % [name, c.id, c.breed_cooldown, "" if c.breed_cooldown == 1 else "s"]
 	if db.species[a.species].egg_group != db.species[b.species].egg_group:
 		return "their egg groups differ"
 	return ""

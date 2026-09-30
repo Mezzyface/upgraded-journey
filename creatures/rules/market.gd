@@ -119,4 +119,6 @@ static func buy_upgrade(state: GameState, db: Db, upgrade_id: StringName) -> Str
 		return reason
 	state.money -= db.upgrades[upgrade_id].cost
 	state.upgrades.append(upgrade_id)
+	if upgrade_id == &"extra_ap":
+		state.ap += 1  # the extra heart works today too: the player just paid for it
 	return ""

@@ -21,6 +21,7 @@ func _ready() -> void:
 	%Continue.pressed.connect(_continue)
 	%NewGame.pressed.connect(_new_game)
 	%Quit.pressed.connect(func() -> void: get_tree().quit())
+	(%Continue if %Continue.visible and not %Continue.disabled else %NewGame).grab_focus()  # keyboard and gamepad
 
 
 func _continue() -> void:

@@ -78,3 +78,15 @@ func test_an_unreadable_save_disables_continue() -> void:
 	eq(title.get_node("%Continue").text, "Save can't be read", "says why")
 	_done(title)
 	DirAccess.remove_absolute(SAVE + ".bad")
+
+
+func test_the_first_button_has_keyboard_focus() -> void:
+	var parts: Array = await _title(true)
+	var title: TitleScreen = parts[0]
+	await tree.process_frame
+	check(title.get_node("%Continue").has_focus(), "Continue focused when there is a save")
+	_done(title)
+	var parts2: Array = await _title(false)
+	await tree.process_frame
+	check(parts2[0].get_node("%NewGame").has_focus(), "New game focused without one")
+	_done(parts2[0])
