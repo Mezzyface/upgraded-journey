@@ -186,7 +186,7 @@ offset_bottom = 360.0
 mouse_filter = 2
 script = ExtResource("11_cd0xb")
 
-[node name="TutorialHint" parent="." unique_id=852135231 instance=ExtResource("12_tut")]
+[node name="TutorialHint" parent="." unique_id=852135231 node_paths=PackedStringArray("panel_host") instance=ExtResource("12_tut")]
 unique_name_in_owner = true
 z_index = 10
 layout_mode = 1
@@ -198,3 +198,4 @@ offset_top = -96.0
 offset_right = 100.0
 offset_bottom = -30.0
 grow_vertical = 0
+panel_host = NodePath("../PanelHost")

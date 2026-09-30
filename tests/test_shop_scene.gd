@@ -208,14 +208,21 @@ func test_the_tutorial_hint_never_covers_a_popups_buttons() -> void:
 	var shop := _shop()
 	await tree.process_frame
 	var hint: Control = shop.get_node("%TutorialHint")
-	for open in [func(): shop.call("open_card", Game.owned()[0]), Callable(shop, "open_orders"),
-			Callable(shop, "open_stable"), Callable(shop, "open_market"), Callable(shop, "open_expedition")]:
-		open.call()
-		await tree.process_frame
-		await tree.process_frame
-		var panel: Control = shop.get_node("%PanelHost").current()
-		for b: BaseButton in panel.find_children("*", "BaseButton", true, false):
-			if b.is_visible_in_tree():
-				check(not hint.get_global_rect().intersects(b.get_global_rect()),
-					"%s: hint %s covers %s %s" % [panel.name, hint.get_global_rect(), b.name, b.get_global_rect()])
+	var opens := [func(): shop.call("open_card", Game.owned()[0]), Callable(shop, "open_orders"),
+			Callable(shop, "open_stable"), Callable(shop, "open_market"), Callable(shop, "open_expedition")]
+	for step in Tutorial.STEPS.size():
+		for open in opens:
+			Game.state.tutorial_step = step
+			open.call()
+			await tree.process_frame
+			await tree.process_frame
+			Game.state.tutorial_step = step  # opening a popup may have advanced it
+			hint.refresh()
+			await tree.process_frame
+			var panel: Control = shop.get_node("%PanelHost").current()
+			var targets: Array = panel.find_children("*", "BaseButton", true, false) + panel.find_children("*", "OrderNote", true, false)
+			for t: Control in targets:
+				if t.is_visible_in_tree():
+					check(not hint.get_global_rect().intersects(t.get_global_rect()),
+						"step %d, %s: hint %s covers %s %s" % [step + 1, panel.name, hint.get_global_rect(), t.name, t.get_global_rect()])
 	_done(shop)

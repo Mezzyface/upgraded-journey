@@ -43,6 +43,9 @@ func test_shows_the_current_step_and_advances_on_it() -> void:
 func test_skip_hides_it_and_is_saved() -> void:
 	var hint := await _hint()
 	hint.get_node("%Skip").pressed.emit()
+	eq(Game.state.tutorial_step, 0, "the first press only arms Skip")
+	check(hint.get_node("%Skip").text.begins_with("Sure?"), "armed: %s" % hint.get_node("%Skip").text)
+	hint.get_node("%Skip").pressed.emit()
 	eq(Game.state.tutorial_step, Tutorial.SKIPPED, "skipped")
 	check(not hint.visible, "hidden")
 	eq(GameState.load_file(Game.db, SAVE).tutorial_step, Tutorial.SKIPPED, "saved")

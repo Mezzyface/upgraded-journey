@@ -129,6 +129,7 @@ func open_stable() -> void:
 	stable.show_creatures(Game.retired())
 	stable.creature_chosen.connect(open_card)
 	stable.bred.connect(toast.bind("An egg was laid"))
+	%TutorialHint.saw(&"stable")
 
 
 func open_market() -> void:
