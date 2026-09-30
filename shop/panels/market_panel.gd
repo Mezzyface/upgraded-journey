@@ -31,13 +31,16 @@ func refresh() -> void:
 	for sp in Game.eggs_on_offer():
 		var reason := Game.egg_reason(sp.id)
 		var why := reason.left(1).to_upper() + reason.substr(1)
-		if reason.begins_with("needs reputation tier"):
+		if sp.market_tier > Game.tier():
 			why = "Unlocks at T%d" % sp.market_tier  # short enough for the column; the bar says T0, T1
 		var row := _row(%Eggs, String(sp.id), "%s egg" % sp.display_name, why, sp.market_price, reason)
 		row.get_node("%Buy").pressed.connect(_buy.bind(func() -> String: return Game.buy_egg(sp.id), "Bought a %s egg" % sp.display_name))
 	for u in Game.upgrades_on_offer():
 		var reason := Game.upgrade_reason(u.id)
-		var row := _row(%Upgrades, String(u.id), u.display_name, u.description, u.cost, reason)
+		var locked := u.min_tier > Game.tier() and reason != "already bought"
+		var row := _row(%Upgrades, String(u.id), u.display_name, "Unlocks at T%d" % u.min_tier if locked else u.description,
+				u.cost, reason)
+		row.get_node("%Holds").tooltip_text = u.description
 		if reason == "already bought":
 			row.get_node("%Buy").text = "Owned"
 		row.get_node("%Buy").pressed.connect(_buy.bind(func() -> String: return Game.buy_upgrade(u.id), "Bought %s" % u.display_name))

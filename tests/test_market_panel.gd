@@ -45,6 +45,9 @@ func test_sections_and_rows() -> void:
 	eq(panel.get_node("%Eggs/slime/%Holds").text, "", "nothing to say for one on sale")
 	check(not _buy(panel, "Eggs", "slime").disabled, "tier-0 egg on sale")
 	eq(panel.get_node("%Upgrades").get_child_count(), 3, "every upgrade")
+	eq(panel.get_node("%Upgrades/extra_ap/%Holds").text, "Unlocks at T1", "a locked upgrade says so, like eggs")
+	eq(panel.get_node("%Upgrades/extra_ap/%Holds").tooltip_text, Game.db.upgrades[&"extra_ap"].description, "description on hover")
+	eq(panel.get_node("%Upgrades/extra_pen/%Holds").text, Game.db.upgrades[&"extra_pen"].description, "an unlocked one shows its description")
 	eq(panel.get_node("%Pens").get_child_count(), 1, "pens kept")
 	_done(parts[0])
 
