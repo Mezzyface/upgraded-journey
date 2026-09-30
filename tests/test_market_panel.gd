@@ -97,3 +97,16 @@ func test_pens_still_ask_the_farm_to_build() -> void:
 	_buy(panel, "Pens", "pen").pressed.emit()
 	eq(asked, [&"pen"], "build_requested")
 	_done(parts[0])
+
+
+func test_section_titles_are_section_labels() -> void:
+	var parts: Array = await _market()
+	var panel: MarketPanel = parts[1]
+	for n in ["FeedTitle", "EggsTitle", "UpgradesTitle", "PensTitle"]:
+		var l: Label = panel.get_node("Margin/Rows/Page/Scroll/Sections/" + n)
+		eq(l.theme_type_variation, &"SectionLabel", n + " is a section heading, not a row")
+	var theme: Theme = load("res://ui/theme/sprout_lands.tres")
+	eq(theme.get_type_variation_base(&"SectionLabel"), &"Label", "a Label variation in the theme")
+	var gallery := FileAccess.get_file_as_string("res://ui/gallery.tscn")
+	check(gallery.contains("&\"SectionLabel\""), "shown in the gallery (CLAUDE.md)")
+	_done(parts[0])

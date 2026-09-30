@@ -60,8 +60,9 @@ func test_creatures_live_in_the_pen_and_open_their_card() -> void:
 	eq(pens.sprites().size(), Game.owned().size(), "one sprite per owned creature")
 	var pen_rect := _pen_rect(shop.get_node("%%Buildings/Placed%d" % start["id"]))
 	check(pen_rect.encloses(pens.get_global_rect()), "Pens %s inside the pen %s" % [pens.get_global_rect(), pen_rect])
-	for s in pens.sprites():
-		check(Rect2(Vector2.ZERO, pens.size).has_point(s.position), "creature inside: %s" % s.position)
+	for s in pens.sprites():  # the drawn body, not the origin (it sits above a small creature's body)
+		var body: Rect2 = s.get_node("%Hit").get_global_rect()
+		check(pens.get_global_rect().grow(0.5).encloses(body), "creature inside: %s in %s" % [body, pens.get_global_rect()])
 	pens.creature_clicked.emit(Game.owned()[0])
 	await tree.process_frame
 	eq(_open_name(shop), "CreatureCard", "a creature opens its card")

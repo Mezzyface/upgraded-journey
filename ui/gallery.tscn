@@ -81,6 +81,12 @@ theme_type_variation = &"BannerLabel"
 text = "Sprout Lands"
 horizontal_alignment = 1
 
+[node name="Section" type="Label" parent="Scroll/Margin/Rows" unique_id=1785696297]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "— Section —"
+horizontal_alignment = 1
+
 [node name="H1" type="Label" parent="Scroll/Margin/Rows" unique_id=2114721262]
 layout_mode = 2
 theme_type_variation = &"HeaderLabel"
@@ -470,6 +476,6 @@ offset_left = -14.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_type_variation = &"PackScrollBar"
-max_value = 722.0
-value = 722.0
+max_value = 777.0
+value = 777.0
 script = ExtResource("8_kq1tw")

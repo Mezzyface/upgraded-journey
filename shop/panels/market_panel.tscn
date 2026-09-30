@@ -48,7 +48,9 @@ size_flags_horizontal = 3
 
 [node name="FeedTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=2057001536]
 layout_mode = 2
-text = "Feed"
+theme_type_variation = &"SectionLabel"
+text = "— Feed —"
+horizontal_alignment = 1
 
 [node name="Feed" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=618628594]
 unique_name_in_owner = true
@@ -56,7 +58,9 @@ layout_mode = 2
 
 [node name="EggsTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1887606193]
 layout_mode = 2
-text = "Eggs"
+theme_type_variation = &"SectionLabel"
+text = "— Eggs —"
+horizontal_alignment = 1
 
 [node name="Eggs" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1605064377]
 unique_name_in_owner = true
@@ -64,7 +68,9 @@ layout_mode = 2
 
 [node name="UpgradesTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=334142150]
 layout_mode = 2
-text = "Upgrades"
+theme_type_variation = &"SectionLabel"
+text = "— Upgrades —"
+horizontal_alignment = 1
 
 [node name="Upgrades" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1351261292]
 unique_name_in_owner = true
@@ -72,7 +78,9 @@ layout_mode = 2
 
 [node name="PensTitle" type="Label" parent="Margin/Rows/Page/Scroll/Sections" unique_id=1158312658]
 layout_mode = 2
-text = "Pens"
+theme_type_variation = &"SectionLabel"
+text = "— Pens —"
+horizontal_alignment = 1
 
 [node name="Pens" type="VBoxContainer" parent="Margin/Rows/Page/Scroll/Sections" unique_id=309004270]
 unique_name_in_owner = true
