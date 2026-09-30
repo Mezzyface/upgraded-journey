@@ -110,3 +110,40 @@ func test_breed_lays_an_egg_and_logs_it() -> void:
 	eq(g.breed(a, b), g.breed_reason(a, b), "refused with the Stable's reason")
 	eq(count[0], 1, "no change on refusal")
 	_cleanup(g)
+
+
+func test_spark_rows_hide_grandparents_until_the_gene_scanner() -> void:
+	var g := _game()
+	Build.place_free(g.state, g.db.buildables[&"pen"], Vector2i(6, 0))  # room for everyone
+	var gp1: CreatureData = Fixtures.adult(g.state, "spider")
+	var gp2: CreatureData = Fixtures.adult(g.state, "spider")
+	var p1: CreatureData = Fixtures.adult(g.state, "spider")
+	var p2: CreatureData = Fixtures.adult(g.state, "spider")
+	p1.parents = PackedInt32Array([gp1.id, gp2.id])
+	for c: CreatureData in [gp1, gp2, p1, p2]:
+		eq(g.retire(c), "", "retire #%d" % c.id)
+	var child: CreatureData = Fixtures.adult(g.state, "spider")
+	child.parents = PackedInt32Array([p1.id, p2.id])
+	var rows: Array[Dictionary] = g.spark_rows(child)
+	eq(rows.map(func(r: Dictionary) -> String: return r["who"]),
+		[g.who(p1), g.who(gp1), g.who(gp2), g.who(p2)], "parent, its parents, then the other parent")
+	eq(rows.map(func(r: Dictionary) -> bool: return r["hidden"]), [false, true, true, false], "grandparents hidden")
+	eq(rows[0]["sparks"], p1.sparks, "a parent's own sparks")
+	eq(g.spark_rows(p1)[0]["who"], "Own", "a retired creature's own sparks come first")
+	g.state.upgrades.append(&"gene_scanner")
+	eq(g.spark_rows(child).map(func(r: Dictionary) -> bool: return r["hidden"]), [false, false, false, false],
+		"the Gene Scanner shows them")
+	check(g.spark_rows(g.owned()[0]).is_empty(), "a starter has no sparks")
+	_cleanup(g)
+
+
+func test_spark_rows_skip_missing_ancestors() -> void:
+	var g := _game()
+	var p: CreatureData = Fixtures.adult(g.state, "spider")
+	p.parents = PackedInt32Array([998])  # a grandparent the save lost
+	eq(g.retire(p), "", "retire the parent")
+	var child: CreatureData = Fixtures.adult(g.state, "spider")
+	child.parents = PackedInt32Array([p.id, 999])  # a parent the save lost
+	var rows: Array[Dictionary] = g.spark_rows(child)
+	eq(rows.map(func(r: Dictionary) -> String: return r["who"]), [g.who(p)], "only the known parent")
+	_cleanup(g)

@@ -125,6 +125,26 @@ func sell_price(c: CreatureData) -> int:
 	return Market.sell_price(c)
 
 
+## The card's Sparks tab: {who, sparks, hidden} for this creature's own sparks (once retired), then per parent the
+## parent's sparks and its parents'. Grandparents are hidden until the Gene Scanner is owned. Ancestors missing from
+## the state or without sparks are skipped.
+func spark_rows(c: CreatureData) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	if not c.sparks.is_empty():
+		rows.append({"who": "Own", "sparks": c.sparks, "hidden": false})
+	var scanner := state.upgrades.has(&"gene_scanner")
+	for pid in c.parents:
+		var p := state.get_creature(pid)
+		if p == null:
+			continue
+		if not p.sparks.is_empty():
+			rows.append({"who": who(p), "sparks": p.sparks, "hidden": false})
+		for gid in p.parents:
+			var gp := state.get_creature(gid)
+			if gp and not gp.sparks.is_empty():
+				rows.append({"who": who(gp), "sparks": gp.sparks, "hidden": not scanner})
+	return rows
+
 func species_of(c: CreatureData) -> Species:
 	return db.species.get(c.species)
 
