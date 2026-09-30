@@ -5,8 +5,10 @@ const SAVE := "user://test_stable_panel_save.json"
 
 
 ## Game on fixture content with three retired creatures: spider, spider, slime (the slime's egg group differs).
-## Returns [host, panel, retired].
+## Returns [host, panel, retired]; await it. The first frame lets earlier tests' queued frees land, so no leftover
+## card is still listening to Game.changed when start_new swaps in the fixture content.
 func _stable() -> Array:
+	await tree.process_frame
 	Game.save_path = SAVE
 	var db := Fixtures.db()
 	var setup := NewGameSetup.new()
@@ -30,6 +32,7 @@ func _done(host: Node) -> void:
 
 
 func test_row_shows_the_creature_and_its_rest() -> void:
+	await tree.process_frame  # earlier tests' queued frees land first (see _stable)
 	Game.save_path = SAVE
 	var db := Fixtures.db()
 	var setup := NewGameSetup.new()
