@@ -197,3 +197,17 @@ func test_blocked_row_is_disabled_and_says_why() -> void:
 	eq(row.get_node("%Note").text, "Dark · Bug", "back to element and egg group")
 	row.queue_free()
 	DirAccess.remove_absolute(SAVE)
+
+
+func test_row_leaves_room_for_the_portrait() -> void:
+	await tree.process_frame
+	var row: CreatureRow = load("res://shop/panels/creature_row.tscn").instantiate()
+	tree.root.add_child(row)
+	await tree.process_frame
+	var pick: Button = row.get_node("%Pick")
+	pick.icon = null
+	var bare := pick.get_minimum_size().x
+	pick.icon = load("res://creatures/egg.tres")  # any portrait-sized texture
+	var with_icon := pick.get_minimum_size().x
+	check(with_icon - bare >= 20, "the portrait reserves %.0f px, not what's left over" % (with_icon - bare))
+	row.queue_free()

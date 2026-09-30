@@ -14,12 +14,12 @@ size_flags_horizontal = 3
 theme_type_variation = &"DecoratedButton"
 text = "Spider #1"
 alignment = 0
-expand_icon = true
+theme_override_constants/icon_max_width = 24
 
 [node name="Note" type="Label" parent="." unique_id=1520847403]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 mouse_filter = 1
 text = "Dark · Bug"
 text_overrun_behavior = 3

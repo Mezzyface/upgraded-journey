@@ -37,7 +37,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 8
 
 [node name="Left" type="VBoxContainer" parent="Margin/Rows/Body" unique_id=675495698]
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
