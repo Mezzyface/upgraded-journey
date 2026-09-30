@@ -75,9 +75,9 @@ func frame_counts() -> PackedInt32Array:
 		return _counts[sheet.resource_path]
 	var img := sheet.get_image()
 	var counts := PackedInt32Array()
-	for r in img.get_height() / cell.y:
+	for r in floori(img.get_height() / float(cell.y)):
 		var n := 0
-		while n < img.get_width() / cell.x \
+		while n < floori(img.get_width() / float(cell.x)) \
 				and img.get_region(Rect2i(Vector2i(n, r) * cell, cell)).get_used_rect().size != Vector2i.ZERO:
 			n += 1
 		counts.append(n)

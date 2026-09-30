@@ -70,7 +70,7 @@ func _fill(t: OrderTemplate, best: CreatureData, due: String) -> void:
 func _need(g: RequirementGroup, bonus: bool, best: CreatureData) -> void:
 	var line: OrderNeed = NEED.instantiate()
 	%Needs.add_child(line)
-	line.show_need(g.describe(), bonus, Game.group_met(best, g) if _active >= 0 else null)
+	line.show_need(g.describe(), bonus, (Game.group_met(best, g) as Variant) if _active >= 0 else null)
 
 
 func _done(reason: String) -> void:

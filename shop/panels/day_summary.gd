@@ -51,8 +51,8 @@ func show_report(report: Dictionary) -> void:
 	%EventsTitle.visible = not events.is_empty()
 
 
-func _total(label: Label, name: String, amount: int) -> void:
-	label.text = "%s %+d" % [name, amount]
+func _total(label: Label, title: String, amount: int) -> void:
+	label.text = "%s %+d" % [title, amount]
 	if amount == 0:
 		label.remove_theme_color_override("font_color")
 	else:
